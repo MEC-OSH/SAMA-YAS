@@ -525,11 +525,10 @@ async function loadTrainingVideos(){
 }
 
 async function loadGallery(){
-  const galleryGrid=document.getElementById("galleryGrid");
   const slideshow=document.querySelector("#gallery .slideshow");
   const awardSlider=document.getElementById("awardSlider");
 
-  if(!galleryGrid || !slideshow || !awardSlider) return;
+  if(!slideshow || !awardSlider) return;
 
   try{
     const {data,error}=await db
@@ -569,14 +568,6 @@ async function loadGallery(){
       }).join("")+
       '<button class="slide-prev" type="button" aria-label="Previous three gallery photos">‹</button>'+
       '<button class="slide-next" type="button" aria-label="Next three gallery photos">›</button>';
-
-      galleryGrid.innerHTML=photos.map(item=>{
-        const title=lang==="ar"&&item.title_ar?item.title_ar:item.title_en;
-        return `<figure>
-          <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(title)}" loading="lazy">
-          <figcaption>${escapeHtml(title)}</figcaption>
-        </figure>`;
-      }).join("");
     }
 
     if(awards.length){

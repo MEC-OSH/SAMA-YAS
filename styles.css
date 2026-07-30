@@ -2039,3 +2039,9 @@ html[dir="rtl"] .links .header-report-btn{
 .primary-emergency{
   cursor:pointer;
 }
+
+/* Floating emergency button now calls directly */
+a.floating-emergency-call{
+  text-decoration:none;
+  cursor:pointer;
+}

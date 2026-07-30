@@ -469,11 +469,6 @@
     <button class="slide-prev" type="button" aria-label="Previous three gallery photos">‹</button>
     <button class="slide-next" type="button" aria-label="Next three gallery photos">›</button>
   </div>
-  <div id="galleryGrid">
-    <figure><img src="assets/sama-yas-hero.jpg" alt="Sama Yas project"><figcaption>Sama Yas Residential Development</figcaption></figure>
-    <figure><div class="placeholder">INSPECTION</div><figcaption>Joint OSH Inspection</figcaption></figure>
-    <figure><div class="placeholder">TRAINING</div><figcaption>Work at Height Training</figcaption></figure>
-  </div>
 
   <div class="section-head awards-head"><span>Awards</span><h2>Award Image Gallery</h2></div>
   <div class="award-slider" id="awardSlider">
@@ -683,10 +678,15 @@
 <script src="supabase-config.js"></script>
 <script src="app.js"></script>
 
-<button id="openEmergencyCall" class="floating-emergency-call" type="button" aria-haspopup="dialog" aria-controls="emergencyCallModal">
+<a
+  class="floating-emergency-call"
+  href="tel:+971503325318"
+  aria-label="Call site emergency number +971 50 332 5318">
+  
   <img src="assets/emergency-call-logo.png" alt="" aria-hidden="true">
   <strong>Emergency Call</strong>
-</button>
+
+</a>
 
 <div id="emergencyCallModal" class="emergency-call-modal" role="dialog" aria-modal="true" aria-labelledby="emergencyCallTitle" hidden>
   <div class="emergency-call-backdrop" data-close-emergency></div>
