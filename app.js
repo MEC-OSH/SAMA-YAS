@@ -3,7 +3,41 @@ en:{home:"Home",about:"About OSH",performance:"Performance",reports:"Safety Repo
 ar:{home:"الرئيسية",about:"عن السلامة والصحة المهنية",performance:"الأداء",reports:"تقارير السلامة",documents:"وثائق السلامة",trainingVideos:"فيديوهات التدريب والتوعية",trainingVideosTitle:"شاهد وتعلم واعمل بأمان",news:"الأخبار",gallery:"المعرض",emergency:"الطوارئ",contact:"اتصل بنا",adminLogin:"دخول المسؤول",heroTitle:"نبني بأمان. نحمي كل حياة.",heroSub:"قسم السلامة والصحة المهنية في مشروع سما ياس السكني",aboutTitle:"ثقافة سلامة قائمة على الوقاية",mission:"الرسالة",missionText:"حماية جميع العاملين في مشروع سما ياس من خلال الإدارة الاستباقية للمخاطر والإشراف الفعّال والالتزام بمتطلبات الدار وADOSH والقوانين الإماراتية.",vision:"الرؤية",visionText:"تحقيق هدف صفر ضرر من خلال ترسيخ القرارات الآمنة في كل نشاط وكل يوم وعلى جميع المستويات.",objectives:"الأهداف",objectivesText:"منع الإصابات والأمراض المهنية وتعزيز الكفاءة وإغلاق الملاحظات وتحسين أداء المقاولين والتطوير المستمر لنظام السلامة.",roles:"الأدوار والمسؤوليات",rolesText:"يقوم قسم السلامة بالتخطيط والمشورة والتفتيش والتدريب والمتابعة والتقارير، وتوفر الإدارة الموارد ويطبق المشرفون الضوابط ويحق لكل عامل إيقاف العمل غير الآمن.",livePerformance:"الأداء التراكمي المباشر",manpower:"إجمالي القوى العاملة",manhours:"ساعات العمل",liveCounter:"عداد مباشر وفق وقت العمل في الإمارات",ltiDays:"أيام بدون إصابة مضيعة للوقت",trainingSessions:"جلسات التدريب",personnelTrained:"الأشخاص المدربون",trainingHours:"ساعات التدريب",inductions:"تعريف السلامة",meetings:"اجتماعات السلامة",audits:"تدقيقات السلامة",inspections:"تفتيشات السلامة",reviews:"مراجعات الإجراءات",drills:"تمارين الطوارئ",reportTrend:"تحليل اتجاه ملاحظات السلامة",unsafeActs:"الأفعال غير الآمنة",unsafeConditions:"الظروف غير الآمنة",goodPractices:"الممارسات الجيدة",reportConcern:"الإبلاغ عن ملاحظة سلامة",whatsappConcern:"الإبلاغ عبر واتساب",category:"الفئة",trackReport:"تتبع التقرير",library:"مكتبة الوثائق العامة",newsTitle:"أخبار وإعلانات السلامة",galleryTitle:"معرض صور السلامة",emergencyTitle:"معلومات الطوارئ"}};
 let lang="en";
 document.getElementById("langBtn").addEventListener("click",()=>{lang=lang==="en"?"ar":"en";document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";document.getElementById("langBtn").textContent=lang==="en"?"العربية":"English";document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n;if(translations[lang][k])el.textContent=translations[lang][k]})});
-document.querySelector(".menu-btn").addEventListener("click",()=>document.querySelector(".links").classList.toggle("open"));
+
+const menuButton=document.querySelector(".menu-btn");
+const menuLinks=document.querySelector(".links");
+const drawerClose=document.querySelector(".drawer-close");
+const menuBackdrop=document.querySelector(".menu-backdrop");
+
+function setMainMenu(open){
+  menuLinks?.classList.toggle("open",open);
+  document.body.classList.toggle("menu-open",open);
+  menuButton?.setAttribute("aria-expanded",String(open));
+  if(menuBackdrop) menuBackdrop.hidden=!open;
+}
+
+menuButton?.addEventListener("click",()=>{
+  setMainMenu(!menuLinks?.classList.contains("open"));
+});
+drawerClose?.addEventListener("click",()=>setMainMenu(false));
+menuBackdrop?.addEventListener("click",()=>setMainMenu(false));
+
+document.querySelectorAll(".links a").forEach(link=>{
+  link.addEventListener("click",()=>setMainMenu(false));
+});
+
+document.getElementById("langBtn")?.addEventListener("click",()=>{
+  setMainMenu(false);
+});
+
+document.getElementById("headerOpenReport")?.addEventListener("click",()=>{
+  setMainMenu(false);
+});
+
+document.addEventListener("keydown",event=>{
+  if(event.key==="Escape") setMainMenu(false);
+});
+
 
 
 const db = window.mecSupabase;
@@ -511,15 +545,30 @@ async function loadGallery(){
     const awards=data.filter(item=>item.gallery_type==="Award");
 
     if(photos.length){
-      slideshow.innerHTML=photos.map((item,index)=>{
-        const title=lang==="ar"&&item.title_ar?item.title_ar:item.title_en;
-        return `<div class="slide ${index===0?"active":""}">
-          <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(title)}">
-          <h3>${escapeHtml(title)}</h3>
-        </div>`;
+      const photoGroups=[];
+      const groupCount=Math.ceil(photos.length/3);
+
+      for(let groupIndex=0;groupIndex<groupCount;groupIndex++){
+        const group=[];
+        for(let offset=0;offset<3;offset++){
+          group.push(photos[(groupIndex*3+offset)%photos.length]);
+        }
+        photoGroups.push(group);
+      }
+
+      slideshow.innerHTML=photoGroups.map((group,index)=>{
+        const cards=group.map(item=>{
+          const title=lang==="ar"&&item.title_ar?item.title_ar:item.title_en;
+          return `<article class="photo-slide-card">
+            <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(title)}" loading="lazy">
+            <h3>${escapeHtml(title)}</h3>
+          </article>`;
+        }).join("");
+
+        return `<div class="photo-group ${index===0?"active":""}">${cards}</div>`;
       }).join("")+
-      '<button class="slide-prev" type="button" aria-label="Previous gallery image">‹</button>'+
-      '<button class="slide-next" type="button" aria-label="Next gallery image">›</button>';
+      '<button class="slide-prev" type="button" aria-label="Previous three gallery photos">‹</button>'+
+      '<button class="slide-next" type="button" aria-label="Next three gallery photos">›</button>';
 
       galleryGrid.innerHTML=photos.map(item=>{
         const title=lang==="ar"&&item.title_ar?item.title_ar:item.title_en;
@@ -603,7 +652,7 @@ loadTrainingVideos();
 loadSafetyTrend();
 setInterval(loadSafetyTrend,30000);
 loadGallery().finally(()=>{
-  slider(".slide",".slide-prev",".slide-next",3000);
+  slider(".photo-group",".slide-prev",".slide-next",4000);
   slider(".award-group",".award-prev",".award-next",4000);
 });
 

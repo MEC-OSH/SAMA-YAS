@@ -12,34 +12,51 @@
   <div class="container nav">
     <a class="brand" href="#home">
       <img src="assets/mec-logo.png" alt="MEC logo" onerror="this.style.display='none'">
-      <div><strong>MEC OSH Department</strong><span>Sama Yas Residential Development</span></div>
+      <div>
+        <strong>MEC OSH Department</strong>
+        <span>Sama Yas Residential Development</span>
+      </div>
     </a>
-    <button class="menu-btn" aria-label="Menu">☰</button>
-    <nav class="links">
+
+    <button
+      class="menu-btn"
+      type="button"
+      aria-label="Open menu"
+      aria-controls="mainMenuLinks"
+      aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="links" id="mainMenuLinks" aria-label="Main navigation">
+      <div class="drawer-title">
+        <strong>Menu</strong>
+        <button class="drawer-close" type="button" aria-label="Close menu">×</button>
+      </div>
+
       <a href="#home" data-i18n="home">Home</a>
       <a href="#about" data-i18n="about">About OSH</a>
-      <a href="#performance" data-i18n="performance">Performance</a>
       <a href="#documents" data-i18n="documents">OSH Documents</a>
       <a class="risk-generator-nav" href="risk-assessment/">Risk Assessment Generator</a>
       <a href="#training-videos" data-i18n="trainingVideos">Training Awareness Videos</a>
-      <a href="#reports" data-i18n="reports">Safety Reports</a>
-      <a href="#trend-analysis" class="trend-analysis-nav">Trend Analysis</a>
       <a href="#news" data-i18n="news">News</a>
       <a href="#certificates">Certificates</a>
       <a href="#organization-chart">Organization Chart</a>
       <a href="#gallery" data-i18n="gallery">Gallery</a>
-      <a href="#emergency" data-i18n="emergency">Emergency</a>
-      <a href="#location">Location</a>
-      <a href="#contact" data-i18n="contact">Contact</a>
       <a class="admin-link" href="admin/" data-i18n="adminLogin">Admin Login</a>
+
+      <button id="langBtn" class="lang-btn" type="button">العربية</button>
+
+      <button
+        type="button"
+        id="headerOpenReport"
+        class="header-report-btn">
+        Report a Safety Concern
+      </button>
     </nav>
-<button id="langBtn" class="lang-btn">العربية</button>
-    <button
-      type="button"
-      id="headerOpenReport"
-      class="header-report-btn">
-      Report a Safety Concern
-    </button>
+
+    <button class="menu-backdrop" type="button" aria-label="Close menu" hidden></button>
   </div>
 </header>
 
@@ -435,13 +452,24 @@
 <section id="gallery" class="section pale">
 <div class="container">
   <div class="section-head"><span data-i18n="gallery">Gallery</span><h2 data-i18n="galleryTitle">OSH photo gallery</h2></div>
-  <div class="slideshow">
-    <div class="slide active"><img src="assets/sama-yas-hero.jpg" alt="Sama Yas project"><h3>Sama Yas Residential Development</h3></div>
-    <div class="slide"><div class="placeholder">TRAINING</div><h3>OSH Training Session</h3></div>
-    <div class="slide"><div class="placeholder">CAMPAIGN</div><h3>Beat the Heat Campaign</h3></div>
-    <button class="slide-prev">‹</button><button class="slide-next">›</button>
+  <div class="slideshow"><div class="photo-group active">
+      <article class="photo-slide-card">
+        <img src="assets/gallery-1.jpg" alt="OSH good practice photo 1">
+        <h3>Good Practice</h3>
+      </article>
+      <article class="photo-slide-card">
+        <img src="assets/gallery-2.jpg" alt="OSH good practice photo 2">
+        <h3>Good Practice</h3>
+      </article>
+      <article class="photo-slide-card">
+        <img src="assets/gallery-3.jpg" alt="OSH good practice photo 3">
+        <h3>Good Practice</h3>
+      </article>
+    </div>
+    <button class="slide-prev" type="button" aria-label="Previous three gallery photos">‹</button>
+    <button class="slide-next" type="button" aria-label="Next three gallery photos">›</button>
   </div>
-  <div class="gallery-grid" id="galleryGrid">
+  <div id="galleryGrid">
     <figure><img src="assets/sama-yas-hero.jpg" alt="Sama Yas project"><figcaption>Sama Yas Residential Development</figcaption></figure>
     <figure><div class="placeholder">INSPECTION</div><figcaption>Joint OSH Inspection</figcaption></figure>
     <figure><div class="placeholder">TRAINING</div><figcaption>Work at Height Training</figcaption></figure>
@@ -664,16 +692,25 @@
   <div class="emergency-call-backdrop" data-close-emergency></div>
   <section class="emergency-call-panel">
     <button id="closeEmergencyCall" class="emergency-call-close" type="button" aria-label="Close emergency call popup">×</button>
-    <img
+    <a
+      class="emergency-popup-image-call"
+      href="tel:+971503325318"
+      aria-label="Call site emergency number +971 50 332 5318">
+      <img
       class="emergency-call-logo"
       src="assets/emergency-call-logo.png"
       alt="Emergency Call">
+      <span>Tap to call +971 50 332 5318</span>
+    </a>
     <h2 id="emergencyCallTitle">Emergency Call</h2>
     <p>Select the required emergency service.</p>
 
     <div class="emergency-call-list">
-      <a class="emergency-call-option primary-emergency" href="tel:+971503325318">
-        <span class="emergency-service-name">Site Emergency</span>
+      <a
+        class="emergency-call-option primary-emergency"
+        href="tel:+971503325318"
+        aria-label="Call site emergency number +971 50 332 5318">
+        <span class="emergency-service-name">Site Emergency — Tap to Call</span>
         <strong>+971 50 332 5318</strong>
       </a>
       <a class="emergency-call-option" href="tel:999">
