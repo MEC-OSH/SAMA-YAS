@@ -2168,3 +2168,87 @@ html[dir="rtl"] .header .menu-btn{
     font-size:10px;
   }
 }
+
+
+/* Final aligned visible top-button row */
+.header .top-visible-links{
+  margin-left:auto!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:8px!important;
+  flex-wrap:nowrap!important;
+  white-space:nowrap!important;
+}
+.header .top-visible-links .top-nav-button{
+  box-sizing:border-box!important;
+  min-height:38px!important;
+  margin:0!important;
+  padding:8px 12px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid #414141!important;
+  border-radius:5px!important;
+  background:#151515!important;
+  color:#fff!important;
+  font-family:Arial,sans-serif!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  text-decoration:none!important;
+  cursor:pointer!important;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+}
+.header .top-visible-links .top-lang-btn{
+  border-color:#ffd400!important;
+  background:#ffd400!important;
+  color:#000!important;
+}
+.header .top-visible-links .top-report-btn{
+  border-color:#e31920!important;
+  background:#e31920!important;
+  color:#fff!important;
+  padding-left:16px!important;
+  padding-right:16px!important;
+}
+.header .top-visible-links .top-nav-button:hover,
+.header .top-visible-links .top-nav-button:focus-visible{
+  border-color:#ffd400!important;
+  background:#222!important;
+  color:#fff!important;
+}
+.header .top-visible-links .top-lang-btn:hover,
+.header .top-visible-links .top-lang-btn:focus-visible{
+  border-color:#e7c100!important;
+  background:#e7c100!important;
+  color:#000!important;
+}
+.header .top-visible-links .top-report-btn:hover,
+.header .top-visible-links .top-report-btn:focus-visible{
+  border-color:#bd1118!important;
+  background:#bd1118!important;
+  color:#fff!important;
+}
+@media(max-width:900px){
+  .header .nav{
+    flex-wrap:wrap!important;
+  }
+  .header .top-visible-links{
+    order:3!important;
+    width:100%!important;
+    margin:0!important;
+    padding:4px 0 2px!important;
+    overflow-x:auto!important;
+    justify-content:flex-start!important;
+  }
+  .header .top-visible-links .top-nav-button{
+    flex:0 0 auto!important;
+  }
+}
+
+/* Current cumulative data is displayed directly without explanatory baseline text. */
+#trend-analysis .section-head{
+  margin-bottom:22px;
+}

@@ -5,7 +5,87 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="MEC OSH Department portal for Sama Yas Residential Development">
 <title>MEC OSH Department | Sama Yas</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20260730-1621">
+
+<style id="critical-top-navigation">
+.header .top-visible-links{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+}
+.header .top-visible-links .top-nav-button{
+  box-sizing:border-box;
+  min-height:38px;
+  margin:0;
+  padding:8px 12px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #414141;
+  border-radius:5px;
+  background:#151515;
+  color:#fff;
+  font-family:Arial,sans-serif;
+  font-size:12px;
+  font-weight:800;
+  line-height:1;
+  text-decoration:none;
+  cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
+}
+.header .top-visible-links .top-nav-button:hover,
+.header .top-visible-links .top-nav-button:focus-visible{
+  border-color:#ffd400;
+  background:#222;
+  color:#fff;
+}
+.header .top-visible-links .top-lang-btn{
+  border-color:#ffd400;
+  background:#ffd400;
+  color:#000;
+}
+.header .top-visible-links .top-report-btn{
+  border-color:#e31920;
+  background:#e31920;
+  color:#fff;
+  padding-left:16px;
+  padding-right:16px;
+}
+.header .top-visible-links .top-lang-btn:hover,
+.header .top-visible-links .top-lang-btn:focus-visible{
+  border-color:#e7c100;
+  background:#e7c100;
+  color:#000;
+}
+.header .top-visible-links .top-report-btn:hover,
+.header .top-visible-links .top-report-btn:focus-visible{
+  border-color:#bd1118;
+  background:#bd1118;
+  color:#fff;
+}
+@media(max-width:900px){
+  .header .nav{
+    flex-wrap:wrap;
+  }
+  .header .top-visible-links{
+    order:3;
+    width:100%;
+    margin:0;
+    padding:4px 0 2px;
+    overflow-x:auto;
+    justify-content:flex-start;
+  }
+  .header .top-visible-links .top-nav-button{
+    flex:0 0 auto;
+  }
+}
+</style>
+
 </head>
 <body>
 <header class="header">
@@ -19,12 +99,12 @@
     </a>
 
     <nav class="top-visible-links" aria-label="Quick navigation">
-      <a href="#home" data-i18n="home">Home</a>
-      <a href="#about" data-i18n="about">About OSH</a>
-      <a href="#contact">Contact</a>
-      <a href="#documents" data-i18n="documents">OSH Documents</a>
-      <button id="topLangBtn" class="top-lang-btn" type="button">العربية</button>
-      <button id="topOpenReport" class="top-report-btn" type="button">
+      <a class="top-nav-button" href="#home" data-i18n="home">Home</a>
+      <a class="top-nav-button" href="#about" data-i18n="about">About OSH</a>
+      <a class="top-nav-button" href="#contact" data-i18n="contact">Contact</a>
+      <a class="top-nav-button" href="#documents" data-i18n="documents">OSH Documents</a>
+      <button id="topLangBtn" class="top-nav-button top-lang-btn" type="button">العربية</button>
+      <button id="topOpenReport" class="top-nav-button top-report-btn" type="button">
         Report a Safety Concern
       </button>
     </nav>
@@ -254,18 +334,6 @@
       <h2>Safety Observation Trend Analysis</h2>
     </div>
 
-    <p class="trend-analysis-intro">
-      The cumulative baseline contains 881 Unsafe Acts and 1,390 Unsafe Conditions.
-      All baseline observations are recorded as Closed. New reports will appear as
-      Open and will move to Closed only when their status is manually changed in
-      the Admin Dashboard.
-    </p>
-
-    <div class="trend-baseline-note">
-      <strong>Current baseline status:</strong>
-      881 Unsafe Acts Closed · 1,390 Unsafe Conditions Closed · 0 Open
-    </div>
-
     <div class="trend-summary-grid" aria-label="Safety observation trend totals">
       <article class="trend-summary-card ua-open-summary">
         <span>Unsafe Act Open</span>
@@ -273,7 +341,7 @@
       </article>
       <article class="trend-summary-card ua-closed-summary">
         <span>Unsafe Act Closed</span>
-        <strong id="trendUaClosed">0</strong>
+        <strong id="trendUaClosed">881</strong>
       </article>
       <article class="trend-summary-card uc-open-summary">
         <span>Unsafe Condition Open</span>
@@ -281,7 +349,7 @@
       </article>
       <article class="trend-summary-card uc-closed-summary">
         <span>Unsafe Condition Closed</span>
-        <strong id="trendUcClosed">0</strong>
+        <strong id="trendUcClosed">1390</strong>
       </article>
     </div>
 
@@ -670,7 +738,7 @@
 <script>window.CATEGORY_DATA=[{"name": "Housekeeping & General Workplace Amenities", "ua": 36, "uc": 188}, {"name": "Traffic Management & Logistics", "ua": 23, "uc": 51}, {"name": "Working at Height", "ua": 104, "uc": 89}, {"name": "Scaffolding/Ladder", "ua": 111, "uc": 195}, {"name": "Personal Protective Equipment", "ua": 87, "uc": 16}, {"name": "Electrical Safety", "ua": 29, "uc": 49}, {"name": "Hand Tools", "ua": 23, "uc": 25}, {"name": "Excavations", "ua": 4, "uc": 3}, {"name": "Lifting Equipment and Lifting Accessories", "ua": 31, "uc": 45}, {"name": "Portable Power Tools", "ua": 32, "uc": 49}, {"name": "Plant and Equipment", "ua": 20, "uc": 32}, {"name": "Confined Space", "ua": 1, "uc": 8}, {"name": "Hot Work Operations", "ua": 41, "uc": 41}, {"name": "Compressed Air and Gases", "ua": 0, "uc": 9}, {"name": "Manual Handling", "ua": 17, "uc": 9}, {"name": "Welfare Facilities", "ua": 28, "uc": 39}, {"name": "Hazardous Substances", "ua": 0, "uc": 20}, {"name": "Machine Guarding", "ua": 5, "uc": 8}, {"name": "Storage Arrangements", "ua": 22, "uc": 115}, {"name": "Barricading of Hazards", "ua": 62, "uc": 112}, {"name": "Access and Egress", "ua": 56, "uc": 78}, {"name": "Permit to Work", "ua": 20, "uc": 14}, {"name": "Safety Signage & Signals", "ua": 14, "uc": 14}, {"name": "Falsework/Formwork", "ua": 96, "uc": 112}, {"name": "Waste Management", "ua": 15, "uc": 66}, {"name": "First Aid Case", "ua": 4, "uc": 2}, {"name": "Near Miss Incident", "ua": 0, "uc": 0}, {"name": "Property Damage", "ua": 0, "uc": 0}, {"name": "Lost Time Injury", "ua": 0, "uc": 1}];</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js"></script>
+<script src="app.js?v=20260730-1621"></script>
 
 <a
   class="floating-emergency-call"

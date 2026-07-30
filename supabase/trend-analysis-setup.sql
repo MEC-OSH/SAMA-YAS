@@ -112,6 +112,9 @@ to authenticated
 using (public.is_mec_admin())
 with check (public.is_mec_admin());
 
+-- Remove the older function before changing its returned columns.
+drop function if exists public.get_public_safety_trend();
+
 create or replace function public.get_public_safety_trend()
 returns table (
   category text,
