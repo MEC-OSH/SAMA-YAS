@@ -2252,3 +2252,99 @@ html[dir="rtl"] .header .menu-btn{
 #trend-analysis .section-head{
   margin-bottom:22px;
 }
+
+
+/* Contact section with professional portrait */
+.contact-section{
+  background:#050505;
+  color:#fff;
+}
+.contact-layout{
+  display:grid;
+  grid-template-columns:minmax(320px,48%) minmax(320px,52%);
+  min-height:560px;
+  align-items:stretch;
+  overflow:hidden;
+  border:1px solid #202020;
+  background:#050505;
+}
+.contact-photo-wrap{
+  min-height:560px;
+  overflow:hidden;
+  background:#111;
+}
+.contact-person-photo{
+  display:block;
+  width:100%;
+  height:100%;
+  min-height:560px;
+  object-fit:cover;
+  object-position:center top;
+}
+.contact-content{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:56px 64px;
+  background:#050505;
+}
+.contact-heading{
+  margin-bottom:12px;
+}
+.contact-heading span{
+  color:#ffd400;
+}
+.contact-heading h2{
+  margin:8px 0 12px;
+  color:#fff;
+  font-size:clamp(38px,5vw,64px);
+  line-height:1.02;
+}
+.contact-details{
+  max-width:560px;
+  color:#fff;
+  font-size:18px;
+  line-height:1.6;
+}
+.contact-details p{
+  margin:0 0 15px;
+}
+.contact-details a{
+  color:#ffd400;
+  font-weight:800;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.contact-details a:hover,
+.contact-details a:focus{
+  color:#fff;
+}
+@media(max-width:900px){
+  .contact-layout{
+    grid-template-columns:1fr;
+    min-height:auto;
+  }
+  .contact-photo-wrap,
+  .contact-person-photo{
+    min-height:0;
+    height:auto;
+  }
+  .contact-person-photo{
+    max-height:620px;
+    object-fit:cover;
+  }
+  .contact-content{
+    padding:38px 28px 46px;
+  }
+}
+@media(max-width:520px){
+  .contact-content{
+    padding:30px 20px 38px;
+  }
+  .contact-heading h2{
+    font-size:38px;
+  }
+  .contact-details{
+    font-size:16px;
+  }
+}
