@@ -134,15 +134,15 @@
     <div class="stat"><label data-i18n="manpower">Total Manpower</label><strong id="manpower">1500</strong></div>
     <div class="stat"><label data-i18n="manhours">Man-Hours</label><strong id="manhours">2,568,386</strong><small data-i18n="liveCounter">Live UAE working-time counter</small></div>
     <div class="stat"><label data-i18n="ltiDays">LTI-Free Days</label><strong id="ltiDays">0</strong></div>
-    <div class="stat"><label data-i18n="trainingSessions">Training Sessions</label><strong>1,773</strong></div>
-    <div class="stat"><label data-i18n="personnelTrained">Personnel Trained</label><strong>39,442</strong></div>
-    <div class="stat"><label data-i18n="trainingHours">Training Hours</label><strong>18,433.55</strong></div>
-    <div class="stat"><label data-i18n="inductions">OSH Inductions</label><strong>2,238</strong></div>
-    <div class="stat"><label data-i18n="meetings">OSH Meetings</label><strong>73</strong></div>
-    <div class="stat"><label data-i18n="audits">OSH Audits</label><strong>6</strong></div>
-    <div class="stat"><label data-i18n="inspections">OSH Inspections</label><strong>167</strong></div>
-    <div class="stat"><label data-i18n="reviews">Procedure Reviews</label><strong>64</strong></div>
-    <div class="stat"><label data-i18n="drills">Emergency Drills</label><strong>6</strong></div>
+    <div class="stat"><label data-i18n="trainingSessions">Training Sessions</label><strong id="trainingSessions">1,773</strong></div>
+    <div class="stat"><label data-i18n="personnelTrained">Personnel Trained</label><strong id="personnelTrained">39,442</strong></div>
+    <div class="stat"><label data-i18n="trainingHours">Training Hours</label><strong id="trainingHours">18,433.55</strong></div>
+    <div class="stat"><label data-i18n="inductions">OSH Inductions</label><strong id="oshInductions">2,238</strong></div>
+    <div class="stat"><label data-i18n="meetings">OSH Meetings</label><strong id="oshMeetings">73</strong></div>
+    <div class="stat"><label data-i18n="audits">OSH Audits</label><strong id="oshAudits">6</strong></div>
+    <div class="stat"><label data-i18n="inspections">OSH Inspections</label><strong id="oshInspections">167</strong></div>
+    <div class="stat"><label data-i18n="reviews">Procedure Reviews</label><strong id="procedureReviews">64</strong></div>
+    <div class="stat"><label data-i18n="drills">Emergency Drills</label><strong id="emergencyDrills">6</strong></div>
   </div>
 </div>
 </section>
@@ -185,7 +185,7 @@
 <section id="news" class="section">
 <div class="container">
   <div class="section-head"><span data-i18n="news">News</span><h2 data-i18n="newsTitle">OSH news and announcements</h2></div>
-  <div class="news-grid">
+  <div class="news-grid" id="newsGrid">
     <article><span>Safety Campaign</span><h3>Beat the Heat Campaign</h3><p>Hydration, shaded recovery, symptom recognition and midday-break awareness activities continue across the project.</p><a href="#">Read more</a></article>
     <article><span>Training</span><h3>Work at Height Refresher</h3><p>Supervisors and operatives completed refresher training on fall protection, access control and scaffold safety.</p><a href="#">Read more</a></article>
     <article><span>Audit</span><h3>Q3 OSH Audit Preparation</h3><p>Project teams are reviewing records, close-outs and site controls ahead of the upcoming audit.</p><a href="#">Read more</a></article>
@@ -322,14 +322,14 @@
     <div class="slide"><div class="placeholder">CAMPAIGN</div><h3>Beat the Heat Campaign</h3></div>
     <button class="slide-prev">‹</button><button class="slide-next">›</button>
   </div>
-  <div class="gallery-grid">
+  <div class="gallery-grid" id="galleryGrid">
     <figure><img src="assets/sama-yas-hero.jpg" alt="Sama Yas project"><figcaption>Sama Yas Residential Development</figcaption></figure>
     <figure><div class="placeholder">INSPECTION</div><figcaption>Joint OSH Inspection</figcaption></figure>
     <figure><div class="placeholder">TRAINING</div><figcaption>Work at Height Training</figcaption></figure>
   </div>
 
   <div class="section-head awards-head"><span>Awards</span><h2>Award Image Gallery</h2></div>
-  <div class="award-slider">
+  <div class="award-slider" id="awardSlider">
     <div class="award active"><div class="award-placeholder">★</div><h3>ALDAR OSH Shining Star</h3></div>
     <div class="award"><div class="award-placeholder">🏆</div><h3>Best Safety Performance</h3></div>
     <div class="award"><div class="award-placeholder">✓</div><h3>HSE Initiative of the Year</h3></div>
@@ -436,7 +436,7 @@
   </div>
 </div>
 
-<div id="viewer" class="modal" aria-hidden="true"><div class="modal-card viewer-card"><button class="viewer-close">×</button><h2 id="viewerTitle"></h2><div class="viewer-placeholder">Document preview appears here.<br>Connect Supabase Storage and upload a PDF preview to enable live viewing.</div></div></div>
+<div id="viewer" class="modal" aria-hidden="true"><div class="modal-card viewer-card"><button class="viewer-close">×</button><h2 id="viewerTitle"></h2><iframe id="documentViewerFrame" class="document-viewer-frame" title="Document preview"></iframe></div></div>
 
 
 <section class="bottom-emergency" aria-label="Emergency contact information">
@@ -500,6 +500,8 @@
 
 <footer><div class="container footer-inner"><strong>MEC OSH Department</strong><span>Masri Engineering & Contracting, MEC S.A.L.</span><span>© 2026 Sama Yas Residential Development</span></div></footer>
 <script>window.CATEGORY_DATA=[{"name": "Housekeeping & General Workplace Amenities", "ua": 36, "uc": 188}, {"name": "Traffic Management & Logistics", "ua": 23, "uc": 51}, {"name": "Working at Height", "ua": 104, "uc": 89}, {"name": "Scaffolding/Ladder", "ua": 111, "uc": 195}, {"name": "Personal Protective Equipment", "ua": 87, "uc": 16}, {"name": "Electrical Safety", "ua": 29, "uc": 49}, {"name": "Hand Tools", "ua": 23, "uc": 25}, {"name": "Excavations", "ua": 4, "uc": 3}, {"name": "Lifting Equipment and Lifting Accessories", "ua": 31, "uc": 45}, {"name": "Portable Power Tools", "ua": 32, "uc": 49}, {"name": "Plant and Equipment", "ua": 20, "uc": 32}, {"name": "Confined Space", "ua": 1, "uc": 8}, {"name": "Hot Work Operations", "ua": 41, "uc": 41}, {"name": "Compressed Air and Gases", "ua": 0, "uc": 9}, {"name": "Manual Handling", "ua": 17, "uc": 9}, {"name": "Welfare Facilities", "ua": 28, "uc": 39}, {"name": "Hazardous Substances", "ua": 0, "uc": 20}, {"name": "Machine Guarding", "ua": 5, "uc": 8}, {"name": "Storage Arrangements", "ua": 22, "uc": 115}, {"name": "Barricading of Hazards", "ua": 62, "uc": 112}, {"name": "Access and Egress", "ua": 56, "uc": 78}, {"name": "Permit to Work", "ua": 20, "uc": 14}, {"name": "Safety Signage & Signals", "ua": 14, "uc": 14}, {"name": "Falsework/Formwork", "ua": 96, "uc": 112}, {"name": "Waste Management", "ua": 15, "uc": 66}, {"name": "First Aid Case", "ua": 4, "uc": 2}, {"name": "Near Miss Incident", "ua": 0, "uc": 0}, {"name": "Property Damage", "ua": 0, "uc": 0}, {"name": "Lost Time Injury", "ua": 0, "uc": 1}];</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

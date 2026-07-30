@@ -5,64 +5,243 @@ let lang="en";
 document.getElementById("langBtn").addEventListener("click",()=>{lang=lang==="en"?"ar":"en";document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";document.getElementById("langBtn").textContent=lang==="en"?"العربية":"English";document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n;if(translations[lang][k])el.textContent=translations[lang][k]})});
 document.querySelector(".menu-btn").addEventListener("click",()=>document.querySelector(".links").classList.toggle("open"));
 
-const baseline=2568386, baselineDate=new Date("2026-07-23T17:00:00+04:00");
-let manpower=1500;
-function workingSecondsBetween(start,end){
-  let total=0, d=new Date(start);
-  d.setUTCHours(20,0,0,0); // midnight UAE represented as prior-day 20:00 UTC
-  while(d<end){
-    const uae=new Date(d.getTime()+4*3600000);
-    const day=uae.getUTCDay();
-    if(day>=1&&day<=6){
-      const blocks=[[8,13],[14,17]];
-      for(const [a,b] of blocks){
-        const s=new Date(Date.UTC(uae.getUTCFullYear(),uae.getUTCMonth(),uae.getUTCDate(),a-4));
-        const e=new Date(Date.UTC(uae.getUTCFullYear(),uae.getUTCMonth(),uae.getUTCDate(),b-4));
-        const lo=Math.max(start.getTime(),s.getTime()), hi=Math.min(end.getTime(),e.getTime());
-        if(hi>lo)total+=(hi-lo)/1000;
+
+const db = window.mecSupabase;
+const DEFAULT_ADMIN_EMAIL = "muhammed.shamil@mecemirates.com";
+
+let performance = {
+  manpower: 1500,
+  baseline_manhours: 2568386,
+  baseline_at: "2026-07-23T17:00:00+04:00",
+  last_lti_date: "2026-05-11",
+  work_start: "08:00",
+  lunch_start: "13:00",
+  lunch_end: "14:00",
+  work_end: "17:00",
+  counter_paused: false,
+  manhour_adjustment: 0
+};
+let holidays = new Set();
+let remoteDocuments = [];
+
+const reportCategories = [
+  "Housekeeping & General Workplace Amenities","Traffic Management & Logistics","Working at Height",
+  "Scaffolding/Ladder","Personal Protective Equipment","Electrical Safety","Hand Tools","Excavations",
+  "Lifting Equipment and Lifting Accessories","Portable Power Tools","Plant and Equipment","Confined Space",
+  "Hot Work Operations","Compressed Air and Gases","Manual Handling","Welfare Facilities","Hazardous Substances",
+  "Machine Guarding","Storage Arrangements","Barricading of Hazards","Access and Egress","Permit to Work",
+  "Safety Signage & Signals","Falsework/Formwork","Waste Management","First Aid Case","Near Miss Incident",
+  "Property Damage","Lost Time Injury"
+];
+const catSelect = document.getElementById("reportCategory");
+if (catSelect) reportCategories.forEach(name => catSelect.add(new Option(name, name)));
+
+const placeholderDocs = [
+  {category:"OSH Plan",title_en:"Project Occupational Safety and Health Plan"},
+  {category:"Procedure",title_en:"Emergency Response Procedure"},
+  {category:"MSRA",title_en:"Work at Height MSRA"},
+  {category:"Legal Register",title_en:"UAE OSH Legal Register"},
+  {category:"Risk Register",title_en:"Project Risk Register"},
+  {category:"OSH Policy",title_en:"MEC Occupational Safety and Health Policy"},
+  {category:"OSH Campaign",title_en:"Beat the Heat Campaign Pack"},
+  {category:"Training",title_en:"Work at Height Training Presentation"},
+  {category:"Organization Chart",title_en:"Project OSH Organization Chart"},
+  {category:"Signages",title_en:"Mandatory PPE Signage Pack"},
+  {category:"Forms",title_en:"Incident Notification Form"},
+  {category:"Checklist",title_en:"Scaffold Inspection Checklist"}
+];
+
+function setText(id, value, decimals = false) {
+  const el = document.getElementById(id);
+  if (!el || value === null || value === undefined) return;
+  const n = Number(value);
+  el.textContent = Number.isFinite(n)
+    ? n.toLocaleString("en-US", decimals ? {minimumFractionDigits:2, maximumFractionDigits:2} : {maximumFractionDigits:0})
+    : value;
+}
+
+function uaeDateParts(date) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone:"Asia/Dubai", year:"numeric", month:"2-digit", day:"2-digit",
+    hour:"2-digit", minute:"2-digit", second:"2-digit", hourCycle:"h23", weekday:"short"
+  }).formatToParts(date);
+  return Object.fromEntries(parts.map(p => [p.type,p.value]));
+}
+
+function minutesFromTime(value, fallback) {
+  const match = String(value || fallback).match(/^(\d{1,2}):(\d{2})/);
+  return match ? Number(match[1])*60 + Number(match[2]) : 0;
+}
+
+function workingSecondsBetween(start, end) {
+  if (end <= start || performance.counter_paused) return 0;
+  let total = 0;
+  let cursor = new Date(start);
+  cursor.setUTCHours(20,0,0,0); // UAE midnight
+  const start1=minutesFromTime(performance.work_start,"08:00");
+  const end1=minutesFromTime(performance.lunch_start,"13:00");
+  const start2=minutesFromTime(performance.lunch_end,"14:00");
+  const end2=minutesFromTime(performance.work_end,"17:00");
+  while (cursor < end) {
+    const p=uaeDateParts(cursor);
+    const dateKey=`${p.year}-${p.month}-${p.day}`;
+    const dayIndex={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}[p.weekday];
+    if (dayIndex>=1 && dayIndex<=6 && !holidays.has(dateKey)) {
+      for (const [a,b] of [[start1,end1],[start2,end2]]) {
+        const dayStart=Date.UTC(Number(p.year),Number(p.month)-1,Number(p.day),0,0,0)-4*3600000;
+        const s=dayStart+a*60000, e=dayStart+b*60000;
+        const lo=Math.max(start.getTime(),s), hi=Math.min(end.getTime(),e);
+        if (hi>lo) total+=(hi-lo)/1000;
       }
     }
-    d=new Date(d.getTime()+86400000);
+    cursor=new Date(cursor.getTime()+86400000);
   }
   return total;
 }
-function updateManhours(){const now=new Date();const sec=now>baselineDate?workingSecondsBetween(baselineDate,now):0;const hours=baseline+(sec/3600)*manpower;document.getElementById("manhours").textContent=Math.floor(hours).toLocaleString("en-US")}
-function updateLti(){const start=new Date("2026-05-12T00:00:00+04:00"),now=new Date();document.getElementById("ltiDays").textContent=Math.max(0,Math.floor((now-start)/86400000)+1)}
-updateManhours();updateLti();setInterval(updateManhours,1000);
 
-const reportCategories = ['Housekeeping & General Workplace Amenities', 'Traffic Management & Logistics', 'Working at Height', 'Scaffolding/Ladder', 'Personal Protective Equipment', 'Electrical Safety', 'Hand Tools', 'Excavations', 'Lifting Equipment and Lifting Accessories', 'Portable Power Tools', 'Plant and Equipment', 'Confined Space', 'Hot Work Operations', 'Compressed Air and Gases', 'Manual Handling', 'Welfare Facilities', 'Hazardous Substances', 'Machine Guarding', 'Storage Arrangements', 'Barricading of Hazards', 'Access and Egress', 'Permit to Work', 'Safety Signage & Signals', 'Falsework/Formwork', 'Waste Management', 'First Aid Case', 'Near Miss Incident', 'Property Damage', 'Lost Time Injury'];
-const catSelect = document.getElementById("reportCategory");
-if (catSelect) {
-  reportCategories.forEach(name => catSelect.add(new Option(name, name)));
+function updateCounters() {
+  const baselineDate=new Date(performance.baseline_at);
+  const seconds=workingSecondsBetween(baselineDate,new Date());
+  const value=Number(performance.baseline_manhours)+(seconds/3600)*Number(performance.manpower)+Number(performance.manhour_adjustment||0);
+  setText("manhours",Math.floor(value));
+  const start=new Date(`${performance.last_lti_date}T00:00:00+04:00`);
+  const startNext=new Date(start.getTime()+86400000);
+  const todayParts=uaeDateParts(new Date());
+  const todayUaeMidnight=new Date(`${todayParts.year}-${todayParts.month}-${todayParts.day}T00:00:00+04:00`);
+  const days=Math.max(0,Math.floor((todayUaeMidnight-startNext)/86400000)+1);
+  setText("ltiDays",days);
 }
 
-const docs=[
-["OSH Plan","Project Occupational Safety and Health Plan"],
-["Procedure","Emergency Response Procedure"],
-["MSRA","Work at Height MSRA"],
-["Legal Register","UAE OSH Legal Register"],
-["Risk Register","Project Risk Register"],
-["OSH Policy","MEC Occupational Safety and Health Policy"],
-["OSH Campaign","Beat the Heat Campaign Pack"],
-["Training","Work at Height Training Presentation"],
-["Organization Chart","Project OSH Organization Chart"],
-["Signages","Mandatory PPE Signage Pack"],
-["Forms","Incident Notification Form"],
-["Checklist","Scaffold Inspection Checklist"]
-];
-const docGrid=document.getElementById("documentGrid"),filter=document.getElementById("docFilter");
-[...new Set(docs.map(d=>d[0]))].forEach(x=>filter.add(new Option(x,x)));
-function renderDocs(){const q=document.getElementById("docSearch").value.toLowerCase(),f=filter.value;docGrid.innerHTML="";docs.filter(d=>(f==="all"||d[0]===f)&&d[1].toLowerCase().includes(q)).forEach(d=>{const el=document.createElement("article");el.className="doc-card";el.innerHTML=`<span class="tag">${d[0]}</span><h3>${d[1]}</h3><div class="doc-actions"><button data-view="${d[1]}">View</button><a href="#" download>Download</a></div>`;docGrid.appendChild(el)});document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{document.getElementById("viewerTitle").textContent=b.dataset.view;document.getElementById("viewer").classList.add("open")}))}
-renderDocs();document.getElementById("docSearch").addEventListener("input",renderDocs);filter.addEventListener("change",renderDocs);
-document.querySelector(".viewer-close").onclick=()=>document.getElementById("viewer").classList.remove("open");
+async function loadLiveSettings() {
+  try {
+    const [{data:row,error},{data:holidayRows}] = await Promise.all([
+      db.from("settings").select("*").eq("id",1).maybeSingle(),
+      db.from("holidays").select("holiday_date").eq("active",true)
+    ]);
+    if (error) throw error;
+    if (row) performance={...performance,...row};
+    holidays=new Set((holidayRows||[]).map(x=>x.holiday_date));
+    setText("manpower",performance.manpower);
+    setText("trainingSessions",performance.training_sessions);
+    setText("personnelTrained",performance.personnel_trained);
+    setText("trainingHours",performance.training_hours,true);
+    setText("oshInductions",performance.osh_inductions);
+    setText("oshMeetings",performance.osh_meetings);
+    setText("oshAudits",performance.osh_audits);
+    setText("oshInspections",performance.osh_inspections);
+    setText("procedureReviews",performance.procedure_reviews);
+    setText("emergencyDrills",performance.emergency_drills);
+    updateCounters();
+  } catch (error) {
+    console.warn("Using built-in performance values:", error.message);
+    updateCounters();
+  }
+}
+setInterval(updateCounters,1000);
 
-const reportModal=document.getElementById("reportModal");document.getElementById("openReport").onclick=()=>reportModal.classList.add("open");document.querySelector(".modal-close").onclick=()=>reportModal.classList.remove("open");
-document.getElementById("reportForm").addEventListener("submit",e=>{e.preventDefault();const ref="SY-"+Date.now().toString().slice(-8);const reports=JSON.parse(localStorage.getItem("sy_reports")||"[]");reports.push({ref,status:"New",date:new Date().toISOString(),closureDate:"",...Object.fromEntries(new FormData(e.target).entries())});localStorage.setItem("sy_reports",JSON.stringify(reports));document.getElementById("reportMsg").textContent=`Submitted successfully. Reference: ${ref}`;e.target.reset()});
-document.getElementById("trackBtn").onclick=()=>{const ref=document.getElementById("trackRef").value.trim(),r=JSON.parse(localStorage.getItem("sy_reports")||"[]").find(x=>x.ref===ref);document.getElementById("trackResult").textContent=r?`Status: ${r.status}${r.closureDate?` | Closure date: ${r.closureDate}`:""}`:"Reference not found."};
-document.getElementById("contactForm").addEventListener("submit",e=>{e.preventDefault();const ref="ENQ-"+Date.now().toString().slice(-8);const list=JSON.parse(localStorage.getItem("sy_enquiries")||"[]");list.push({ref,status:"New",date:new Date().toISOString(),...Object.fromEntries(new FormData(e.target).entries())});localStorage.setItem("sy_enquiries",JSON.stringify(list));document.getElementById("contactMsg").textContent=`Enquiry received. Reference: ${ref}`;e.target.reset()});
+const docGrid=document.getElementById("documentGrid");
+const docFilter=document.getElementById("docFilter");
+function documentTitle(d){ return lang==="ar" && d.title_ar ? d.title_ar : d.title_en; }
+function renderDocuments(){
+  if(!docGrid || !docFilter) return;
+  const q=(document.getElementById("docSearch")?.value||"").toLowerCase();
+  const f=docFilter.value;
+  const source=remoteDocuments.length?remoteDocuments:placeholderDocs;
+  docGrid.innerHTML="";
+  source.filter(d=>(f==="all"||d.category===f)&&documentTitle(d).toLowerCase().includes(q)).forEach(d=>{
+    const title=documentTitle(d);
+    const el=document.createElement("article"); el.className="doc-card";
+    const canOpen=Boolean(d.preview_url||d.file_url);
+    el.innerHTML=`<span class="tag">${d.category}</span><h3>${title}</h3><div class="doc-actions"><button ${canOpen?"":"disabled"} data-view-url="${d.preview_url||d.file_url||""}" data-view-title="${title}">View</button><a class="${d.file_url?"":"disabled-link"}" href="${d.file_url||"#"}" ${d.file_url?'target="_blank" rel="noopener" download':''}>Download</a></div>`;
+    docGrid.appendChild(el);
+  });
+  document.querySelectorAll("[data-view-url]").forEach(b=>b.addEventListener("click",()=>{
+    const frame=document.getElementById("documentViewerFrame");
+    document.getElementById("viewerTitle").textContent=b.dataset.viewTitle;
+    frame.src=b.dataset.viewUrl;
+    document.getElementById("viewer").classList.add("open");
+  }));
+}
+async function loadDocuments(){
+  try{
+    const {data,error}=await db.from("documents").select("*").order("created_at",{ascending:false});
+    if(error) throw error; remoteDocuments=data||[];
+  }catch(error){ console.warn("Documents not loaded:",error.message); }
+  const cats=[...new Set((remoteDocuments.length?remoteDocuments:placeholderDocs).map(d=>d.category))];
+  if(docFilter){docFilter.innerHTML='<option value="all">All sections</option>';cats.forEach(x=>docFilter.add(new Option(x,x)));}
+  renderDocuments();
+}
+document.getElementById("docSearch")?.addEventListener("input",renderDocuments);
+docFilter?.addEventListener("change",renderDocuments);
+document.querySelector(".viewer-close")?.addEventListener("click",()=>{document.getElementById("viewer").classList.remove("open");document.getElementById("documentViewerFrame").src="";});
 
-function slider(sel,item,prev,next,ms){let idx=0;const items=[...document.querySelectorAll(item)];const show=n=>{items.forEach((x,i)=>x.classList.toggle("active",i===n));idx=n};document.querySelector(prev).onclick=()=>show((idx-1+items.length)%items.length);document.querySelector(next).onclick=()=>show((idx+1)%items.length);setInterval(()=>show((idx+1)%items.length),ms)}
-slider(".slideshow",".slide",".slide-prev",".slide-next",3000);slider(".award-slider",".award",".award-prev",".award-next",3000);
+async function loadNews(){
+  const grid=document.getElementById("newsGrid"); if(!grid) return;
+  try{
+    const {data,error}=await db.from("news").select("*").eq("published",true).order("pinned",{ascending:false}).order("created_at",{ascending:false});
+    if(error) throw error; if(!data?.length) return;
+    grid.innerHTML="";
+    data.forEach(n=>{
+      const title=lang==="ar"&&n.title_ar?n.title_ar:n.title_en;
+      const summary=lang==="ar"&&n.summary_ar?n.summary_ar:n.summary_en;
+      const article=document.createElement("article");
+      article.innerHTML=`${n.image_url?`<img class="news-image" src="${n.image_url}" alt="${title}">`:""}<span>${n.pinned?"Pinned":"OSH News"}</span><h3>${title}</h3><p>${summary||""}</p>${n.attachment_url?`<a href="${n.attachment_url}" target="_blank" rel="noopener">Open attachment</a>`:""}`;
+      grid.appendChild(article);
+    });
+  }catch(error){console.warn("News not loaded:",error.message);}
+}
+
+function safeFileName(name){return name.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g,"-").replace(/-+/g,"-");}
+function uniqueReference(prefix){return `${prefix}-${new Date().toISOString().slice(2,10).replaceAll("-","")}-${crypto.randomUUID().slice(0,8).toUpperCase()}`;}
+
+const reportModal=document.getElementById("reportModal");
+document.getElementById("openReport")?.addEventListener("click",()=>reportModal.classList.add("open"));
+document.querySelector(".modal-close")?.addEventListener("click",()=>reportModal.classList.remove("open"));
+
+document.getElementById("reportForm")?.addEventListener("submit",async event=>{
+  event.preventDefault(); const form=event.currentTarget; const msg=document.getElementById("reportMsg");
+  const button=form.querySelector('button[type="submit"]'); button.disabled=true; msg.textContent="Submitting…";
+  try{
+    const fd=new FormData(form); const ref=uniqueReference("SY"); let photoPath=null;
+    const photo=fd.get("photo");
+    if(photo instanceof File && photo.size){
+      if(photo.size>50*1024*1024) throw new Error("Photo exceeds the 50 MB limit.");
+      photoPath=`${ref}/${Date.now()}-${safeFileName(photo.name)}`;
+      const {error:uploadError}=await db.storage.from("report-photos").upload(photoPath,photo,{contentType:photo.type,upsert:false});
+      if(uploadError) throw uploadError;
+    }
+    const payload={reference:ref,report_type:fd.get("type"),category:fd.get("category"),location:fd.get("location"),location_details:fd.get("locationDetails")||null,urgency:fd.get("urgency"),description:fd.get("description"),photo_url:photoPath,status:"New"};
+    const {error}=await db.from("safety_reports").insert(payload); if(error) throw error;
+    msg.textContent=`Submitted successfully. Reference: ${ref}`; form.reset();
+  }catch(error){msg.textContent=`Submission failed: ${error.message}`;}
+  finally{button.disabled=false;}
+});
+
+document.getElementById("trackBtn")?.addEventListener("click",async()=>{
+  const ref=document.getElementById("trackRef").value.trim(); const result=document.getElementById("trackResult");
+  if(!ref){result.textContent="Enter a reference number.";return;} result.textContent="Checking…";
+  try{
+    const {data,error}=await db.rpc("track_safety_report",{p_reference:ref}); if(error) throw error;
+    const row=data?.[0]; result.textContent=row?`Status: ${row.current_status}${row.closure_date?` | Closure date: ${row.closure_date}`:""}`:"Reference not found.";
+  }catch(error){result.textContent=`Unable to track report: ${error.message}`;}
+});
+
+document.getElementById("contactForm")?.addEventListener("submit",async event=>{
+  event.preventDefault(); const form=event.currentTarget; const msg=document.getElementById("contactMsg");
+  const button=form.querySelector('button[type="submit"]'); button.disabled=true; msg.textContent="Sending…";
+  try{
+    const fd=new FormData(form); const ref=uniqueReference("ENQ");
+    const payload={reference:ref,name:fd.get("name"),company:fd.get("company")||null,mobile:fd.get("mobile"),email:fd.get("email"),subject:fd.get("subject"),message:fd.get("message"),status:"New"};
+    const {error}=await db.from("enquiries").insert(payload); if(error) throw error;
+    msg.textContent=`Enquiry received. Reference: ${ref}`; form.reset();
+  }catch(error){msg.textContent=`Unable to send enquiry: ${error.message}`;}
+  finally{button.disabled=false;}
+});
+
+function slider(item,prev,next,ms){let idx=0;const items=[...document.querySelectorAll(item)];if(!items.length)return;const show=n=>{items.forEach((x,i)=>x.classList.toggle("active",i===n));idx=n};document.querySelector(prev)?.addEventListener("click",()=>show((idx-1+items.length)%items.length));document.querySelector(next)?.addEventListener("click",()=>show((idx+1)%items.length));setInterval(()=>show((idx+1)%items.length),ms);}
+slider(".slide",".slide-prev",".slide-next",3000);slider(".award",".award-prev",".award-next",3000);
+
+loadLiveSettings(); loadDocuments(); loadNews();
 
 const organizationChartViewer = document.getElementById("organizationChartViewer");
 const openOrganizationChart = document.getElementById("openOrganizationChart");

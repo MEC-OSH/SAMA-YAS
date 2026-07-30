@@ -1,0 +1,16 @@
+MEC OSH SUPABASE ACTIVATION
+
+1. In Supabase SQL Editor, run supabase/schema.sql if not already completed.
+2. Run supabase/security-setup.sql.
+3. Authentication > Users: create/confirm muhammed.shamil@mecemirates.com.
+4. Authentication > Email Templates > Magic Link: use {{ .Token }} in the email body so a numeric OTP is sent.
+5. Authentication > URL Configuration:
+   Site URL: https://mec-osh-department.github.io/sama-yas/admin/
+   Redirect URL: https://mec-osh-department.github.io/sama-yas/admin/
+6. Upload all website files to the root of the GitHub repository.
+7. Open https://mec-osh-department.github.io/sama-yas/admin/ and click Send OTP.
+
+SECURITY
+- The website includes only a publishable key, which is intended for browser use with RLS.
+- Never place a Supabase secret/service-role key in GitHub Pages.
+- Rotate the secret key that was previously exposed.
