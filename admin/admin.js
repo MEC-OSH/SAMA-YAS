@@ -75,7 +75,7 @@ db.auth.onAuthStateChange(async(event,session)=>{
   }
 });
 
-$("signOut").onclick=async()=>{await db.auth.signOut();location.reload();};location.reload();};
+$("signOut").onclick=async()=>{await db.auth.signOut();location.reload();};
 document.querySelectorAll("[data-panel]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));$(b.dataset.panel).classList.add("active")});
 
 async function loadAll(){await Promise.all([loadSettings(),loadReports(),loadDocuments(),loadNews(),loadGallery(),loadLocations(),loadHolidays(),loadEnquiries()]);}
