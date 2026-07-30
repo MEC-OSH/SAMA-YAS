@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="MEC OSH Department portal for Sama Yas Residential Development">
+<title>MEC OSH Department | Sama Yas</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="header">
+  <div class="container nav">
+    <a class="brand" href="#home">
+      <img src="assets/mec-logo.png" alt="MEC logo" onerror="this.style.display='none'">
+      <div><strong>MEC OSH Department</strong><span>Sama Yas Residential Development</span></div>
+    </a>
+    <button class="menu-btn" aria-label="Menu">☰</button>
+    <nav class="links">
+      <a href="#home" data-i18n="home">Home</a>
+      <a href="#about" data-i18n="about">About OSH</a>
+      <a href="#performance" data-i18n="performance">Performance</a>
+      <a href="#documents" data-i18n="documents">OSH Documents</a>
+      <a href="#reports" data-i18n="reports">Safety Reports</a>
+      <a href="#news" data-i18n="news">News</a>
+      <a href="#certificates">Certificates</a>
+      <a href="#organization-chart">Organization Chart</a>
+      <a href="#gallery" data-i18n="gallery">Gallery</a>
+      <a href="#emergency" data-i18n="emergency">Emergency</a>
+      <a href="#location">Location</a>
+      <a href="#contact" data-i18n="contact">Contact</a>
+      <a class="admin-link" href="admin/" data-i18n="adminLogin">Admin Login</a>
+    </nav>
+<button id="langBtn" class="lang-btn">العربية</button>
+    <button
+      type="button"
+      id="headerOpenReport"
+      class="header-report-btn">
+      Report a Safety Concern
+    </button>
+  </div>
+</header>
+
+<main>
+
+<section id="home" class="hero">
+  <div class="hero-slide active" style="background-image:linear-gradient(90deg,rgba(0,0,0,.82),rgba(0,0,0,.25)),url('assets/sama-yas-hero.jpg')">
+    <div class="container hero-copy">
+      <div class="eyebrow">MASRI ENGINEERING & CONTRACTING</div>
+      <h1 data-i18n="heroTitle">Building Safely. Protecting Every Life.</h1>
+      <p data-i18n="heroSub">MEC OSH Department, Sama Yas Residential Development</p>
+    </div>
+  </div>
+</section>
+
+<section id="stakeholders" class="section stakeholders-section">
+  <div class="container">
+    <div class="section-head stakeholders-heading">
+      <span>Project Information</span>
+      <h2>Project Stakeholders</h2>
+    </div>
+
+    <div class="stakeholder-grid">
+      <article class="stakeholder-card">
+        <div class="stakeholder-role">Client</div>
+        <a
+          class="stakeholder-logo-box stakeholder-logo-link"
+          href="https://www.aldar.com/properties/en"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open ALDAR Properties website">
+          <img src="assets/aldar-client.webp" alt="ALDAR Properties logo">
+        </a>
+        <h3>ALDAR Properties</h3>
+      </article>
+
+      <article class="stakeholder-card">
+        <div class="stakeholder-role">PMC</div>
+        <a
+          class="stakeholder-logo-box dark-logo-box stakeholder-logo-link"
+          href="https://www.hillintl.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Hill International website">
+          <img src="assets/hill-international.png" alt="Hill International logo">
+        </a>
+        <h3>Hill International</h3>
+      </article>
+
+      <article class="stakeholder-card">
+        <div class="stakeholder-role">Consultant</div>
+        <a
+          class="stakeholder-logo-box dark-logo-box stakeholder-logo-link"
+          href="https://www.mottmac.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Mott MacDonald website">
+          <img src="assets/mott-macdonald.png" alt="Mott MacDonald logo">
+        </a>
+        <h3>Mott MacDonald</h3>
+      </article>
+
+      <article class="stakeholder-card">
+        <div class="stakeholder-role">Main Contractor</div>
+        <a
+          class="stakeholder-logo-box dark-logo-box stakeholder-logo-link"
+          href="https://www.mecemirates.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open MEC Emirates website">
+          <img src="assets/mec-main-contractor.png" alt="MEC logo">
+        </a>
+        <h3>Masri Engineering &amp; Contracting, MEC S.A.L.</h3>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="section">
+<div class="container">
+  <div class="section-head"><span data-i18n="about">About OSH</span><h2 data-i18n="aboutTitle">A prevention-led safety culture</h2></div>
+  <div class="about-grid">
+    <article><h3 data-i18n="mission">Mission</h3><p data-i18n="missionText">To protect every person involved in the Sama Yas Residential Development through proactive risk management, competent supervision, effective consultation and strict compliance with ALDAR OSHMS, ADOSH-SF and UAE legal requirements.</p></article>
+    <article><h3 data-i18n="vision">Vision</h3><p data-i18n="visionText">To achieve Zero Harm by creating a workplace where safe decisions are embedded in every activity, every day and at every level.</p></article>
+    <article><h3 data-i18n="objectives">Objectives</h3><p data-i18n="objectivesText">Prevent injuries and occupational illness, maintain legal compliance, strengthen workforce competence, close findings promptly, improve contractor performance and continuously enhance the OSH management system.</p></article>
+    <article><h3 data-i18n="roles">Roles & Responsibilities</h3><p data-i18n="rolesText">The OSH Department plans, advises, inspects, trains, monitors and reports. Management provides resources, supervisors enforce controls, and every worker has the authority and duty to stop unsafe work.</p></article>
+  </div>
+</div>
+</section>
+
+<section id="performance" class="section dark">
+<div class="container">
+  <div class="section-head light"><span data-i18n="performance">Performance</span><h2 data-i18n="livePerformance">Live cumulative OSH performance</h2></div>
+  <div class="stats">
+    <div class="stat"><label data-i18n="manpower">Total Manpower</label><strong id="manpower">1500</strong></div>
+    <div class="stat"><label data-i18n="manhours">Man-Hours</label><strong id="manhours">2,568,386</strong><small data-i18n="liveCounter">Live UAE working-time counter</small></div>
+    <div class="stat"><label data-i18n="ltiDays">LTI-Free Days</label><strong id="ltiDays">0</strong></div>
+    <div class="stat"><label data-i18n="trainingSessions">Training Sessions</label><strong>1,773</strong></div>
+    <div class="stat"><label data-i18n="personnelTrained">Personnel Trained</label><strong>39,442</strong></div>
+    <div class="stat"><label data-i18n="trainingHours">Training Hours</label><strong>18,433.55</strong></div>
+    <div class="stat"><label data-i18n="inductions">OSH Inductions</label><strong>2,238</strong></div>
+    <div class="stat"><label data-i18n="meetings">OSH Meetings</label><strong>73</strong></div>
+    <div class="stat"><label data-i18n="audits">OSH Audits</label><strong>6</strong></div>
+    <div class="stat"><label data-i18n="inspections">OSH Inspections</label><strong>167</strong></div>
+    <div class="stat"><label data-i18n="reviews">Procedure Reviews</label><strong>64</strong></div>
+    <div class="stat"><label data-i18n="drills">Emergency Drills</label><strong>6</strong></div>
+  </div>
+</div>
+</section>
+
+<section id="documents" class="section pale">
+<div class="container">
+  <div class="section-head"><span data-i18n="documents">OSH Documents</span><h2 data-i18n="library">Public document library</h2></div>
+  <div class="doc-tools"><input id="docSearch" type="search" placeholder="Search documents"><select id="docFilter"><option value="all">All sections</option></select></div>
+  <div id="documentGrid" class="document-grid"></div>
+</div>
+</section>
+
+<section id="reports" class="section">
+<div class="container">
+  <div class="section-head">
+    <span data-i18n="reports">Safety Reports</span>
+    <h2 data-i18n="reportConcern">Report a Safety Concern</h2>
+  </div>
+
+  <div class="report-intro">
+    <p>Workers and visitors may anonymously report unsafe acts, unsafe conditions, good practices, near misses, incidents, and other OSH concerns.</p>
+  </div>
+
+  <div class="report-actions">
+    <button class="primary" id="openReport" data-i18n="reportConcern">Report a Safety Concern</button>
+    <a class="secondary" href="https://wa.me/971585125005" target="_blank" rel="noopener" data-i18n="whatsappConcern">Report a Safety Concern on WhatsApp</a>
+  </div>
+
+  <div class="tracker">
+    <h3 data-i18n="trackReport">Track a Report</h3>
+    <div class="inline-form">
+      <input id="trackRef" placeholder="Reference number">
+      <button id="trackBtn" class="primary">Track</button>
+    </div>
+    <p id="trackResult" aria-live="polite"></p>
+  </div>
+</div>
+</section>
+
+<section id="news" class="section">
+<div class="container">
+  <div class="section-head"><span data-i18n="news">News</span><h2 data-i18n="newsTitle">OSH news and announcements</h2></div>
+  <div class="news-grid">
+    <article><span>Safety Campaign</span><h3>Beat the Heat Campaign</h3><p>Hydration, shaded recovery, symptom recognition and midday-break awareness activities continue across the project.</p><a href="#">Read more</a></article>
+    <article><span>Training</span><h3>Work at Height Refresher</h3><p>Supervisors and operatives completed refresher training on fall protection, access control and scaffold safety.</p><a href="#">Read more</a></article>
+    <article><span>Audit</span><h3>Q3 OSH Audit Preparation</h3><p>Project teams are reviewing records, close-outs and site controls ahead of the upcoming audit.</p><a href="#">Read more</a></article>
+  </div>
+</div>
+</section>
+
+<section id="certificates" class="section certificates-section">
+  <div class="container">
+    <div class="section-head certificates-heading">
+      <span>Compliance &amp; Recognition</span>
+      <h2>Certificates &amp; Accreditations</h2>
+    </div>
+
+    <div class="certificate-grid">
+      <article class="certificate-card">
+        <button
+          type="button"
+          class="certificate-image-button"
+          data-certificate-image="assets/iso-45001-certificate.png"
+          data-certificate-title="ISO 45001:2018 Certification">
+          <img
+            src="assets/iso-45001-certificate.png"
+            alt="MEC ISO 45001:2018 occupational health and safety management system certificate"
+            loading="lazy">
+        </button>
+        <div class="certificate-copy">
+          <span class="certificate-badge">ISO 45001:2018</span>
+          <h3>Occupational Health &amp; Safety Management System</h3>
+          <p>Certified by Bureau Veritas Certification Holding SAS.</p>
+        </div>
+      </article>
+
+      <article class="certificate-card">
+        <button
+          type="button"
+          class="certificate-image-button"
+          data-certificate-image="assets/adosh-approval-certificate.png"
+          data-certificate-title="ADOSH / ADPHC Approval Certificate">
+          <img
+            src="assets/adosh-approval-certificate.png"
+            alt="MEC ADOSH and Abu Dhabi Public Health Centre approval certificate"
+            loading="lazy">
+        </button>
+        <div class="certificate-copy">
+          <span class="certificate-badge">ADOSH / ADPHC</span>
+          <h3>OSH Management System Approval</h3>
+          <p>Approved by Abu Dhabi Public Health Centre.</p>
+        </div>
+      </article>
+
+      <article class="certificate-card">
+        <button
+          type="button"
+          class="certificate-image-button"
+          data-certificate-image="assets/iso-14001-certificate-page-1.png"
+          data-certificate-title="ISO 14001:2015 Certification - Page 1">
+          <img
+            src="assets/iso-14001-certificate-page-1.png"
+            alt="MEC ISO 14001:2015 environmental management system certificate page one"
+            loading="lazy">
+        </button>
+        <div class="certificate-copy">
+          <span class="certificate-badge">ISO 14001:2015</span>
+          <h3>Environmental Management System</h3>
+          <p>Certified by Bureau Veritas Certification Holding SAS.</p>
+        </div>
+      </article>
+
+      
+
+      <article class="certificate-card">
+        <button
+          type="button"
+          class="certificate-image-button"
+          data-certificate-image="assets/iso-9001-certificate.png"
+          data-certificate-title="ISO 9001:2015 Certification">
+          <img
+            src="assets/iso-9001-certificate.png"
+            alt="MEC ISO 9001:2015 quality management system certificate"
+            loading="lazy">
+        </button>
+        <div class="certificate-copy">
+          <span class="certificate-badge">ISO 9001:2015</span>
+          <h3>Quality Management System</h3>
+          <p>Certified by Bureau Veritas Certification Holding SAS.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section id="organization-chart" class="section organization-chart-section">
+  <div class="container">
+    <div class="section-head organization-chart-heading">
+      <span>OSH Team</span>
+      <h2>OSH Team Organization Chart</h2>
+    </div>
+
+    <div class="organization-chart-card">
+      <button
+        type="button"
+        class="organization-chart-image-button"
+        id="openOrganizationChart"
+        aria-label="Enlarge OSH Team Organization Chart">
+        <img
+          src="assets/osh-team-organization-chart.png"
+          alt="OSH Team Organization Chart showing project leadership, zone teams, lifting team, night shift, OSH coordinator and male nurse"
+          loading="lazy">
+      </button>
+
+      <div class="organization-chart-actions">
+        <button type="button" class="primary" id="viewOrganizationChart">
+          View Full Size
+        </button>
+        <a
+          class="secondary"
+          href="assets/osh-team-organization-chart.pptx"
+          download>
+          Download PowerPoint
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery" class="section pale">
+<div class="container">
+  <div class="section-head"><span data-i18n="gallery">Gallery</span><h2 data-i18n="galleryTitle">OSH photo gallery</h2></div>
+  <div class="slideshow">
+    <div class="slide active"><img src="assets/sama-yas-hero.jpg" alt="Sama Yas project"><h3>Sama Yas Residential Development</h3></div>
+    <div class="slide"><div class="placeholder">TRAINING</div><h3>OSH Training Session</h3></div>
+    <div class="slide"><div class="placeholder">CAMPAIGN</div><h3>Beat the Heat Campaign</h3></div>
+    <button class="slide-prev">‹</button><button class="slide-next">›</button>
+  </div>
+  <div class="gallery-grid">
+    <figure><img src="assets/sama-yas-hero.jpg" alt="Sama Yas project"><figcaption>Sama Yas Residential Development</figcaption></figure>
+    <figure><div class="placeholder">INSPECTION</div><figcaption>Joint OSH Inspection</figcaption></figure>
+    <figure><div class="placeholder">TRAINING</div><figcaption>Work at Height Training</figcaption></figure>
+  </div>
+
+  <div class="section-head awards-head"><span>Awards</span><h2>Award Image Gallery</h2></div>
+  <div class="award-slider">
+    <div class="award active"><div class="award-placeholder">★</div><h3>ALDAR OSH Shining Star</h3></div>
+    <div class="award"><div class="award-placeholder">🏆</div><h3>Best Safety Performance</h3></div>
+    <div class="award"><div class="award-placeholder">✓</div><h3>HSE Initiative of the Year</h3></div>
+    <button class="award-prev">‹</button><button class="award-next">›</button>
+  </div>
+</div>
+</section>
+
+<section id="emergency" class="section emergency-section">
+<div class="container">
+  <div class="section-head light"><span data-i18n="emergency">Emergency</span><h2 data-i18n="emergencyTitle">Emergency information</h2></div>
+  <div class="emergency-cards">
+    <a href="tel:+971503325318"><span>MEC Emergency Contact</span><strong>+971 50 332 5318</strong></a>
+    <div><span>Police</span><strong>999</strong></div>
+    <div><span>Ambulance</span><strong>998</strong></div>
+    <div><span>Civil Defence</span><strong>997</strong></div>
+  </div>
+</div>
+</section>
+
+<section id="location" class="section location-section">
+  <div class="container">
+    <div class="section-head">
+      <span>Project Location</span>
+      <h2>Sama Yas Residential Development</h2>
+    </div>
+
+    <div class="location-grid">
+      <div class="map-frame">
+        <iframe
+          title="Google Map showing Sama Yas Residential Development"
+          src="https://www.google.com/maps?q=24.5061277,54.6277034&z=16&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <div class="location-details">
+        <div class="location-pin">⌖</div>
+        <h3>Sama Yas - By ALDAR</h3>
+        <p class="location-address">
+          Sama Yas Residential Development<br>
+          Yas Island, Abu Dhabi<br>
+          United Arab Emirates
+        </p>
+
+        <div class="location-meta">
+          <p><strong>Coordinates:</strong> 24.5061277, 54.6277034</p>
+          <p><strong>Client:</strong> ALDAR Properties</p>
+          <p><strong>Main Contractor:</strong> Masri Engineering &amp; Contracting, MEC S.A.L.</p>
+        </div>
+
+        <a
+          class="map-link"
+          href="https://maps.app.goo.gl/e1FcjVGfTdqKFU2Q8"
+          target="_blank"
+          rel="noopener">
+          Open in Google Maps
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section">
+<div class="container contact-grid">
+  <div>
+    <div class="section-head"><span data-i18n="contact">Contact</span><h2>Muhammed Shamil</h2></div>
+    <p><strong>Sr. OSH Officer</strong></p>
+    <p>Sama Yas Residential Development<br>Yas Island, Abu Dhabi, UAE</p>
+    <p><a href="mailto:muhammed.shamil@mecemirates.com">muhammed.shamil@mecemirates.com</a></p>
+    <p>Admin Shamil: <a href="tel:+971585125005">+971 58 512 5005</a></p>
+  </div>
+  <form id="contactForm" class="form-card">
+    <input required name="name" placeholder="Name">
+    <input name="company" placeholder="Company">
+    <input required name="mobile" placeholder="Mobile Number">
+    <input required type="email" name="email" placeholder="Email">
+    <input required name="subject" placeholder="Subject">
+    <textarea required name="message" placeholder="Message"></textarea>
+    <button class="primary" type="submit">Send Enquiry</button>
+    <p id="contactMsg" aria-live="polite"></p>
+  </form>
+</div>
+</section>
+</main>
+
+<div id="reportModal" class="modal" aria-hidden="true">
+  <div class="modal-card">
+    <button class="modal-close">×</button>
+    <h2 data-i18n="reportConcern">Report a Safety Concern</h2>
+    <form id="reportForm">
+      <label>Report Type<select name="type" required><option>Unsafe Act</option><option>Unsafe Condition</option><option>Good Practice</option></select></label>
+      <label>Category<select name="category" id="reportCategory" required></select></label>
+      <label>Predefined Location<select name="location"><option>Zone 1</option><option>Zone 2</option><option>Zone 3</option><option>Basement</option><option>Ground Floor</option><option>Building 1</option><option>Building 2</option><option>Building 3</option><option>Building 4</option><option>Building 5</option><option>Roof</option><option>Laydown Area</option><option>Logistics Area</option><option>Welfare Area</option><option>Office Area</option><option>Waste Collection Area</option><option>Other</option></select></label>
+      <label>Location Details<input name="locationDetails"></label>
+      <label>Urgency<select name="urgency"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></label>
+      <label>Description<textarea name="description" required></textarea></label>
+      <label>Photo<input type="file" name="photo" accept="image/*"></label>
+      <button class="primary" type="submit">Submit Report</button>
+      <p id="reportMsg" aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+
+<div id="viewer" class="modal" aria-hidden="true"><div class="modal-card viewer-card"><button class="viewer-close">×</button><h2 id="viewerTitle"></h2><div class="viewer-placeholder">Document preview appears here.<br>Connect Supabase Storage and upload a PDF preview to enable live viewing.</div></div></div>
+
+
+<section class="bottom-emergency" aria-label="Emergency contact information">
+  <div class="container bottom-emergency-inner">
+    <div class="bottom-emergency-title">
+      <span class="bottom-emergency-icon">☎</span>
+      <div>
+        <small>Emergency Contacts</small>
+        <strong>Immediate Assistance</strong>
+      </div>
+    </div>
+
+    <a href="tel:+971503325318" class="bottom-emergency-contact">
+      <span>MEC Emergency Contact</span>
+      <strong>+971 50 332 5318</strong>
+    </a>
+
+    <div class="bottom-emergency-contact">
+      <span>Police</span>
+      <strong>999</strong>
+    </div>
+
+    <div class="bottom-emergency-contact">
+      <span>Ambulance</span>
+      <strong>998</strong>
+    </div>
+
+    <div class="bottom-emergency-contact">
+      <span>Civil Defence</span>
+      <strong>997</strong>
+    </div>
+  </div>
+</section>
+
+
+<div id="organizationChartViewer" class="org-chart-modal" aria-hidden="true">
+  <div class="org-chart-modal-content">
+    <button
+      type="button"
+      class="org-chart-modal-close"
+      id="closeOrganizationChart"
+      aria-label="Close organization chart viewer">×</button>
+    <img
+      src="assets/osh-team-organization-chart.png"
+      alt="Enlarged OSH Team Organization Chart">
+  </div>
+</div>
+
+
+<div id="certificateViewer" class="certificate-modal" aria-hidden="true">
+  <div class="certificate-modal-content">
+    <button
+      type="button"
+      class="certificate-modal-close"
+      id="closeCertificateViewer"
+      aria-label="Close certificate viewer">×</button>
+    <h2 id="certificateViewerTitle">Certificate</h2>
+    <img id="certificateViewerImage" src="" alt="">
+  </div>
+</div>
+
+<footer><div class="container footer-inner"><strong>MEC OSH Department</strong><span>Masri Engineering & Contracting, MEC S.A.L.</span><span>© 2026 Sama Yas Residential Development</span></div></footer>
+<script>window.CATEGORY_DATA=[{"name": "Housekeeping & General Workplace Amenities", "ua": 36, "uc": 188}, {"name": "Traffic Management & Logistics", "ua": 23, "uc": 51}, {"name": "Working at Height", "ua": 104, "uc": 89}, {"name": "Scaffolding/Ladder", "ua": 111, "uc": 195}, {"name": "Personal Protective Equipment", "ua": 87, "uc": 16}, {"name": "Electrical Safety", "ua": 29, "uc": 49}, {"name": "Hand Tools", "ua": 23, "uc": 25}, {"name": "Excavations", "ua": 4, "uc": 3}, {"name": "Lifting Equipment and Lifting Accessories", "ua": 31, "uc": 45}, {"name": "Portable Power Tools", "ua": 32, "uc": 49}, {"name": "Plant and Equipment", "ua": 20, "uc": 32}, {"name": "Confined Space", "ua": 1, "uc": 8}, {"name": "Hot Work Operations", "ua": 41, "uc": 41}, {"name": "Compressed Air and Gases", "ua": 0, "uc": 9}, {"name": "Manual Handling", "ua": 17, "uc": 9}, {"name": "Welfare Facilities", "ua": 28, "uc": 39}, {"name": "Hazardous Substances", "ua": 0, "uc": 20}, {"name": "Machine Guarding", "ua": 5, "uc": 8}, {"name": "Storage Arrangements", "ua": 22, "uc": 115}, {"name": "Barricading of Hazards", "ua": 62, "uc": 112}, {"name": "Access and Egress", "ua": 56, "uc": 78}, {"name": "Permit to Work", "ua": 20, "uc": 14}, {"name": "Safety Signage & Signals", "ua": 14, "uc": 14}, {"name": "Falsework/Formwork", "ua": 96, "uc": 112}, {"name": "Waste Management", "ua": 15, "uc": 66}, {"name": "First Aid Case", "ua": 4, "uc": 2}, {"name": "Near Miss Incident", "ua": 0, "uc": 0}, {"name": "Property Damage", "ua": 0, "uc": 0}, {"name": "Lost Time Injury", "ua": 0, "uc": 1}];</script>
+<script src="app.js"></script>
+</body>
+</html>
