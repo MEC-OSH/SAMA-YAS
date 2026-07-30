@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="MEC OSH Risk Assessment Generator for Sama Yas Residential Development">
+  <title>Risk Assessment Generator | MEC OSH</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="tool-header">
+  <div class="tool-container tool-nav">
+    <a class="tool-brand" href="../">
+      <img src="../assets/mec-logo.png" alt="MEC logo">
+      <span><strong>MEC OSH Department</strong><small>Sama Yas Residential Development</small></span>
+    </a>
+    <a class="back-button" href="../">← Back to Website</a>
+  </div>
+</header>
+
+<main>
+  <section class="tool-hero">
+    <div class="tool-container">
+      <span class="eyebrow">ALDAR OSH-MS APPENDIX 5 FORMAT</span>
+      <h1>Risk Assessment Generator</h1>
+      <p>Select an activity from the approved risk-register library. Hazards, risk classification, control measures, applicable ADOSH-SF Code of Practice references, ALDAR OSH-MS Rev.08 (May 2025) references and revised risk classification will be populated automatically and remain editable.</p>
+      <div class="source-note">
+        Source: YAPLR-BW-MEC-ZZ-ZZ-XX-RR-HS-00026, ALDAR OSH-MS Rev.08 / May-2025.
+        The library contains <strong id="activityCount">119</strong> activity entries.
+      </div>
+    </div>
+  </section>
+
+  <section class="tool-section">
+    <div class="tool-container">
+      <div class="panel">
+        <div class="panel-heading">
+          <span>Document Details</span>
+          <h2>Project and approval information</h2>
+        </div>
+        <div class="details-grid">
+          <label>Assessment Title
+            <input id="assessmentTitle" value="Project Risk Assessment" required>
+          </label>
+          <label>Project Name
+            <input id="projectName" value="Sama Yas Residential Development">
+          </label>
+          <label>Location
+            <input id="assessmentLocation" value="Yas Island, Abu Dhabi, UAE">
+          </label>
+          <label>Assessment Date
+            <input id="assessmentDate" type="date">
+          </label>
+          <label>Prepared By
+            <input id="preparedBy" value="MEC OSH Department">
+          </label>
+          <label>Reviewed By
+            <input id="reviewedBy">
+          </label>
+          <label>Approved By
+            <input id="approvedBy">
+          </label>
+          <label>Reference Number
+            <input id="referenceNumber" value="YAPLR-BW-MEC-ZZ-ZZ-XX-RR-HS-00026">
+          </label>
+        </div>
+      </div>
+
+      <div class="panel activity-builder">
+        <div class="panel-heading">
+          <span>Activity Builder</span>
+          <h2>Add activities to the assessment</h2>
+        </div>
+
+        <div class="activity-picker">
+          <label>Search activity
+            <input id="activitySearch" type="search" placeholder="Search excavation, lifting, scaffolding, welding...">
+          </label>
+          <label>Select activity
+            <select id="activitySelect"></select>
+          </label>
+        </div>
+
+        <label>Activity Element
+          <textarea id="activityName" rows="2"></textarea>
+        </label>
+
+        <label>Significant Potential Hazards
+          <textarea id="hazards" rows="8"></textarea>
+        </label>
+
+        <div class="classification-grid">
+          <fieldset>
+            <legend>Initial Risk Classification</legend>
+            <div class="rating-fields">
+              <label>Probability (P)
+                <select id="probability"></select>
+              </label>
+              <label>Severity (S)
+                <select id="severity"></select>
+              </label>
+              <label>Risk Rating (P × S)
+                <input id="riskRating" readonly>
+              </label>
+              <div>
+                <span class="field-label">Risk Level</span>
+                <strong id="riskLevel" class="risk-badge">Low Risk</strong>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Revised Risk Classification</legend>
+            <div class="rating-fields">
+              <label>Probability (P)
+                <select id="revisedProbability"></select>
+              </label>
+              <label>Severity (S)
+                <select id="revisedSeverity"></select>
+              </label>
+              <label>Risk Rating (P × S)
+                <input id="revisedRiskRating" readonly>
+              </label>
+              <div>
+                <span class="field-label">Residual Risk</span>
+                <strong id="residualRiskLevel" class="risk-badge">Low Risk</strong>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <label>Action to be Taken to Reduce the Risk, Including Legal References
+          <textarea id="controls" rows="18"></textarea>
+        </label>
+
+        <p class="reference-note">Applicable ADOSH-SF CoP references and ALDAR OSH-MS Rev.08 (May 2025), Appendix 5 are added automatically to the control measures and remain editable.</p>
+
+        <p class="edit-note">All automatically generated content may be edited before adding it to the assessment.</p>
+
+        <div class="builder-actions">
+          <button id="addActivity" class="primary" type="button">Add Activity</button>
+          <button id="cancelEdit" class="secondary hidden" type="button">Cancel Edit</button>
+          <button id="clearActivity" class="secondary" type="button">Clear Form</button>
+        </div>
+        <p id="builderStatus" class="status" aria-live="polite"></p>
+      </div>
+
+      <div class="panel">
+        <div class="panel-heading heading-with-actions">
+          <div>
+            <span>Assessment Register</span>
+            <h2>Added activities</h2>
+          </div>
+          <strong id="addedCount" class="count-badge">0 activities</strong>
+        </div>
+
+        <div class="table-wrap">
+          <table class="assessment-list">
+            <thead>
+              <tr>
+                <th>S/N</th>
+                <th>Activity</th>
+                <th>Initial Risk</th>
+                <th>Residual Risk</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="assessmentRows">
+              <tr><td colspan="5" class="empty-row">No activities added yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="document-actions">
+          <button id="generateWord" class="primary word-button" type="button">Generate Word File (.docx)</button>
+          <button id="clearAssessment" class="danger" type="button">Clear All Activities</button>
+        </div>
+        <p id="documentStatus" class="status" aria-live="polite"></p>
+      </div>
+
+      <div class="panel matrix-panel">
+        <div class="panel-heading">
+          <span>Risk Grading Matrix</span>
+          <h2>Automatic risk-level calculation</h2>
+        </div>
+        <div class="matrix-grid">
+          <div class="matrix-level extreme"><strong>15 - 25</strong><span>Extreme Risk</span></div>
+          <div class="matrix-level high"><strong>8 - 12</strong><span>High Risk</span></div>
+          <div class="matrix-level moderate"><strong>4 - 6</strong><span>Moderate Risk</span></div>
+          <div class="matrix-level low"><strong>1 - 3</strong><span>Low Risk</span></div>
+        </div>
+        <p class="competent-review">The generated assessment must be reviewed, amended where necessary, communicated to affected personnel and approved by competent project personnel before work starts.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="risk-register-data.js"></script>
+<script src="legal-references.js"></script>
+<script src="docx-generator.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

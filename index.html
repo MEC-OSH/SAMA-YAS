@@ -20,7 +20,10 @@
       <a href="#about" data-i18n="about">About OSH</a>
       <a href="#performance" data-i18n="performance">Performance</a>
       <a href="#documents" data-i18n="documents">OSH Documents</a>
+      <a class="risk-generator-nav" href="risk-assessment/">Risk Assessment Generator</a>
+      <a href="#training-videos" data-i18n="trainingVideos">Training Awareness Videos</a>
       <a href="#reports" data-i18n="reports">Safety Reports</a>
+      <a href="#trend-analysis" class="trend-analysis-nav">Trend Analysis</a>
       <a href="#news" data-i18n="news">News</a>
       <a href="#certificates">Certificates</a>
       <a href="#organization-chart">Organization Chart</a>
@@ -151,8 +154,49 @@
 <div class="container">
   <div class="section-head"><span data-i18n="documents">OSH Documents</span><h2 data-i18n="library">Public document library</h2></div>
   <div class="doc-tools"><input id="docSearch" type="search" placeholder="Search documents"><select id="docFilter"><option value="all">All sections</option></select></div>
+  <div class="document-categories persistent-document-tools">
+    <article class="document-category-card risk-generator-card">
+      <div class="document-category-icon risk-generator-icon" aria-hidden="true">RA</div>
+      <div>
+        <span class="document-category-badge">Interactive Tool</span>
+        <h3>Risk Assessment Generator</h3>
+        <p>Select activities from the approved risk register, automatically load hazards and controls, calculate risk levels and generate an editable Word document.</p>
+      </div>
+      <a class="primary risk-generator-open" href="risk-assessment/">Open Generator</a>
+    </article>
+    <article class="document-category-card third-party-certificates-card">
+      <div class="document-category-icon" aria-hidden="true">✓</div>
+      <div>
+        <span class="document-category-badge">Certification</span>
+        <h3>Third-Party Certificates</h3>
+        <p>Approved third-party inspection, testing, operator, lifting equipment, scaffold, machinery and competency certificates.</p>
+      </div>
+      <button type="button" class="secondary document-filter-button" data-document-category="Third-Party Certificate">
+        View Certificates
+      </button>
+    </article>
+  </div>
   <div id="documentGrid" class="document-grid"></div>
 </div>
+</section>
+
+<section id="training-videos" class="section training-videos-section">
+  <div class="container">
+    <div class="section-head">
+      <span data-i18n="trainingVideos">Training Awareness Videos</span>
+      <h2 data-i18n="trainingVideosTitle">Watch, learn and work safely</h2>
+    </div>
+    <p class="training-videos-intro">
+      Short OSH training and awareness videos covering project hazards, safe work practices and emergency preparedness.
+    </p>
+    <div id="trainingVideoGrid" class="training-video-grid">
+      <div class="training-video-empty">
+        <span aria-hidden="true">▶</span>
+        <h3>Training videos will appear here</h3>
+        <p>Upload videos through the Admin Dashboard to publish them on this page.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section id="reports" class="section">
@@ -180,6 +224,81 @@
     <p id="trackResult" aria-live="polite"></p>
   </div>
 </div>
+</section>
+
+<section id="trend-analysis" class="section trend-analysis-section">
+  <div class="container">
+    <div class="section-head">
+      <span>Live Safety Data</span>
+      <h2>Safety Observation Trend Analysis</h2>
+    </div>
+
+    <p class="trend-analysis-intro">
+      The chart starts from the current project trend figures and automatically
+      continues with reports submitted through this website. Unsafe Acts and
+      Unsafe Conditions are shown separately.
+    </p>
+
+    <div class="trend-summary-grid" aria-label="Safety report trend totals">
+      <article class="trend-summary-card unsafe-act-summary">
+        <span>Unsafe Acts</span>
+        <strong id="trendUnsafeActs">0</strong>
+      </article>
+      <article class="trend-summary-card unsafe-condition-summary">
+        <span>Unsafe Conditions</span>
+        <strong id="trendUnsafeConditions">0</strong>
+      </article>
+      <article class="trend-summary-card open-summary">
+        <span>Open Reports</span>
+        <strong id="trendOpenReports">0</strong>
+      </article>
+      <article class="trend-summary-card closed-summary">
+        <span>Closed Reports</span>
+        <strong id="trendClosedReports">0</strong>
+      </article>
+    </div>
+
+    <article class="trend-chart-panel">
+      <div class="trend-chart-heading">
+        <div>
+          <span>Category Analysis</span>
+          <h3>Unsafe Act vs Unsafe Condition</h3>
+        </div>
+        <div class="trend-legend" aria-label="Chart legend">
+          <span><i class="legend-ua"></i> Unsafe Act</span>
+          <span><i class="legend-uc"></i> Unsafe Condition</span>
+        </div>
+      </div>
+      <div class="trend-chart-scroll">
+        <div id="unsafeConditionTrendChart" class="trend-chart"
+             role="img"
+             aria-label="Unsafe Act and Unsafe Condition trend by category"></div>
+      </div>
+    </article>
+
+    <article class="trend-chart-panel">
+      <div class="trend-chart-heading">
+        <div>
+          <span>Closure Performance</span>
+          <h3>Open vs Closed Reports</h3>
+        </div>
+        <div class="trend-legend" aria-label="Chart legend">
+          <span><i class="legend-open"></i> Open</span>
+          <span><i class="legend-closed"></i> Closed</span>
+        </div>
+      </div>
+      <div class="trend-chart-scroll">
+        <div id="openClosedTrendChart" class="trend-chart"
+             role="img"
+             aria-label="Open and Closed safety reports by category"></div>
+      </div>
+    </article>
+
+    <div class="trend-live-status">
+      <span class="trend-live-dot" aria-hidden="true"></span>
+      <span id="trendUpdateStatus">Loading live trend data…</span>
+    </div>
+  </div>
 </section>
 
 <section id="news" class="section">
@@ -330,10 +449,22 @@
 
   <div class="section-head awards-head"><span>Awards</span><h2>Award Image Gallery</h2></div>
   <div class="award-slider" id="awardSlider">
-    <div class="award active"><div class="award-placeholder">★</div><h3>ALDAR OSH Shining Star</h3></div>
-    <div class="award"><div class="award-placeholder">🏆</div><h3>Best Safety Performance</h3></div>
-    <div class="award"><div class="award-placeholder">✓</div><h3>HSE Initiative of the Year</h3></div>
-    <button class="award-prev">‹</button><button class="award-next">›</button>
+    <div class="award-group active">
+      <article class="award-card">
+        <div class="award-placeholder">★</div>
+        <h3>ALDAR OSH Shining Star</h3>
+      </article>
+      <article class="award-card">
+        <div class="award-placeholder">🏆</div>
+        <h3>Best Safety Performance</h3>
+      </article>
+      <article class="award-card">
+        <div class="award-placeholder">✓</div>
+        <h3>HSE Initiative of the Year</h3>
+      </article>
+    </div>
+    <button class="award-prev" type="button" aria-label="Previous three awards">‹</button>
+    <button class="award-next" type="button" aria-label="Next three awards">›</button>
   </div>
 </div>
 </section>
@@ -423,13 +554,33 @@
     <button class="modal-close">×</button>
     <h2 data-i18n="reportConcern">Report a Safety Concern</h2>
     <form id="reportForm">
-      <label>Report Type<select name="type" required><option>Unsafe Act</option><option>Unsafe Condition</option><option>Good Practice</option></select></label>
+      <label>Report Type<select name="type" required><option>Unsafe Act</option><option>Unsafe Condition</option><option>Good Practice</option><option>Accident</option><option>Near Miss</option><option>Property Damage</option></select></label>
       <label>Category<select name="category" id="reportCategory" required></select></label>
       <label>Predefined Location<select name="location"><option>Zone 1</option><option>Zone 2</option><option>Zone 3</option><option>Basement</option><option>Ground Floor</option><option>Building 1</option><option>Building 2</option><option>Building 3</option><option>Building 4</option><option>Building 5</option><option>Roof</option><option>Laydown Area</option><option>Logistics Area</option><option>Welfare Area</option><option>Office Area</option><option>Waste Collection Area</option><option>Other</option></select></label>
       <label>Location Details<input name="locationDetails"></label>
       <label>Urgency<select name="urgency"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></label>
       <label>Description<textarea name="description" required></textarea></label>
-      <label>Photo<input type="file" name="photo" accept="image/*"></label>
+      <fieldset class="report-photo-options">
+        <legend>Photo Evidence</legend>
+        <div class="photo-choice-grid">
+          <label class="photo-choice camera-choice">
+            <span class="photo-choice-icon" aria-hidden="true">📷</span>
+            <strong>Take Photo with Camera</strong>
+            <small>Open the rear camera on your phone or tablet.</small>
+            <input id="cameraPhoto" type="file" name="cameraPhoto" accept="image/*" capture="environment">
+          </label>
+          <label class="photo-choice">
+            <span class="photo-choice-icon" aria-hidden="true">🖼️</span>
+            <strong>Choose Photo from Device</strong>
+            <small>Select an existing photo from your gallery or files.</small>
+            <input id="galleryPhoto" type="file" name="photo" accept="image/*">
+          </label>
+        </div>
+        <div id="reportPhotoPreviewWrap" class="report-photo-preview hidden">
+          <img id="reportPhotoPreview" alt="Selected safety report photo preview">
+          <button id="removeReportPhoto" type="button" class="secondary">Remove Photo</button>
+        </div>
+      </fieldset>
       <button class="primary" type="submit">Submit Report</button>
       <p id="reportMsg" aria-live="polite"></p>
     </form>
@@ -503,5 +654,45 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="app.js"></script>
+
+<button id="openEmergencyCall" class="floating-emergency-call" type="button" aria-haspopup="dialog" aria-controls="emergencyCallModal">
+  <img src="assets/emergency-call-logo.png" alt="" aria-hidden="true">
+  <strong>Emergency Call</strong>
+</button>
+
+<div id="emergencyCallModal" class="emergency-call-modal" role="dialog" aria-modal="true" aria-labelledby="emergencyCallTitle" hidden>
+  <div class="emergency-call-backdrop" data-close-emergency></div>
+  <section class="emergency-call-panel">
+    <button id="closeEmergencyCall" class="emergency-call-close" type="button" aria-label="Close emergency call popup">×</button>
+    <img
+      class="emergency-call-logo"
+      src="assets/emergency-call-logo.png"
+      alt="Emergency Call">
+    <h2 id="emergencyCallTitle">Emergency Call</h2>
+    <p>Select the required emergency service.</p>
+
+    <div class="emergency-call-list">
+      <a class="emergency-call-option primary-emergency" href="tel:+971503325318">
+        <span class="emergency-service-name">Site Emergency</span>
+        <strong>+971 50 332 5318</strong>
+      </a>
+      <a class="emergency-call-option" href="tel:999">
+        <span class="emergency-service-name">Police</span>
+        <strong>999</strong>
+      </a>
+      <a class="emergency-call-option" href="tel:998">
+        <span class="emergency-service-name">Ambulance</span>
+        <strong>998</strong>
+      </a>
+      <a class="emergency-call-option" href="tel:997">
+        <span class="emergency-service-name">Civil Defence</span>
+        <strong>997</strong>
+      </a>
+    </div>
+
+    <p class="emergency-call-warning">Use emergency numbers only for genuine emergencies.</p>
+  </section>
+</div>
+
 </body>
 </html>

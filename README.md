@@ -60,3 +60,23 @@ The Admin Dashboard now supports email OTP, live performance settings, safety-re
 Before publishing, run `MEC_OSH_Supabase_Security_Setup.sql`, create the admin user `muhammed.shamil@mecemirates.com`, change the Magic Link email template to use `{{ .Token }}`, and configure the GitHub Pages admin URL in Auth URL Configuration.
 
 Microsoft 365 direct sending is not embedded. The Reply button opens the user's email application. A secure Microsoft Graph / Edge Function connection is required for automatic sending and Sent Items synchronisation.
+
+
+## Risk Assessment Generator
+- Open `/risk-assessment/`
+- Contains 119 activities extracted from the approved project risk register
+- Automatically loads hazards, initial P/S/R, risk level, controls and revised P/S/R
+- Allows multiple activities, editing, deletion and browser draft saving
+- Generates a standalone `.docx` Word risk assessment without an external library
+
+
+## Live Trend Analysis
+
+Run `TREND_ANALYSIS_SETUP.sql` once in Supabase. The public website combines
+the supplied current baseline with new safety reports while keeping individual
+report records private.
+
+
+## Legal references in generated risk assessments
+
+The Risk Assessment Generator now appends applicable ADOSH-SF Code of Practice references and `ALDAR OSH-MS Rev.08 (May 2025), Appendix 5` to every activity's control-measure column. Existing references in the approved risk-register source are preserved and normalized; keyword-based references are supplied when the source activity has no explicit CoP number.

@@ -28,3 +28,19 @@ In Supabase:
 4. Open the website /admin/ page and sign in with that password.
 
 Do not place the password, secret key, or service_role key in website files.
+
+LIVE TREND ANALYSIS
+-------------------
+1. Open Supabase > SQL Editor > New query.
+2. Open TREND_ANALYSIS_SETUP.sql from this website package.
+3. Copy all SQL, paste it into Supabase and click Run.
+4. Confirm: Success. No rows returned.
+5. Upload the website files to GitHub Pages and refresh with Ctrl + F5.
+
+The SQL creates a privacy-safe aggregate function. Public visitors can see
+category totals only. They cannot read individual safety report descriptions,
+photos, locations or other report details.
+
+Baseline cutoff: 30 July 2026, 14:27 UAE time.
+Reports submitted after that time are added automatically. The website reloads
+the trend immediately after a new report and refreshes every 30 seconds.
