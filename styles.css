@@ -2348,3 +2348,60 @@ html[dir="rtl"] .header .menu-btn{
     font-size:16px;
   }
 }
+
+
+/* Contact portrait: smaller oval presentation */
+.contact-layout{
+  grid-template-columns:minmax(260px,38%) minmax(360px,62%)!important;
+  min-height:470px!important;
+  align-items:center!important;
+}
+.contact-photo-wrap{
+  min-height:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:34px!important;
+  background:#050505!important;
+}
+.contact-person-photo{
+  width:280px!important;
+  height:360px!important;
+  min-height:0!important;
+  max-width:100%!important;
+  border-radius:50%!important;
+  object-fit:cover!important;
+  object-position:center top!important;
+  border:5px solid #ffd400!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.42)!important;
+}
+.contact-content{
+  padding:48px 54px!important;
+}
+@media(max-width:900px){
+  .contact-layout{
+    grid-template-columns:1fr!important;
+    min-height:auto!important;
+  }
+  .contact-photo-wrap{
+    padding:30px 20px 10px!important;
+  }
+  .contact-person-photo{
+    width:230px!important;
+    height:300px!important;
+  }
+  .contact-content{
+    padding:30px 24px 42px!important;
+    text-align:center!important;
+  }
+  .contact-details{
+    margin:0 auto!important;
+  }
+}
+@media(max-width:520px){
+  .contact-person-photo{
+    width:190px!important;
+    height:250px!important;
+    border-width:4px!important;
+  }
+}
