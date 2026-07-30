@@ -5,10 +5,17 @@
 body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}.sidebar{background:#000;border-right:3px solid #ffd400;color:#fff;padding:24px;position:sticky;top:0;height:100vh}.sidebar h2{color:#ffd400}.sidebar button,.sidebar a{display:block;width:100%;text-align:left;background:none;color:#fff;border:0;padding:11px 0;cursor:pointer;text-decoration:none}.sidebar button:hover,.sidebar a:hover{color:#ffd400}.admin-main{padding:32px;background:#070707}.panel{display:none}.panel.active{display:block}.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.admin-card,.login,.data-item{background:#171717;color:#fff;border:1px solid #333;padding:22px}.admin-card input,.admin-card select,.admin-card textarea,.login input,.data-item select,.data-item textarea{width:100%;margin:6px 0 12px;background:#111;color:#fff;border:1px solid #444}.login{max-width:520px;margin:70px auto}.otp-row{display:grid;grid-template-columns:1fr auto;gap:10px}.data-list{display:grid;gap:12px;margin-top:18px}.data-item{border-left:4px solid #ffd400}.critical{border-left-color:#d71920}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}.toolbar .spacer{flex:1}.small{font-size:12px;color:#aaa}.status{min-height:22px;color:#ffd400}.preview-thumb{max-width:160px;max-height:100px;object-fit:cover}.danger{background:#d71920!important;color:#fff!important}.row-actions{display:flex;gap:8px;flex-wrap:wrap}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric{padding:16px;background:#111;border:1px solid #333}.metric strong{display:block;color:#ffd400;font-size:26px}.hidden{display:none!important}@media(max-width:850px){.admin-shell{grid-template-columns:1fr}.sidebar{position:static;height:auto}.admin-grid,.metrics{grid-template-columns:1fr}}
 </style></head><body>
 <div id="loginView" class="login">
-  <h1>Admin Login</h1><p>Email OTP access is restricted to:</p><p><strong>muhammed.shamil@mecemirates.com</strong></p>
-  <input id="email" value="muhammed.shamil@mecemirates.com" readonly>
-  <button id="sendOtp" class="primary">Send OTP</button>
-  <div id="otpBox" class="hidden"><label>Enter the code received by email<input id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="8"></label><button id="verifyOtp" class="primary">Verify OTP</button></div>
+  <h1>Admin Login</h1>
+  <p>Access is restricted to:</p>
+  <p><strong>muhammed.shamil@mecemirates.com</strong></p>
+  <label>Email
+    <input id="email" type="email" value="muhammed.shamil@mecemirates.com" readonly autocomplete="username">
+  </label>
+  <label>Password
+    <input id="password" type="password" autocomplete="current-password" placeholder="Enter your Supabase user password">
+  </label>
+  <button id="signIn" class="primary" type="button">Sign In</button>
+  <p class="small">Use the password assigned to this user in Supabase Authentication.</p>
   <p id="loginStatus" class="status" aria-live="polite"></p>
 </div>
 <div id="adminApp" class="admin-shell" hidden>

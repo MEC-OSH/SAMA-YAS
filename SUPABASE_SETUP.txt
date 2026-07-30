@@ -14,3 +14,17 @@ SECURITY
 - The website includes only a publishable key, which is intended for browser use with RLS.
 - Never place a Supabase secret/service-role key in GitHub Pages.
 - Rotate the secret key that was previously exposed.
+
+
+ADMIN LOGIN UPDATE
+------------------
+The Admin Dashboard now uses email-and-password authentication.
+
+In Supabase:
+1. Open Authentication > Users.
+2. Make sure muhammed.shamil@mecemirates.com exists.
+3. Assign a strong password to that user. If the existing user has no known password,
+   delete it and create it again using Add user, with Auto Confirm enabled.
+4. Open the website /admin/ page and sign in with that password.
+
+Do not place the password, secret key, or service_role key in website files.

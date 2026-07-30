@@ -6,10 +6,76 @@ function publicUrl(bucket,path){return db.storage.from(bucket).getPublicUrl(path
 function storagePath(url,bucket){const marker=`/storage/v1/object/public/${bucket}/`;return url?.includes(marker)?decodeURIComponent(url.split(marker)[1]):null;}
 async function requireAdmin(session){const email=session?.user?.email?.toLowerCase();if(email!==ADMIN_EMAIL){if(session)await db.auth.signOut();throw new Error("This account is not authorised for the MEC OSH Admin Dashboard.");}}
 async function showApp(session){await requireAdmin(session);$("loginView").hidden=true;$("adminApp").hidden=false;$("adminIdentity").textContent=session.user.email;await loadAll();}
-async function initialise(){const {data:{session}}=await db.auth.getSession();if(session){try{await showApp(session)}catch(e){setStatus("loginStatus",e.message)}}}
-$("sendOtp").onclick=async()=>{setStatus("loginStatus","Sending OTP…");const {error}=await db.auth.signInWithOtp({email:ADMIN_EMAIL,options:{shouldCreateUser:false}});if(error){setStatus("loginStatus",error.message);return;}$("otpBox").classList.remove("hidden");setStatus("loginStatus","OTP sent. Check your email.");};
-$("verifyOtp").onclick=async()=>{const token=$("otp").value.trim();if(!token){setStatus("loginStatus","Enter the OTP code.");return;}setStatus("loginStatus","Verifying…");const {data,error}=await db.auth.verifyOtp({email:ADMIN_EMAIL,token,type:"email"});if(error){setStatus("loginStatus",error.message);return;}try{await showApp(data.session)}catch(e){setStatus("loginStatus",e.message)}};
-$("signOut").onclick=async()=>{await db.auth.signOut();location.reload();};
+async function initialise(){
+  const url = new URL(window.location.href);
+  const authError =
+    url.searchParams.get("error_description") ||
+    new URLSearchParams(window.location.hash.replace(/^#/, "")).get("error_description");
+
+  if(authError){
+    setStatus("loginStatus", decodeURIComponent(authError.replace(/\+/g, " ")));
+    history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  const {data:{session}, error} = await db.auth.getSession();
+  if(error){
+    setStatus("loginStatus", error.message);
+    return;
+  }
+  if(session){
+    try{
+      await showApp(session);
+    }catch(e){
+      setStatus("loginStatus", e.message);
+    }
+  }
+}
+
+$("signIn").onclick=async()=>{
+  const password=$("password").value;
+  if(!password){
+    setStatus("loginStatus","Enter your password.");
+    return;
+  }
+
+  setStatus("loginStatus","Signing in…");
+  $("signIn").disabled=true;
+
+  const {data,error}=await db.auth.signInWithPassword({
+    email:ADMIN_EMAIL,
+    password
+  });
+
+  $("signIn").disabled=false;
+
+  if(error){
+    setStatus("loginStatus",error.message);
+    return;
+  }
+
+  try{
+    await showApp(data.session);
+    setStatus("loginStatus","");
+  }catch(e){
+    setStatus("loginStatus",e.message);
+  }
+};
+
+$("password").addEventListener("keydown",event=>{
+  if(event.key==="Enter") $("signIn").click();
+});
+
+db.auth.onAuthStateChange(async(event,session)=>{
+  if(event==="SIGNED_IN" && session && $("adminApp").hidden){
+    try{
+      await showApp(session);
+    }catch(e){
+      setStatus("loginStatus",e.message);
+    }
+  }
+});
+
+$("signOut").onclick=async()=>{await db.auth.signOut();location.reload();};location.reload();};
 document.querySelectorAll("[data-panel]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));$(b.dataset.panel).classList.add("active")});
 
 async function loadAll(){await Promise.all([loadSettings(),loadReports(),loadDocuments(),loadNews(),loadGallery(),loadLocations(),loadHolidays(),loadEnquiries()]);}
