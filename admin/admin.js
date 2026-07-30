@@ -78,15 +78,459 @@ db.auth.onAuthStateChange(async(event,session)=>{
 $("signOut").onclick=async()=>{await db.auth.signOut();location.reload();};
 document.querySelectorAll("[data-panel]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));$(b.dataset.panel).classList.add("active")});
 
-async function loadAll(){await Promise.all([loadSettings(),loadReports(),loadDocuments(),loadTrainingVideos(),loadNews(),loadGallery(),loadLocations(),loadHolidays(),loadEnquiries()]);}
+async function loadAll(){await Promise.all([loadSettings(),loadReports(),loadTrendAdmin(),loadDocuments(),loadTrainingVideos(),loadNews(),loadGallery(),loadLocations(),loadHolidays(),loadEnquiries()]);}
 async function loadSettings(){const {data,error}=await db.from("settings").select("*").eq("id",1).maybeSingle();if(error)throw error;const s=data||{};$("dashManpower").textContent=Number(s.manpower||0).toLocaleString();$("dashManhours").textContent=Number(s.baseline_manhours||0).toLocaleString();
 const map={pManpower:s.manpower,pBaseline:s.baseline_manhours,pBaselineAt:s.baseline_at?new Date(s.baseline_at).toISOString().slice(0,16):"",pAdjustment:s.manhour_adjustment||0,pWorkStart:s.work_start?.slice(0,5),pLunchStart:s.lunch_start?.slice(0,5),pLunchEnd:s.lunch_end?.slice(0,5),pWorkEnd:s.work_end?.slice(0,5),pLastLti:s.last_lti_date,pTrainingSessions:s.training_sessions,pPersonnelTrained:s.personnel_trained,pTrainingHours:s.training_hours,pInductions:s.osh_inductions,pMeetings:s.osh_meetings,pAudits:s.osh_audits,pInspections:s.osh_inspections,pReviews:s.procedure_reviews,pDrills:s.emergency_drills};for(const [id,v] of Object.entries(map))if(v!==undefined&&v!==null)$(id).value=v;$("pPaused").checked=Boolean(s.counter_paused);}
 $("performanceForm").onsubmit=async e=>{e.preventDefault();setStatus("performanceStatus","Saving…");const payload={id:1,manpower:Number($("pManpower").value),baseline_manhours:Number($("pBaseline").value),baseline_at:new Date($("pBaselineAt").value).toISOString(),manhour_adjustment:Number($("pAdjustment").value||0),counter_paused:$("pPaused").checked,work_start:$("pWorkStart").value,lunch_start:$("pLunchStart").value,lunch_end:$("pLunchEnd").value,work_end:$("pWorkEnd").value,last_lti_date:$("pLastLti").value,training_sessions:Number($("pTrainingSessions").value||0),personnel_trained:Number($("pPersonnelTrained").value||0),training_hours:Number($("pTrainingHours").value||0),osh_inductions:Number($("pInductions").value||0),osh_meetings:Number($("pMeetings").value||0),osh_audits:Number($("pAudits").value||0),osh_inspections:Number($("pInspections").value||0),procedure_reviews:Number($("pReviews").value||0),emergency_drills:Number($("pDrills").value||0)};const {error}=await db.from("settings").upsert(payload);setStatus("performanceStatus",error?error.message:"Saved. Public figures will update on refresh.");if(!error)await loadSettings();};
 
-let reportRows=[];async function loadReports(){const {data,error}=await db.from("safety_reports").select("*").order("created_at",{ascending:false});if(error)throw error;reportRows=data||[];$("dashReports").textContent=reportRows.filter(r=>r.status!=="Closed").length;const list=$("reportList");list.innerHTML=reportRows.length?"":"<p>No reports submitted yet.</p>";for(const r of reportRows){const d=document.createElement("div");d.className=`data-item ${r.urgency==="Critical"?"critical":""}`;d.innerHTML=`<strong>${r.reference}</strong> | ${r.report_type} | ${r.category}<br><span class="small">${new Date(r.created_at).toLocaleString()} | ${r.location||""} ${r.location_details||""} | ${r.urgency||""}</span><p>${r.description||""}</p><label>Status<select class="report-status"><option>New</option><option>Under Review</option><option>Action Required</option><option>Closed</option></select></label><label>Admin remarks<textarea class="report-remarks">${r.admin_remarks||""}</textarea></label><div class="row-actions"><button class="primary save-report">Save</button>${r.photo_url?'<button class="primary view-photo">View Photo</button>':""}</div>`;d.querySelector(".report-status").value=r.status;d.querySelector(".save-report").onclick=async()=>{const status=d.querySelector(".report-status").value;const payload={status,admin_remarks:d.querySelector(".report-remarks").value,updated_at:new Date().toISOString(),closure_date:status==="Closed"?(r.closure_date||new Date().toISOString().slice(0,10)):null};const {error}=await db.from("safety_reports").update(payload).eq("id",r.id);if(error)alert(error.message);else loadReports();};d.querySelector(".view-photo")?.addEventListener("click",async()=>{const {data,error}=await db.storage.from("report-photos").createSignedUrl(r.photo_url,3600);if(error)alert(error.message);else window.open(data.signedUrl,"_blank","noopener")});list.appendChild(d);}}
-$("exportExcel").onclick=()=>{const headers=["Report ID","Date","Report Type","Category","Location","Urgency","Status","Description","Photo Path","Closure Date","Admin Remarks"];const csv=[headers,...reportRows.map(r=>[r.reference,r.created_at,r.report_type,r.category,`${r.location||""} ${r.location_details||""}`,r.urgency,r.status,r.description,r.photo_url,r.closure_date,r.admin_remarks])].map(row=>row.map(v=>`"${String(v||"").replaceAll('"','""')}"`).join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="sama-yas-safety-reports.csv";a.click();URL.revokeObjectURL(a.href);};
+let reportRows=[];async function loadReports(){const {data,error}=await db.from("safety_reports").select("*").order("created_at",{ascending:false});if(error)throw error;reportRows=data||[];$("dashReports").textContent=reportRows.filter(r=>r.status!=="Closed").length;const list=$("reportList");list.innerHTML=reportRows.length?"":"<p>No reports submitted yet.</p>";for(const r of reportRows){const d=document.createElement("div");d.className=`data-item ${r.urgency==="Critical"?"critical":""}`;d.innerHTML=`<strong>${r.reference}</strong> | ${r.report_type} | ${r.category}<br><span class="small">${new Date(r.created_at).toLocaleString()} | ${r.location||""} ${r.location_details||""} | ${r.urgency||""}</span><p>${r.description||""}</p><label>Status<select class="report-status"><option>New</option><option>Under Review</option><option>Action Required</option><option>Closed</option></select></label><label>Admin remarks<textarea class="report-remarks">${r.admin_remarks||""}</textarea></label><div class="row-actions"><button class="primary save-report" type="button">Save</button>${r.photo_url?'<button class="primary view-photo" type="button">View Photo</button>':""}<button class="danger delete-report" type="button">Delete Report</button></div>`;d.querySelector(".report-status").value=r.status;d.querySelector(".save-report").onclick=async()=>{const status=d.querySelector(".report-status").value;const payload={status,admin_remarks:d.querySelector(".report-remarks").value,updated_at:new Date().toISOString(),closure_date:status==="Closed"?(r.closure_date||new Date().toISOString().slice(0,10)):null};const {error}=await db.from("safety_reports").update(payload).eq("id",r.id);if(error)alert(error.message);else {await loadReports();await loadTrendAdmin();}};d.querySelector(".view-photo")?.addEventListener("click",async()=>{const {data,error}=await db.storage.from("report-photos").createSignedUrl(r.photo_url,3600);if(error)alert(error.message);else window.open(data.signedUrl,"_blank","noopener")});
+d.querySelector(".delete-report").onclick=async()=>{
+  const confirmed=confirm(`Permanently delete safety report ${r.reference}?\n\nThis action cannot be undone.`);
+  if(!confirmed)return;
+
+  const deleteButton=d.querySelector(".delete-report");
+  deleteButton.disabled=true;
+  deleteButton.textContent="Deleting…";
+
+  try{
+    let photoWarning="";
+
+    if(r.photo_url){
+      const {error:photoError}=await db.storage
+        .from("report-photos")
+        .remove([r.photo_url]);
+
+      if(photoError){
+        photoWarning=`\n\nThe report was deleted, but its photo could not be removed: ${photoError.message}`;
+      }
+    }
+
+    const {error:deleteError}=await db
+      .from("safety_reports")
+      .delete()
+      .eq("id",r.id);
+
+    if(deleteError)throw deleteError;
+
+    alert(`Safety report ${r.reference} was permanently deleted.${photoWarning}`);
+    await loadReports();
+    await loadTrendAdmin();
+  }catch(error){
+    deleteButton.disabled=false;
+    deleteButton.textContent="Delete Report";
+    alert(`Unable to delete the report: ${error.message}`);
+  }
+};
+list.appendChild(d);}}
+
+function downloadExcelBlob(blob,fileName){
+  const link=document.createElement("a");
+  const url=URL.createObjectURL(blob);
+  link.href=url;
+  link.download=fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
+async function imageBlobToPngDataUrl(blob,maxWidth=720,maxHeight=540){
+  const objectUrl=URL.createObjectURL(blob);
+
+  try{
+    const image=await new Promise((resolve,reject)=>{
+      const element=new Image();
+      element.onload=()=>resolve(element);
+      element.onerror=()=>reject(new Error("The report photo could not be processed."));
+      element.src=objectUrl;
+    });
+
+    const scale=Math.min(1,maxWidth/image.naturalWidth,maxHeight/image.naturalHeight);
+    const width=Math.max(1,Math.round(image.naturalWidth*scale));
+    const height=Math.max(1,Math.round(image.naturalHeight*scale));
+    const canvas=document.createElement("canvas");
+    canvas.width=width;
+    canvas.height=height;
+
+    const context=canvas.getContext("2d");
+    context.fillStyle="#ffffff";
+    context.fillRect(0,0,width,height);
+    context.drawImage(image,0,0,width,height);
+
+    return {
+      dataUrl:canvas.toDataURL("image/png",0.9),
+      width,
+      height
+    };
+  }finally{
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
+async function getReportPhotoForExcel(photoPath){
+  if(!photoPath)return null;
+
+  const {data,error}=await db.storage
+    .from("report-photos")
+    .createSignedUrl(photoPath,600);
+
+  if(error)throw error;
+
+  const response=await fetch(data.signedUrl);
+  if(!response.ok)throw new Error(`Photo download failed (${response.status}).`);
+
+  return imageBlobToPngDataUrl(await response.blob());
+}
+
+function excelDateValue(value){
+  if(!value)return "";
+  const date=new Date(value);
+  return Number.isNaN(date.getTime())?String(value):date;
+}
+
+$("exportExcel").onclick=async()=>{
+  const button=$("exportExcel");
+  const status=$("exportExcelStatus");
+
+  if(!window.ExcelJS){
+    alert("Excel export library did not load. Check the internet connection and refresh the Admin Dashboard.");
+    return;
+  }
+
+  button.disabled=true;
+  status.textContent="Preparing Excel workbook…";
+
+  try{
+    const workbook=new ExcelJS.Workbook();
+    workbook.creator="MEC OSH Department";
+    workbook.lastModifiedBy=ADMIN_EMAIL;
+    workbook.created=new Date();
+    workbook.modified=new Date();
+
+    const worksheet=workbook.addWorksheet("Safety Reports",{
+      views:[{state:"frozen",ySplit:4}]
+    });
+
+    worksheet.mergeCells("A1:K1");
+    worksheet.getCell("A1").value="SAMA YAS RESIDENTIAL DEVELOPMENT";
+    worksheet.getCell("A1").font={bold:true,size:18,color:{argb:"FFFFFFFF"}};
+    worksheet.getCell("A1").fill={type:"pattern",pattern:"solid",fgColor:{argb:"FF111111"}};
+    worksheet.getCell("A1").alignment={horizontal:"center",vertical:"middle"};
+    worksheet.getRow(1).height=30;
+
+    worksheet.mergeCells("A2:K2");
+    worksheet.getCell("A2").value="MEC OSH Department - Safety Reports Register";
+    worksheet.getCell("A2").font={bold:true,size:13,color:{argb:"FF000000"}};
+    worksheet.getCell("A2").fill={type:"pattern",pattern:"solid",fgColor:{argb:"FFFFD400"}};
+    worksheet.getCell("A2").alignment={horizontal:"center",vertical:"middle"};
+    worksheet.getRow(2).height=24;
+
+    worksheet.mergeCells("A3:K3");
+    worksheet.getCell("A3").value=`Exported: ${new Date().toLocaleString("en-GB",{timeZone:"Asia/Dubai"})} UAE time`;
+    worksheet.getCell("A3").font={italic:true,color:{argb:"FF555555"}};
+    worksheet.getCell("A3").alignment={horizontal:"right"};
+
+    const headers=[
+      "Report ID",
+      "Date",
+      "Report Type",
+      "Category",
+      "Location",
+      "Urgency",
+      "Status",
+      "Description",
+      "Photo",
+      "Closure Date",
+      "Admin Remarks"
+    ];
+
+    const headerRow=worksheet.getRow(4);
+    headerRow.values=headers;
+    headerRow.height=30;
+    headerRow.eachCell(cell=>{
+      cell.font={bold:true,color:{argb:"FFFFFFFF"}};
+      cell.fill={type:"pattern",pattern:"solid",fgColor:{argb:"FF1A1A1A"}};
+      cell.alignment={horizontal:"center",vertical:"middle",wrapText:true};
+      cell.border={
+        top:{style:"thin",color:{argb:"FF888888"}},
+        left:{style:"thin",color:{argb:"FF888888"}},
+        bottom:{style:"thin",color:{argb:"FF888888"}},
+        right:{style:"thin",color:{argb:"FF888888"}}
+      };
+    });
+
+    worksheet.columns=[
+      {key:"reference",width:18},
+      {key:"created",width:20},
+      {key:"type",width:20},
+      {key:"category",width:32},
+      {key:"location",width:28},
+      {key:"urgency",width:13},
+      {key:"status",width:17},
+      {key:"description",width:42},
+      {key:"photo",width:22},
+      {key:"closure",width:16},
+      {key:"remarks",width:36}
+    ];
+
+    for(let index=0;index<reportRows.length;index++){
+      const report=reportRows[index];
+      const rowNumber=index+5;
+      const row=worksheet.getRow(rowNumber);
+
+      status.textContent=`Preparing report ${index+1} of ${reportRows.length}…`;
+
+      row.values=[
+        report.reference||"",
+        excelDateValue(report.created_at),
+        report.report_type||"",
+        report.category||"",
+        `${report.location||""}${report.location_details?` - ${report.location_details}`:""}`,
+        report.urgency||"",
+        report.status||"",
+        report.description||"",
+        report.photo_url?"Loading photo…":"No photo",
+        report.closure_date?excelDateValue(report.closure_date):"",
+        report.admin_remarks||""
+      ];
+
+      row.height=82;
+      row.alignment={vertical:"top",wrapText:true};
+
+      row.eachCell((cell,columnNumber)=>{
+        cell.border={
+          top:{style:"thin",color:{argb:"FFD0D0D0"}},
+          left:{style:"thin",color:{argb:"FFD0D0D0"}},
+          bottom:{style:"thin",color:{argb:"FFD0D0D0"}},
+          right:{style:"thin",color:{argb:"FFD0D0D0"}}
+        };
+        if(index%2===1){
+          cell.fill={type:"pattern",pattern:"solid",fgColor:{argb:"FFF7F7F7"}};
+        }
+        if([1,2,3,6,7,9,10].includes(columnNumber)){
+          cell.alignment={horizontal:"center",vertical:"middle",wrapText:true};
+        }
+      });
+
+      row.getCell(2).numFmt="dd/mm/yyyy hh:mm";
+      row.getCell(10).numFmt="dd/mm/yyyy";
+
+      const urgencyColors={
+        Low:"FFDCFCE7",
+        Medium:"FFFEF3C7",
+        High:"FFFED7AA",
+        Critical:"FFFECACA"
+      };
+      if(urgencyColors[report.urgency]){
+        row.getCell(6).fill={
+          type:"pattern",
+          pattern:"solid",
+          fgColor:{argb:urgencyColors[report.urgency]}
+        };
+        row.getCell(6).font={bold:true};
+      }
+
+      if(report.status==="Closed"){
+        row.getCell(7).fill={type:"pattern",pattern:"solid",fgColor:{argb:"FFBBF7D0"}};
+      }
+
+      if(report.photo_url){
+        try{
+          const photo=await getReportPhotoForExcel(report.photo_url);
+          if(photo){
+            const imageId=workbook.addImage({
+              base64:photo.dataUrl,
+              extension:"png"
+            });
+
+            const maxWidth=118;
+            const maxHeight=88;
+            const scale=Math.min(maxWidth/photo.width,maxHeight/photo.height);
+            const imageWidth=Math.max(1,Math.round(photo.width*scale));
+            const imageHeight=Math.max(1,Math.round(photo.height*scale));
+
+            worksheet.addImage(imageId,{
+              tl:{col:8.12,row:rowNumber-1+0.10},
+              ext:{width:imageWidth,height:imageHeight},
+              editAs:"oneCell"
+            });
+            row.getCell(9).value="";
+          }
+        }catch(photoError){
+          row.getCell(9).value="Photo unavailable";
+          row.getCell(9).note=photoError.message;
+        }
+      }
+    }
+
+    worksheet.autoFilter="A4:K4";
+    worksheet.getColumn(9).alignment={horizontal:"center",vertical:"middle"};
+
+    worksheet.pageSetup={
+      orientation:"landscape",
+      paperSize:9,
+      fitToPage:true,
+      fitToWidth:1,
+      fitToHeight:0,
+      margins:{
+        left:0.25,
+        right:0.25,
+        top:0.5,
+        bottom:0.5,
+        header:0.2,
+        footer:0.2
+      }
+    };
+
+    worksheet.headerFooter.oddFooter="MEC OSH Department | Page &P of &N";
+
+    status.textContent="Creating Excel file…";
+    const buffer=await workbook.xlsx.writeBuffer();
+    const dateStamp=new Date().toISOString().slice(0,10);
+    downloadExcelBlob(
+      new Blob([buffer],{
+        type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      }),
+      `sama-yas-safety-reports-${dateStamp}.xlsx`
+    );
+
+    status.textContent=`Excel exported with ${reportRows.length} report${reportRows.length===1?"":"s"} and embedded photos.`;
+  }catch(error){
+    console.error(error);
+    status.textContent="Export failed.";
+    alert(`Unable to export Excel: ${error.message}`);
+  }finally{
+    button.disabled=false;
+  }
+};
 
 async function upload(bucket,file,prefix){if(!file||!file.size)return null;if(file.size>50*1024*1024)throw new Error("File exceeds 50 MB.");const path=`${prefix}/${Date.now()}-${safeName(file.name)}`;const {error}=await db.storage.from(bucket).upload(path,file,{contentType:file.type,upsert:false});if(error)throw error;return {path,url:publicUrl(bucket,path)};}
+
+let trendAdminRows=[];
+
+function toLocalDateTimeInput(value){
+  if(!value)return "";
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime()))return "";
+
+  const parts=new Intl.DateTimeFormat("en-CA",{
+    timeZone:"Asia/Dubai",
+    year:"numeric",
+    month:"2-digit",
+    day:"2-digit",
+    hour:"2-digit",
+    minute:"2-digit",
+    hour12:false
+  }).formatToParts(date);
+
+  const values=Object.fromEntries(parts.map(part=>[part.type,part.value]));
+  return `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}`;
+}
+
+function trendCount(value){
+  const number=Number(value);
+  return Number.isFinite(number)&&number>=0?Math.round(number):0;
+}
+
+function renderTrendAdminRows(){
+  const tbody=$("trendAdminRows");
+  tbody.innerHTML="";
+
+  trendAdminRows.forEach((row,index)=>{
+    const tr=document.createElement("tr");
+    tr.dataset.index=String(index);
+    tr.innerHTML=`<td>${row.category}</td>
+      <td><input class="trend-ua-open" type="number" min="0" step="1" value="${trendCount(row.unsafe_act_open_count)}"></td>
+      <td><input class="trend-ua-closed" type="number" min="0" step="1" value="${trendCount(row.unsafe_act_closed_count)}"></td>
+      <td><input class="trend-uc-open" type="number" min="0" step="1" value="${trendCount(row.unsafe_condition_open_count)}"></td>
+      <td><input class="trend-uc-closed" type="number" min="0" step="1" value="${trendCount(row.unsafe_condition_closed_count)}"></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+async function loadTrendAdmin(){
+  const [{data:rows,error:rowsError},{data:config,error:configError}]=await Promise.all([
+    db.from("safety_trend_baseline")
+      .select("category,sort_order,unsafe_act_open_count,unsafe_act_closed_count,unsafe_condition_open_count,unsafe_condition_closed_count")
+      .order("sort_order")
+      .order("category"),
+    db.from("safety_trend_config")
+      .select("baseline_cutoff")
+      .eq("id",1)
+      .maybeSingle()
+  ]);
+
+  if(rowsError)throw rowsError;
+  if(configError)throw configError;
+
+  trendAdminRows=rows||[];
+  renderTrendAdminRows();
+
+  if(config?.baseline_cutoff){
+    $("trendBaselineCutoff").value=toLocalDateTimeInput(config.baseline_cutoff);
+  }
+}
+
+$("reloadTrendData").onclick=async()=>{
+  setStatus("trendAdminStatus","Reloading…");
+  try{
+    await loadTrendAdmin();
+    setStatus("trendAdminStatus","Trend data reloaded.");
+  }catch(error){
+    setStatus("trendAdminStatus",error.message);
+  }
+};
+
+$("trendAdminForm").onsubmit=async event=>{
+  event.preventDefault();
+  setStatus("trendAdminStatus","Saving trend data…");
+
+  try{
+    const cutoffValue=$("trendBaselineCutoff").value;
+    if(!cutoffValue)throw new Error("Select the baseline cutoff date and time.");
+
+    const payload=[...document.querySelectorAll("#trendAdminRows tr")].map((tr,index)=>{
+      const source=trendAdminRows[index];
+      const uaOpen=trendCount(tr.querySelector(".trend-ua-open").value);
+      const uaClosed=trendCount(tr.querySelector(".trend-ua-closed").value);
+      const ucOpen=trendCount(tr.querySelector(".trend-uc-open").value);
+      const ucClosed=trendCount(tr.querySelector(".trend-uc-closed").value);
+
+      return {
+        category:source.category,
+        sort_order:source.sort_order??index+1,
+        unsafe_act_open_count:uaOpen,
+        unsafe_act_closed_count:uaClosed,
+        unsafe_condition_open_count:ucOpen,
+        unsafe_condition_closed_count:ucClosed,
+        unsafe_act_count:uaOpen+uaClosed,
+        unsafe_condition_count:ucOpen+ucClosed,
+        open_count:uaOpen+ucOpen,
+        closed_count:uaClosed+ucClosed,
+        updated_at:new Date().toISOString()
+      };
+    });
+
+    const [{error:baselineError},{error:configError}]=await Promise.all([
+      db.from("safety_trend_baseline").upsert(payload,{onConflict:"category"}),
+      db.from("safety_trend_config").upsert({
+        id:1,
+        baseline_cutoff:new Date(cutoffValue).toISOString(),
+        updated_at:new Date().toISOString()
+      },{onConflict:"id"})
+    ]);
+
+    if(baselineError)throw baselineError;
+    if(configError)throw configError;
+
+    await loadTrendAdmin();
+    setStatus("trendAdminStatus","Trend Analysis data saved. The public graph will refresh automatically.");
+  }catch(error){
+    setStatus("trendAdminStatus",error.message);
+  }
+};
+
+
 async function loadDocuments(){const {data,error}=await db.from("documents").select("*").order("created_at",{ascending:false});if(error)throw error;const list=$("documentList");list.innerHTML=data?.length?"":"<p>No uploaded documents.</p>";(data||[]).forEach(r=>{const d=document.createElement("div");d.className="data-item";d.innerHTML=`<strong>${r.title_en}</strong> <span class="small">${r.category}</span><div class="row-actions"><a class="primary" href="${r.file_url}" target="_blank">Open</a><button class="danger">Delete</button></div>`;d.querySelector(".danger").onclick=async()=>{if(!confirm("Delete this document permanently?"))return;const paths=[storagePath(r.file_url,"documents"),storagePath(r.preview_url,"documents")].filter(Boolean);if(paths.length)await db.storage.from("documents").remove(paths);const {error}=await db.from("documents").delete().eq("id",r.id);if(error)alert(error.message);else loadDocuments();};list.appendChild(d);});}
 $("documentForm").onsubmit=async e=>{e.preventDefault();setStatus("documentStatus","Uploading…");try{const file=await upload("documents",$("docFile").files[0],$("docCategory").value);const preview=await upload("documents",$("docPreview").files[0],`${$("docCategory").value}/previews`);const {error}=await db.from("documents").insert({category:$("docCategory").value,title_en:$("docTitleEn").value,title_ar:$("docTitleAr").value||null,file_url:file.url,preview_url:preview?.url||null});if(error)throw error;e.target.reset();setStatus("documentStatus","Uploaded.");loadDocuments();}catch(err){setStatus("documentStatus",err.message)}};
 

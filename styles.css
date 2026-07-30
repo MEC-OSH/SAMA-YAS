@@ -2045,3 +2045,126 @@ a.floating-emergency-call{
   text-decoration:none;
   cursor:pointer;
 }
+
+/* Four-series editable Safety Trend Analysis */
+.ua-open-summary{border-top:5px solid #f59e0b!important}
+.ua-closed-summary{border-top:5px solid #0aa34f!important}
+.uc-open-summary{border-top:5px solid #ef1717!important}
+.uc-closed-summary{border-top:5px solid #2563eb!important}
+
+.legend-ua-open{background:#f59e0b}
+.legend-ua-closed{background:#0aa34f}
+.legend-uc-open{background:#ef1717}
+.legend-uc-closed{background:#2563eb}
+
+#safetyStatusTrendChart{
+  min-height:535px;
+}
+
+.trend-baseline-note{
+  margin:-4px 0 22px;
+  padding:13px 15px;
+  border-left:5px solid #0aa34f;
+  background:#12251a;
+  color:#dff7e7;
+  font-size:14px;
+}
+
+
+/* Always-visible top navigation buttons */
+.top-visible-links{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  white-space:nowrap;
+}
+.top-visible-links a,
+.top-visible-links button{
+  min-height:38px;
+  padding:8px 11px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #444;
+  border-radius:5px;
+  background:#141414;
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  text-decoration:none;
+  cursor:pointer;
+}
+.top-visible-links a:hover,
+.top-visible-links button:hover{
+  border-color:#ffd400;
+  background:#202020;
+}
+.top-visible-links .top-lang-btn{
+  background:#ffd400;
+  color:#000;
+  border-color:#ffd400;
+}
+.top-visible-links .top-report-btn{
+  background:#e31920;
+  color:#fff;
+  border-color:#e31920;
+}
+.header .menu-btn{
+  margin-left:4px;
+  flex:0 0 auto;
+}
+html[dir="rtl"] .top-visible-links{
+  margin-left:0;
+  margin-right:auto;
+}
+html[dir="rtl"] .header .menu-btn{
+  margin-left:0;
+  margin-right:4px;
+}
+@media(max-width:1180px){
+  .top-visible-links{
+    gap:5px;
+  }
+  .top-visible-links a,
+  .top-visible-links button{
+    padding:7px 8px;
+    font-size:11px;
+  }
+  .header .brand span{
+    display:none;
+  }
+}
+@media(max-width:850px){
+  .header .nav{
+    flex-wrap:wrap;
+    padding-top:8px;
+    padding-bottom:8px;
+  }
+  .top-visible-links{
+    order:3;
+    width:100%;
+    margin:0;
+    overflow-x:auto;
+    padding-bottom:3px;
+    scrollbar-width:thin;
+  }
+  .top-visible-links a,
+  .top-visible-links button{
+    flex:0 0 auto;
+  }
+  .header .menu-btn{
+    margin-left:auto;
+  }
+}
+@media(max-width:520px){
+  .top-visible-links{
+    gap:4px;
+  }
+  .top-visible-links a,
+  .top-visible-links button{
+    min-height:36px;
+    padding:7px 8px;
+    font-size:10px;
+  }
+}

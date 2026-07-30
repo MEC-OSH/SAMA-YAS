@@ -44,3 +44,41 @@ photos, locations or other report details.
 Baseline cutoff: 30 July 2026, 14:27 UAE time.
 Reports submitted after that time are added automatically. The website reloads
 the trend immediately after a new report and refreshes every 30 seconds.
+
+EDITABLE FOUR-SERIES TREND ANALYSIS
+-----------------------------------
+1. Open Supabase > SQL Editor > New query.
+2. Open TREND_ANALYSIS_ADMIN_SETUP.sql from this package.
+3. Copy all SQL, paste it into Supabase and click Run.
+4. Confirm: Success. No rows returned.
+5. Upload the website files to GitHub Pages.
+6. Open Admin Dashboard > Trend Analysis.
+
+Editable values:
+- Unsafe Act Open
+- Unsafe Act Closed
+- Unsafe Condition Open
+- Unsafe Condition Closed
+
+The supplied historical Unsafe Act and Unsafe Condition totals are initially
+placed under Closed because the original chart did not provide separate
+Open/Closed values. Edit them in the Admin Dashboard to match the project data.
+
+New reports submitted after the editable baseline cutoff are counted
+automatically. Changing a report status to Closed moves it from Open to Closed.
+
+UPDATED CUMULATIVE TREND BASELINE
+---------------------------------
+Baseline cutoff: 30 July 2026, 3:56 PM UAE time.
+
+Current cumulative values:
+- Unsafe Acts: 881, all Closed
+- Unsafe Conditions: 1,390, all Closed
+- Open baseline observations: 0
+
+Future Unsafe Act and Unsafe Condition reports submitted after the cutoff
+will appear as Open. They will move to Closed only when the report status is
+manually changed to Closed under Admin Dashboard > Safety Reports.
+
+Run TREND_ANALYSIS_ADMIN_SETUP.sql again in Supabase SQL Editor to replace
+the previous baseline with these updated cumulative values.

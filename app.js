@@ -30,9 +30,24 @@ document.getElementById("langBtn")?.addEventListener("click",()=>{
   setMainMenu(false);
 });
 
-document.getElementById("headerOpenReport")?.addEventListener("click",()=>{
-  setMainMenu(false);
+document.getElementById("topLangBtn")?.addEventListener("click",()=>{
+  lang=lang==="en"?"ar":"en";
+  localStorage.setItem("mecLanguage",lang);
+  applyLanguage();
+  const topButton=document.getElementById("topLangBtn");
+  if(topButton) topButton.textContent=lang==="en"?"العربية":"English";
 });
+
+document.getElementById("topOpenReport")?.addEventListener("click",()=>{
+  const modal=document.getElementById("reportModal");
+  if(modal){
+    modal.classList.add("open");
+    modal.removeAttribute("hidden");
+  }
+});
+
+
+
 
 document.addEventListener("keydown",event=>{
   if(event.key==="Escape") setMainMenu(false);
@@ -259,36 +274,37 @@ document.querySelector(".modal-close")?.addEventListener("click",()=>reportModal
 
 
 
+
 const safetyTrendBaseline = [
-  {category:"Housekeeping & General Workplace Amenities",unsafe_act_count:3,unsafe_condition_count:55,open_count:0,closed_count:0},
-  {category:"Traffic Management & Logistics",unsafe_act_count:0,unsafe_condition_count:9,open_count:0,closed_count:0},
-  {category:"Working at Height",unsafe_act_count:2,unsafe_condition_count:34,open_count:0,closed_count:0},
-  {category:"Scaffolding/Ladder",unsafe_act_count:6,unsafe_condition_count:48,open_count:0,closed_count:0},
-  {category:"Personal Protective Equipment",unsafe_act_count:9,unsafe_condition_count:2,open_count:0,closed_count:0},
-  {category:"Electrical Safety",unsafe_act_count:1,unsafe_condition_count:21,open_count:0,closed_count:0},
-  {category:"Hand Tools",unsafe_act_count:5,unsafe_condition_count:6,open_count:0,closed_count:0},
-  {category:"Excavations",unsafe_act_count:0,unsafe_condition_count:0,open_count:0,closed_count:0},
-  {category:"Lifting Equipment and Lifting Accessories",unsafe_act_count:0,unsafe_condition_count:7,open_count:0,closed_count:0},
-  {category:"Portable Power Tools",unsafe_act_count:3,unsafe_condition_count:20,open_count:0,closed_count:0},
-  {category:"Plant and Equipment",unsafe_act_count:1,unsafe_condition_count:7,open_count:0,closed_count:0},
-  {category:"Confined Space",unsafe_act_count:0,unsafe_condition_count:2,open_count:0,closed_count:0},
-  {category:"Hot Work Operations",unsafe_act_count:0,unsafe_condition_count:9,open_count:0,closed_count:0},
-  {category:"Compressed Air and Gases",unsafe_act_count:0,unsafe_condition_count:0,open_count:0,closed_count:0},
-  {category:"Manual Handling",unsafe_act_count:2,unsafe_condition_count:2,open_count:0,closed_count:0},
-  {category:"Welfare Facilities",unsafe_act_count:0,unsafe_condition_count:11,open_count:0,closed_count:0},
-  {category:"Hazardous Substances",unsafe_act_count:0,unsafe_condition_count:4,open_count:0,closed_count:0},
-  {category:"Machine Guarding",unsafe_act_count:0,unsafe_condition_count:8,open_count:0,closed_count:0},
-  {category:"Storage Arrangements",unsafe_act_count:2,unsafe_condition_count:17,open_count:0,closed_count:0},
-  {category:"Barricading of Hazards",unsafe_act_count:6,unsafe_condition_count:23,open_count:0,closed_count:0},
-  {category:"Access and Egress",unsafe_act_count:2,unsafe_condition_count:13,open_count:0,closed_count:0},
-  {category:"Permit to Work",unsafe_act_count:0,unsafe_condition_count:4,open_count:0,closed_count:0},
-  {category:"Safety Signage & Signals",unsafe_act_count:0,unsafe_condition_count:0,open_count:0,closed_count:0},
-  {category:"Falsework/Formwork",unsafe_act_count:1,unsafe_condition_count:15,open_count:0,closed_count:0},
-  {category:"Waste Management",unsafe_act_count:0,unsafe_condition_count:10,open_count:0,closed_count:0},
-  {category:"First Aid Case",unsafe_act_count:0,unsafe_condition_count:0,open_count:0,closed_count:0},
-  {category:"Near Miss Incident",unsafe_act_count:0,unsafe_condition_count:0,open_count:0,closed_count:0},
-  {category:"Property Damage",unsafe_act_count:0,unsafe_condition_count:0,open_count:0,closed_count:0},
-  {category:"Lost Time Injury",unsafe_act_count:0,unsafe_condition_count:0,open_count:0,closed_count:0}
+{"category": "Housekeeping & General Workplace Amenities", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 36, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 188},
+{"category": "Traffic Management & Logistics", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 23, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 51},
+{"category": "Working at Height", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 104, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 89},
+{"category": "Scaffolding/Ladder", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 111, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 195},
+{"category": "Personal Protective Equipment", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 87, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 16},
+{"category": "Electrical Safety", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 29, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 49},
+{"category": "Hand Tools", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 23, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 25},
+{"category": "Excavations", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 4, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 3},
+{"category": "Lifting Equipment and Lifting Accessories", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 31, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 45},
+{"category": "Portable Power Tools", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 32, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 49},
+{"category": "Plant and Equipment", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 20, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 32},
+{"category": "Confined Space", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 1, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 8},
+{"category": "Hot Work Operations", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 41, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 41},
+{"category": "Compressed Air and Gases", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 0, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 9},
+{"category": "Manual Handling", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 17, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 9},
+{"category": "Welfare Facilities", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 28, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 39},
+{"category": "Hazardous Substances", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 0, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 20},
+{"category": "Machine Guarding", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 5, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 8},
+{"category": "Storage Arrangements", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 22, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 115},
+{"category": "Barricading of Hazards", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 62, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 112},
+{"category": "Access and Egress", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 56, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 78},
+{"category": "Permit to Work", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 20, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 14},
+{"category": "Safety Signage & Signals", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 14, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 14},
+{"category": "Falsework/Formwork", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 96, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 112},
+{"category": "Waste Management", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 15, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 66},
+{"category": "First Aid Case", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 4, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 2},
+{"category": "Near Miss Incident", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 0, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 0},
+{"category": "Property Damage", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 0, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 0},
+{"category": "Lost Time Injury", "unsafe_act_open_count": 0, "unsafe_act_closed_count": 0, "unsafe_condition_open_count": 0, "unsafe_condition_closed_count": 1}
 ];
 
 function trendNumber(value){
@@ -297,25 +313,31 @@ function trendNumber(value){
 }
 
 function niceTrendMaximum(rows,fields){
-  const largest=Math.max(1,...rows.flatMap(row=>fields.map(field=>trendNumber(row[field]))));
+  const largest=Math.max(
+    1,
+    ...rows.flatMap(row=>fields.map(field=>trendNumber(row[field])))
+  );
   const interval=largest<=10?2:largest<=30?5:10;
   return Math.ceil(largest/interval)*interval;
 }
 
 function renderGroupedTrendChart(containerId,rows,series){
   const container=document.getElementById(containerId);
-  if(!container) return;
+  if(!container)return;
 
-  const width=Math.max(1280,rows.length*62+120);
-  const height=510;
-  const margin={top:46,right:28,bottom:190,left:58};
+  const width=Math.max(1500,rows.length*76+130);
+  const height=535;
+  const margin={top:50,right:28,bottom:195,left:60};
   const chartWidth=width-margin.left-margin.right;
   const chartHeight=height-margin.top-margin.bottom;
   const max=niceTrendMaximum(rows,series.map(item=>item.field));
   const tickCount=6;
   const categoryWidth=chartWidth/rows.length;
-  const barWidth=Math.min(18,Math.max(10,categoryWidth*.27));
-  const gap=4;
+  const gap=3;
+  const barWidth=Math.min(
+    14,
+    Math.max(7,(categoryWidth-18-(series.length-1)*gap)/series.length)
+  );
 
   const grid=Array.from({length:tickCount+1},(_,index)=>{
     const value=Math.round(max*index/tickCount);
@@ -334,71 +356,86 @@ function renderGroupedTrendChart(containerId,rows,series){
       const barHeight=max?value/max*chartHeight:0;
       const x=start+seriesIndex*(barWidth+gap);
       const y=margin.top+chartHeight-barHeight;
-      const labelY=Math.max(margin.top+12,y-6);
+      const labelY=Math.max(margin.top+12,y-5);
+
       return `<rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="1" fill="${item.color}">
-                <title>${escapeHtml(row.category)}: ${escapeHtml(item.label)} ${value}</title>
-              </rect>
-              <text x="${x+barWidth/2}" y="${labelY}" text-anchor="middle" class="trend-value-label">${value}</text>`;
+        <title>${escapeHtml(row.category)}: ${escapeHtml(item.label)} ${value}</title>
+      </rect>
+      <text x="${x+barWidth/2}" y="${labelY}" text-anchor="middle" class="trend-value-label">${value}</text>`;
     }).join("");
 
     const labelX=center+4;
     const labelY=margin.top+chartHeight+14;
+
     return `${rowBars}
-      <text x="${labelX}" y="${labelY}" transform="rotate(90 ${labelX} ${labelY})" class="trend-category-label">${escapeHtml(row.category)}</text>`;
+      <text x="${labelX}" y="${labelY}"
+            transform="rotate(90 ${labelX} ${labelY})"
+            class="trend-category-label">${escapeHtml(row.category)}</text>`;
   }).join("");
 
-  container.innerHTML=`<svg viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  container.innerHTML=`<svg viewBox="0 0 ${width} ${height}" width="${width}" height="${height}"
+      xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <rect width="${width}" height="${height}" fill="#fff"/>
     ${grid}
-    <line x1="${margin.left}" y1="${margin.top+chartHeight}" x2="${width-margin.right}" y2="${margin.top+chartHeight}" class="trend-axis-line"/>
+    <line x1="${margin.left}" y1="${margin.top+chartHeight}"
+          x2="${width-margin.right}" y2="${margin.top+chartHeight}"
+          class="trend-axis-line"/>
     ${bars}
   </svg>`;
 }
 
 function updateTrendSummary(rows){
   const totals=rows.reduce((sum,row)=>({
-    unsafeActs:sum.unsafeActs+trendNumber(row.unsafe_act_count),
-    unsafeConditions:sum.unsafeConditions+trendNumber(row.unsafe_condition_count),
-    open:sum.open+trendNumber(row.open_count),
-    closed:sum.closed+trendNumber(row.closed_count)
-  }),{unsafeActs:0,unsafeConditions:0,open:0,closed:0});
+    uaOpen:sum.uaOpen+trendNumber(row.unsafe_act_open_count),
+    uaClosed:sum.uaClosed+trendNumber(row.unsafe_act_closed_count),
+    ucOpen:sum.ucOpen+trendNumber(row.unsafe_condition_open_count),
+    ucClosed:sum.ucClosed+trendNumber(row.unsafe_condition_closed_count)
+  }),{uaOpen:0,uaClosed:0,ucOpen:0,ucClosed:0});
 
-  setText("trendUnsafeActs",totals.unsafeActs);
-  setText("trendUnsafeConditions",totals.unsafeConditions);
-  setText("trendOpenReports",totals.open);
-  setText("trendClosedReports",totals.closed);
+  setText("trendUaOpen",totals.uaOpen);
+  setText("trendUaClosed",totals.uaClosed);
+  setText("trendUcOpen",totals.ucOpen);
+  setText("trendUcClosed",totals.ucClosed);
 }
 
 function renderSafetyTrend(rows){
   updateTrendSummary(rows);
-  renderGroupedTrendChart("unsafeConditionTrendChart",rows,[
-    {field:"unsafe_act_count",label:"Unsafe Act",color:"#0aa34f"},
-    {field:"unsafe_condition_count",label:"Unsafe Condition",color:"#f11212"}
-  ]);
-  renderGroupedTrendChart("openClosedTrendChart",rows,[
-    {field:"open_count",label:"Open",color:"#f59e0b"},
-    {field:"closed_count",label:"Closed",color:"#0aa34f"}
+
+  renderGroupedTrendChart("safetyStatusTrendChart",rows,[
+    {field:"unsafe_act_open_count",label:"Unsafe Act Open",color:"#f59e0b"},
+    {field:"unsafe_act_closed_count",label:"Unsafe Act Closed",color:"#0aa34f"},
+    {field:"unsafe_condition_open_count",label:"Unsafe Condition Open",color:"#ef1717"},
+    {field:"unsafe_condition_closed_count",label:"Unsafe Condition Closed",color:"#2563eb"}
   ]);
 }
 
 async function loadSafetyTrend(){
   const status=document.getElementById("trendUpdateStatus");
+
   try{
     const {data,error}=await db.rpc("get_public_safety_trend");
-    if(error) throw error;
+    if(error)throw error;
+
     const rows=(data&&data.length)?data:safetyTrendBaseline;
     renderSafetyTrend(rows);
+
     if(status){
       const updated=new Intl.DateTimeFormat("en-GB",{
-        timeZone:"Asia/Dubai",hour:"2-digit",minute:"2-digit",second:"2-digit"
+        timeZone:"Asia/Dubai",
+        hour:"2-digit",
+        minute:"2-digit",
+        second:"2-digit"
       }).format(new Date());
+
       status.textContent=`Live data updated automatically at ${updated} UAE time`;
     }
   }catch(error){
     renderSafetyTrend(safetyTrendBaseline);
+
     if(status){
-      status.textContent="Showing the current baseline. Run TREND_ANALYSIS_SETUP.sql to activate live automatic updates.";
+      status.textContent="Showing the editable baseline. Run TREND_ANALYSIS_ADMIN_SETUP.sql to activate live updates.";
     }
+
     console.warn("Safety trend RPC unavailable:",error.message);
   }
 }

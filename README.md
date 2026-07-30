@@ -80,3 +80,9 @@ report records private.
 ## Legal references in generated risk assessments
 
 The Risk Assessment Generator now appends applicable ADOSH-SF Code of Practice references and `ALDAR OSH-MS Rev.08 (May 2025), Appendix 5` to every activity's control-measure column. Existing references in the approved risk-register source are preserved and normalized; keyword-based references are supplied when the source activity has no explicit CoP number.
+
+## Excel Safety Report Export
+
+The Admin Dashboard exports a real `.xlsx` workbook. Photos from the private
+Supabase `report-photos` bucket are fetched using short-lived signed URLs,
+converted to compact PNG thumbnails, and embedded inside the Photo column.
