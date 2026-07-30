@@ -7,7 +7,19 @@ document.querySelector(".menu-btn").addEventListener("click",()=>document.queryS
 
 
 const db = window.mecSupabase;
+
 const DEFAULT_ADMIN_EMAIL = "muhammed.shamil@mecemirates.com";
+
+function escapeHtml(value=""){
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[character]);
+}
+
 
 let performance = {
   manpower: 1500,
@@ -238,10 +250,73 @@ document.getElementById("contactForm")?.addEventListener("submit",async event=>{
   finally{button.disabled=false;}
 });
 
-function slider(item,prev,next,ms){let idx=0;const items=[...document.querySelectorAll(item)];if(!items.length)return;const show=n=>{items.forEach((x,i)=>x.classList.toggle("active",i===n));idx=n};document.querySelector(prev)?.addEventListener("click",()=>show((idx-1+items.length)%items.length));document.querySelector(next)?.addEventListener("click",()=>show((idx+1)%items.length));setInterval(()=>show((idx+1)%items.length),ms);}
-slider(".slide",".slide-prev",".slide-next",3000);slider(".award",".award-prev",".award-next",3000);
 
-loadLiveSettings(); loadDocuments(); loadNews();
+async function loadGallery(){
+  const galleryGrid=document.getElementById("galleryGrid");
+  const slideshow=document.querySelector("#gallery .slideshow");
+  const awardSlider=document.getElementById("awardSlider");
+
+  if(!galleryGrid || !slideshow || !awardSlider) return;
+
+  try{
+    const {data,error}=await db
+      .from("gallery")
+      .select("*")
+      .order("sort_order",{ascending:true})
+      .order("created_at",{ascending:false});
+
+    if(error) throw error;
+    if(!data?.length) return;
+
+    const photos=data.filter(item=>item.gallery_type!=="Award");
+    const awards=data.filter(item=>item.gallery_type==="Award");
+
+    if(photos.length){
+      slideshow.innerHTML=photos.map((item,index)=>{
+        const title=lang==="ar"&&item.title_ar?item.title_ar:item.title_en;
+        return `<div class="slide ${index===0?"active":""}">
+          <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(title)}">
+          <h3>${escapeHtml(title)}</h3>
+        </div>`;
+      }).join("")+
+      '<button class="slide-prev" type="button" aria-label="Previous gallery image">‹</button>'+
+      '<button class="slide-next" type="button" aria-label="Next gallery image">›</button>';
+
+      galleryGrid.innerHTML=photos.map(item=>{
+        const title=lang==="ar"&&item.title_ar?item.title_ar:item.title_en;
+        return `<figure>
+          <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(title)}" loading="lazy">
+          <figcaption>${escapeHtml(title)}</figcaption>
+        </figure>`;
+      }).join("");
+    }
+
+    if(awards.length){
+      awardSlider.innerHTML=awards.map((item,index)=>{
+        const title=lang==="ar"&&item.title_ar?item.title_ar:item.title_en;
+        return `<div class="award ${index===0?"active":""}">
+          <img class="award-image" src="${escapeHtml(item.image_url)}" alt="${escapeHtml(title)}">
+          <h3>${escapeHtml(title)}</h3>
+        </div>`;
+      }).join("")+
+      '<button class="award-prev" type="button" aria-label="Previous award">‹</button>'+
+      '<button class="award-next" type="button" aria-label="Next award">›</button>';
+    }
+  }catch(error){
+    console.warn("Gallery not loaded:",error.message);
+  }
+}
+
+function slider(item,prev,next,ms){let idx=0;const items=[...document.querySelectorAll(item)];if(!items.length)return;const show=n=>{items.forEach((x,i)=>x.classList.toggle("active",i===n));idx=n};document.querySelector(prev)?.addEventListener("click",()=>show((idx-1+items.length)%items.length));document.querySelector(next)?.addEventListener("click",()=>show((idx+1)%items.length));setInterval(()=>show((idx+1)%items.length),ms);}
+
+
+loadLiveSettings();
+loadDocuments();
+loadNews();
+loadGallery().finally(()=>{
+  slider(".slide",".slide-prev",".slide-next",3000);
+  slider(".award",".award-prev",".award-next",3000);
+});
 
 const organizationChartViewer = document.getElementById("organizationChartViewer");
 const openOrganizationChart = document.getElementById("openOrganizationChart");
