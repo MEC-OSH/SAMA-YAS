@@ -1,5 +1,5 @@
 const translations={
-en:{home:"Home",about:"About OSH",performance:"Performance",reports:"Safety Reports",documents:"OSH Documents",trainingVideos:"Training Awareness Videos",trainingVideosTitle:"Watch, learn and work safely",news:"News",gallery:"Gallery",emergency:"Emergency",contact:"Contact",adminLogin:"Admin Login",heroTitle:"Building Safely. Protecting Every Life.",heroSub:"MEC OSH Department, Sama Yas Residential Development",aboutTitle:"A prevention-led safety culture",mission:"Mission",missionText:"To protect every person involved in the Sama Yas Residential Development through proactive risk management, competent supervision, effective consultation and strict compliance with ALDAR OSHMS, ADOSH-SF and UAE legal requirements.",vision:"Vision",visionText:"To achieve Zero Harm by creating a workplace where safe decisions are embedded in every activity, every day and at every level.",objectives:"Objectives",objectivesText:"Prevent injuries and occupational illness, maintain legal compliance, strengthen workforce competence, close findings promptly, improve contractor performance and continuously enhance the OSH management system.",roles:"Roles & Responsibilities",rolesText:"The OSH Department plans, advises, inspects, trains, monitors and reports. Management provides resources, supervisors enforce controls, and every worker has the authority and duty to stop unsafe work.",livePerformance:"Live cumulative OSH performance",manpower:"Total Manpower",manhours:"Man-Hours",liveCounter:"Live UAE working-time counter",ltiDays:"LTI-Free Days",trainingSessions:"Training Sessions",personnelTrained:"Personnel Trained",trainingHours:"Training Hours",inductions:"OSH Inductions",meetings:"OSH Meetings",audits:"OSH Audits",inspections:"OSH Inspections",reviews:"Procedure Reviews",drills:"Emergency Drills",reportTrend:"Safety observation trend analysis",unsafeActs:"Unsafe Acts",unsafeConditions:"Unsafe Conditions",goodPractices:"Good Practices",reportConcern:"Report a Safety Concern",whatsappConcern:"Report a Safety Concern on WhatsApp",category:"Category",trackReport:"Track a Report",library:"Public document library",newsTitle:"OSH news and announcements",galleryTitle:"OSH photo gallery",emergencyTitle:"Emergency information"},
+en:{home:"Home",about:"About OSH",performance:"Performance",reports:"Safety Reports",documents:"OSH Documents",trainingVideos:"Training Awareness Videos",trainingVideosTitle:"Watch, learn and work safely",news:"News",gallery:"Gallery",emergency:"Emergency",contact:"Contact",adminLogin:"Admin Login",heroTitle:"Building Safely. Protecting Every Life.",heroSub:"MEC OSH Department, Sama Yas Residential Development",aboutTitle:"A prevention-led safety culture",mission:"Mission",missionText:"To protect every person involved in the Sama Yas Residential Development through proactive risk management, competent supervision, effective consultation and strict compliance with ALDAR OSHMS, ADOSH-SF and UAE legal requirements.",vision:"Vision",visionText:"To achieve Zero Harm by creating a workplace where safe decisions are embedded in every activity, every day and at every level.",objectives:"Objectives",objectivesText:"Prevent injuries and occupational illness, maintain legal compliance, strengthen workforce competence, close findings promptly, improve contractor performance and continuously enhance the OSH management system.",roles:"Roles & Responsibilities",rolesText:"The OSH Department plans, advises, inspects, trains, monitors and reports. Management provides resources, supervisors enforce controls, and every worker has the authority and duty to stop unsafe work.",livePerformance:"Live cumulative OSH performance",manpower:"Total Manpower",manhours:"Man-Hours",liveCounter:"Live UAE working-time counter",ltiDays:"LTI-Free Days",trainingSessions:"Training Sessions",personnelTrained:"Personnel Trained",trainingHours:"Training Hours",inductions:"OSH Inductions",meetings:"OSH Meetings",audits:"OSH Audits",inspections:"OSH Inspections",reviews:"Procedure Reviews",drills:"Emergency Drills",reportTrend:"Safety observation trend analysis",unsafeActs:"Unsafe Acts",unsafeConditions:"Unsafe Conditions",goodPractices:"Good Practices",reportConcern:"Report a Safety Concern",whatsappConcern:"Report a Safety Concern on WhatsApp",category:"Category",trackReport:"Track a Report",library:"Public document library",newsTitle:"OSH news and announcements",galleryTitle:"OSH Gallery",emergencyTitle:"Emergency information"},
 ar:{home:"الرئيسية",about:"عن السلامة والصحة المهنية",performance:"الأداء",reports:"تقارير السلامة",documents:"وثائق السلامة",trainingVideos:"فيديوهات التدريب والتوعية",trainingVideosTitle:"شاهد وتعلم واعمل بأمان",news:"الأخبار",gallery:"المعرض",emergency:"الطوارئ",contact:"اتصل بنا",adminLogin:"دخول المسؤول",heroTitle:"نبني بأمان. نحمي كل حياة.",heroSub:"قسم السلامة والصحة المهنية في مشروع سما ياس السكني",aboutTitle:"ثقافة سلامة قائمة على الوقاية",mission:"الرسالة",missionText:"حماية جميع العاملين في مشروع سما ياس من خلال الإدارة الاستباقية للمخاطر والإشراف الفعّال والالتزام بمتطلبات الدار وADOSH والقوانين الإماراتية.",vision:"الرؤية",visionText:"تحقيق هدف صفر ضرر من خلال ترسيخ القرارات الآمنة في كل نشاط وكل يوم وعلى جميع المستويات.",objectives:"الأهداف",objectivesText:"منع الإصابات والأمراض المهنية وتعزيز الكفاءة وإغلاق الملاحظات وتحسين أداء المقاولين والتطوير المستمر لنظام السلامة.",roles:"الأدوار والمسؤوليات",rolesText:"يقوم قسم السلامة بالتخطيط والمشورة والتفتيش والتدريب والمتابعة والتقارير، وتوفر الإدارة الموارد ويطبق المشرفون الضوابط ويحق لكل عامل إيقاف العمل غير الآمن.",livePerformance:"الأداء التراكمي المباشر",manpower:"إجمالي القوى العاملة",manhours:"ساعات العمل",liveCounter:"عداد مباشر وفق وقت العمل في الإمارات",ltiDays:"أيام بدون إصابة مضيعة للوقت",trainingSessions:"جلسات التدريب",personnelTrained:"الأشخاص المدربون",trainingHours:"ساعات التدريب",inductions:"تعريف السلامة",meetings:"اجتماعات السلامة",audits:"تدقيقات السلامة",inspections:"تفتيشات السلامة",reviews:"مراجعات الإجراءات",drills:"تمارين الطوارئ",reportTrend:"تحليل اتجاه ملاحظات السلامة",unsafeActs:"الأفعال غير الآمنة",unsafeConditions:"الظروف غير الآمنة",goodPractices:"الممارسات الجيدة",reportConcern:"الإبلاغ عن ملاحظة سلامة",whatsappConcern:"الإبلاغ عبر واتساب",category:"الفئة",trackReport:"تتبع التقرير",library:"مكتبة الوثائق العامة",newsTitle:"أخبار وإعلانات السلامة",galleryTitle:"معرض صور السلامة",emergencyTitle:"معلومات الطوارئ"}};
 let lang=localStorage.getItem("mecLanguage")==="ar"?"ar":"en";
 
@@ -38,6 +38,9 @@ function applyLanguage(){
 
   if(typeof renderDocuments==="function"){
     renderDocuments();
+  }
+  if(typeof loadTeamMembers==="function"){
+    loadTeamMembers();
   }
 }
 
@@ -605,6 +608,149 @@ async function loadTrainingVideos(){
   }
 }
 
+
+let teamCarouselIndex=0;
+let teamCarouselTimer=null;
+
+function teamDisplayText(member,englishField,arabicField){
+  if(lang==="ar"&&member[arabicField])return member[arabicField];
+  return member[englishField]||"";
+}
+
+function setTeamCarouselPage(index,animate=true){
+  const track=document.getElementById("teamCarouselTrack");
+  if(!track)return;
+
+  const slides=[...track.querySelectorAll(".team-slide:not(.team-empty-slide)")];
+  if(!slides.length)return;
+
+  teamCarouselIndex=(index+slides.length)%slides.length;
+  track.style.transition=animate?"transform .7s cubic-bezier(.22,.75,.23,1)":"none";
+  track.style.transform=`translateX(-${teamCarouselIndex*100}%)`;
+
+  document.querySelectorAll("#teamCarouselDots button").forEach((button,dotIndex)=>{
+    button.classList.toggle("active",dotIndex===teamCarouselIndex);
+    button.setAttribute("aria-current",dotIndex===teamCarouselIndex?"true":"false");
+  });
+}
+
+function restartTeamCarousel(){
+  clearInterval(teamCarouselTimer);
+  const slideCount=document.querySelectorAll("#teamCarouselTrack .team-slide:not(.team-empty-slide)").length;
+  if(slideCount<=1)return;
+
+  teamCarouselTimer=setInterval(()=>{
+    setTeamCarouselPage(teamCarouselIndex+1);
+  },4500);
+}
+
+function renderTeamMembers(members){
+  const track=document.getElementById("teamCarouselTrack");
+  const dots=document.getElementById("teamCarouselDots");
+  const previous=document.getElementById("teamCarouselPrev");
+  const next=document.getElementById("teamCarouselNext");
+
+  if(!track||!dots||!previous||!next)return;
+
+  clearInterval(teamCarouselTimer);
+  teamCarouselIndex=0;
+
+  if(!members?.length){
+    track.innerHTML=`<div class="team-slide team-empty-slide">
+      <div class="team-empty-state">
+        <div class="team-empty-icon" aria-hidden="true">👥</div>
+        <h3>OSH Team profiles will appear here</h3>
+        <p>Add team members through the Admin Dashboard.</p>
+      </div>
+    </div>`;
+    dots.innerHTML="";
+    previous.hidden=true;
+    next.hidden=true;
+    track.style.transform="translateX(0)";
+    return;
+  }
+
+  const groups=[];
+  for(let index=0;index<members.length;index+=4){
+    groups.push(members.slice(index,index+4));
+  }
+
+  track.innerHTML=groups.map(group=>{
+    const cards=group.map(member=>{
+      const name=teamDisplayText(member,"name_en","name_ar");
+      const designation=teamDisplayText(member,"designation_en","designation_ar");
+
+      return `<article class="team-member-card">
+        <div class="team-member-photo-wrap">
+          <img class="team-member-photo"
+               src="${escapeHtml(member.photo_url)}"
+               alt="${escapeHtml(name)}"
+               loading="lazy">
+        </div>
+        <div class="team-member-copy">
+          <h3>${escapeHtml(name)}</h3>
+          <p>${escapeHtml(designation)}</p>
+        </div>
+      </article>`;
+    }).join("");
+
+    return `<div class="team-slide">${cards}</div>`;
+  }).join("");
+
+  dots.innerHTML=groups.map((_,index)=>
+    `<button type="button"
+             aria-label="Show team group ${index+1}"
+             class="${index===0?"active":""}"
+             aria-current="${index===0?"true":"false"}"></button>`
+  ).join("");
+
+  previous.hidden=groups.length<=1;
+  next.hidden=groups.length<=1;
+
+  previous.onclick=()=>{
+    setTeamCarouselPage(teamCarouselIndex-1);
+    restartTeamCarousel();
+  };
+
+  next.onclick=()=>{
+    setTeamCarouselPage(teamCarouselIndex+1);
+    restartTeamCarousel();
+  };
+
+  dots.querySelectorAll("button").forEach((button,index)=>{
+    button.onclick=()=>{
+      setTeamCarouselPage(index);
+      restartTeamCarousel();
+    };
+  });
+
+  const carousel=document.getElementById("teamCarousel");
+  carousel.onmouseenter=()=>clearInterval(teamCarouselTimer);
+  carousel.onmouseleave=restartTeamCarousel;
+  carousel.onfocusin=()=>clearInterval(teamCarouselTimer);
+  carousel.onfocusout=restartTeamCarousel;
+
+  setTeamCarouselPage(0,false);
+  restartTeamCarousel();
+}
+
+async function loadTeamMembers(){
+  try{
+    const {data,error}=await db
+      .from("team_members")
+      .select("*")
+      .eq("active",true)
+      .order("sort_order",{ascending:true})
+      .order("created_at",{ascending:true});
+
+    if(error)throw error;
+    renderTeamMembers(data||[]);
+  }catch(error){
+    console.warn("OSH team profiles not loaded:",error.message);
+    renderTeamMembers([]);
+  }
+}
+
 async function loadGallery(){
   const slideshow=document.querySelector("#gallery .slideshow");
   const awardSlider=document.getElementById("awardSlider");
@@ -621,7 +767,10 @@ async function loadGallery(){
     if(error) throw error;
     if(!data?.length) return;
 
-    const photos=data.filter(item=>item.gallery_type==="Photo Gallery");
+    const photos=data.filter(item=>
+      item.gallery_type==="Photo Gallery" ||
+      item.gallery_type==="OSH Gallery Video"
+    );
     const awards=data.filter(item=>item.gallery_type==="Award");
 
     if(photos.length){
@@ -639,8 +788,16 @@ async function loadGallery(){
       slideshow.innerHTML=photoGroups.map((group,index)=>{
         const cards=group.map(item=>{
           const title=lang==="ar"&&item.title_ar?item.title_ar:item.title_en;
-          return `<article class="photo-slide-card">
-            <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(title)}" loading="lazy">
+          const isVideo=item.gallery_type==="OSH Gallery Video";
+          const media=isVideo
+            ? `<video class="gallery-slide-video" controls preload="metadata" playsinline>
+                 <source src="${escapeHtml(item.image_url)}">
+                 Your browser does not support embedded video.
+               </video>`
+            : `<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(title)}" loading="lazy">`;
+
+          return `<article class="photo-slide-card ${isVideo?"video-card":""}">
+            ${media}
             <h3>${escapeHtml(title)}</h3>
           </article>`;
         }).join("");
@@ -682,7 +839,40 @@ async function loadGallery(){
   }
 }
 
-function slider(item,prev,next,ms){let idx=0;const items=[...document.querySelectorAll(item)];if(!items.length)return;const show=n=>{items.forEach((x,i)=>x.classList.toggle("active",i===n));idx=n};document.querySelector(prev)?.addEventListener("click",()=>show((idx-1+items.length)%items.length));document.querySelector(next)?.addEventListener("click",()=>show((idx+1)%items.length));setInterval(()=>show((idx+1)%items.length),ms);}
+function slider(item,prev,next,ms){
+  let idx=0;
+  const items=[...document.querySelectorAll(item)];
+  if(!items.length)return;
+
+  const pauseVideos=container=>{
+    container?.querySelectorAll("video").forEach(video=>{
+      video.pause();
+    });
+  };
+
+  const show=n=>{
+    items.forEach((element,i)=>{
+      if(i!==n)pauseVideos(element);
+      element.classList.toggle("active",i===n);
+    });
+    idx=n;
+  };
+
+  document.querySelector(prev)?.addEventListener("click",()=>{
+    show((idx-1+items.length)%items.length);
+  });
+
+  document.querySelector(next)?.addEventListener("click",()=>{
+    show((idx+1)%items.length);
+  });
+
+  setInterval(()=>{
+    const activeVideo=items[idx]?.querySelector("video:not([paused])");
+    const playing=[...(items[idx]?.querySelectorAll("video")||[])]
+      .some(video=>!video.paused&&!video.ended);
+    if(!playing)show((idx+1)%items.length);
+  },ms);
+}
 
 
 
@@ -722,41 +912,13 @@ loadLiveSettings();
 loadDocuments();
 loadNews();
 loadTrainingVideos();
+loadTeamMembers();
 renderSafetyTrend(safetyTrendBaseline);
 loadSafetyTrend();
 setInterval(loadSafetyTrend,30000);
 loadGallery().finally(()=>{
   slider(".photo-group",".slide-prev",".slide-next",4000);
   slider(".award-group",".award-prev",".award-next",4000);
-});
-
-const organizationChartViewer = document.getElementById("organizationChartViewer");
-const openOrganizationChart = document.getElementById("openOrganizationChart");
-const viewOrganizationChart = document.getElementById("viewOrganizationChart");
-const closeOrganizationChart = document.getElementById("closeOrganizationChart");
-
-function showOrganizationChart() {
-  if (!organizationChartViewer) return;
-  organizationChartViewer.classList.add("open");
-  organizationChartViewer.setAttribute("aria-hidden", "false");
-}
-
-function hideOrganizationChart() {
-  if (!organizationChartViewer) return;
-  organizationChartViewer.classList.remove("open");
-  organizationChartViewer.setAttribute("aria-hidden", "true");
-}
-
-if (openOrganizationChart) openOrganizationChart.addEventListener("click", showOrganizationChart);
-if (viewOrganizationChart) viewOrganizationChart.addEventListener("click", showOrganizationChart);
-if (closeOrganizationChart) closeOrganizationChart.addEventListener("click", hideOrganizationChart);
-if (organizationChartViewer) {
-  organizationChartViewer.addEventListener("click", event => {
-    if (event.target === organizationChartViewer) hideOrganizationChart();
-  });
-}
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape") hideOrganizationChart();
 });
 
 const headerOpenReport = document.getElementById("headerOpenReport");

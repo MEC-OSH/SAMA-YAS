@@ -86,3 +86,9 @@ The Risk Assessment Generator now appends applicable ADOSH-SF Code of Practice r
 The Admin Dashboard exports a real `.xlsx` workbook. Photos from the private
 Supabase `report-photos` bucket are fetched using short-lived signed URLs,
 converted to compact PNG thumbnails, and embedded inside the Photo column.
+
+
+## OSH Team Members
+
+Run `TEAM_MEMBERS_SETUP.sql` once. Team profiles are managed in the Admin
+Dashboard and displayed four at a time in a right-to-left carousel.

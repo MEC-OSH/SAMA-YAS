@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="MEC OSH Department portal for Sama Yas Residential Development">
 <title>MEC OSH Department | Sama Yas</title>
-<link rel="stylesheet" href="styles.css?v=20260730-1752">
+<link rel="stylesheet" href="styles.css?v=20260731-1005">
 
 <style id="critical-top-navigation">
 .header .top-visible-links{
@@ -133,7 +133,7 @@
       <a href="#trend-analysis">Trend Analysis</a>
       <a href="#news" data-i18n="news">News</a>
       <a href="#certificates">Certificates</a>
-      <a href="#organization-chart">Organization Chart</a>
+      <a href="#organization-chart">OSH Team</a>
       <a href="#gallery" data-i18n="gallery">Gallery</a>
       <a href="#emergency">Emergency</a>
       <a href="#location">Location</a>
@@ -481,39 +481,35 @@
   <div class="container">
     <div class="section-head organization-chart-heading">
       <span>OSH Team</span>
-      <h2>OSH Team Organization Chart</h2>
+      <h2>Meet Our OSH Team</h2>
     </div>
 
-    <div class="organization-chart-card">
-      <button
-        type="button"
-        class="organization-chart-image-button"
-        id="openOrganizationChart"
-        aria-label="Enlarge OSH Team Organization Chart">
-        <img
-          src="assets/osh-team-organization-chart.png"
-          alt="OSH Team Organization Chart showing project leadership, zone teams, lifting team, night shift, OSH coordinator and male nurse"
-          loading="lazy">
-      </button>
-
-      <div class="organization-chart-actions">
-        <button type="button" class="primary" id="viewOrganizationChart">
-          View Full Size
-        </button>
-        <a
-          class="secondary"
-          href="assets/osh-team-organization-chart.pptx"
-          download>
-          Download PowerPoint
-        </a>
+    <div class="team-carousel" id="teamCarousel" aria-label="OSH team member slideshow">
+      <div class="team-carousel-viewport">
+        <div class="team-carousel-track" id="teamCarouselTrack">
+          <div class="team-slide team-empty-slide">
+            <div class="team-empty-state">
+              <div class="team-empty-icon" aria-hidden="true">👥</div>
+              <h3>OSH Team profiles will appear here</h3>
+              <p>Add team members through the Admin Dashboard.</p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <button class="team-carousel-prev" id="teamCarouselPrev" type="button"
+              aria-label="Show previous four team members">‹</button>
+      <button class="team-carousel-next" id="teamCarouselNext" type="button"
+              aria-label="Show next four team members">›</button>
+
+      <div class="team-carousel-dots" id="teamCarouselDots" aria-label="Team carousel pages"></div>
     </div>
   </div>
 </section>
 
 <section id="gallery" class="section pale">
 <div class="container">
-  <div class="section-head"><span data-i18n="gallery">Gallery</span><h2 data-i18n="galleryTitle">OSH photo gallery</h2></div>
+  <div class="section-head"><span data-i18n="gallery">Gallery</span><h2 data-i18n="galleryTitle">OSH Gallery</h2></div>
   <div class="slideshow"><div class="photo-group active">
       <article class="photo-slide-card">
         <img src="assets/gallery-1.jpg" alt="OSH good practice photo 1">
@@ -720,22 +716,6 @@
     </div>
   </div>
 </section>
-
-
-<div id="organizationChartViewer" class="org-chart-modal" aria-hidden="true">
-  <div class="org-chart-modal-content">
-    <button
-      type="button"
-      class="org-chart-modal-close"
-      id="closeOrganizationChart"
-      aria-label="Close organization chart viewer">×</button>
-    <img
-      src="assets/osh-team-organization-chart.png"
-      alt="Enlarged OSH Team Organization Chart">
-  </div>
-</div>
-
-
 <div id="certificateViewer" class="certificate-modal" aria-hidden="true">
   <div class="certificate-modal-content">
     <button
@@ -752,14 +732,14 @@
 <script>window.CATEGORY_DATA=[{"name": "Housekeeping & General Workplace Amenities", "ua": 36, "uc": 188}, {"name": "Traffic Management & Logistics", "ua": 23, "uc": 51}, {"name": "Working at Height", "ua": 104, "uc": 89}, {"name": "Scaffolding/Ladder", "ua": 111, "uc": 195}, {"name": "Personal Protective Equipment", "ua": 87, "uc": 16}, {"name": "Electrical Safety", "ua": 29, "uc": 49}, {"name": "Hand Tools", "ua": 23, "uc": 25}, {"name": "Excavations", "ua": 4, "uc": 3}, {"name": "Lifting Equipment and Lifting Accessories", "ua": 31, "uc": 45}, {"name": "Portable Power Tools", "ua": 32, "uc": 49}, {"name": "Plant and Equipment", "ua": 20, "uc": 32}, {"name": "Confined Space", "ua": 1, "uc": 8}, {"name": "Hot Work Operations", "ua": 41, "uc": 41}, {"name": "Compressed Air and Gases", "ua": 0, "uc": 9}, {"name": "Manual Handling", "ua": 17, "uc": 9}, {"name": "Welfare Facilities", "ua": 28, "uc": 39}, {"name": "Hazardous Substances", "ua": 0, "uc": 20}, {"name": "Machine Guarding", "ua": 5, "uc": 8}, {"name": "Storage Arrangements", "ua": 22, "uc": 115}, {"name": "Barricading of Hazards", "ua": 62, "uc": 112}, {"name": "Access and Egress", "ua": 56, "uc": 78}, {"name": "Permit to Work", "ua": 20, "uc": 14}, {"name": "Safety Signage & Signals", "ua": 14, "uc": 14}, {"name": "Falsework/Formwork", "ua": 96, "uc": 112}, {"name": "Waste Management", "ua": 15, "uc": 66}, {"name": "First Aid Case", "ua": 4, "uc": 2}, {"name": "Near Miss Incident", "ua": 0, "uc": 0}, {"name": "Property Damage", "ua": 0, "uc": 0}, {"name": "Lost Time Injury", "ua": 0, "uc": 1}];</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20260730-1634"></script>
+<script src="app.js?v=20260731-1005"></script>
 
 <a
   class="floating-emergency-call"
   href="tel:+971503325318"
   aria-label="Call site emergency number +971 50 332 5318">
   
-  <img src="assets/emergency-call-logo.png" alt="" aria-hidden="true">
+  <img src="assets/emergency-phone-icon.webp" alt="" aria-hidden="true">
   <strong>Emergency Call</strong>
 
 </a>

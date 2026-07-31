@@ -82,3 +82,16 @@ manually changed to Closed under Admin Dashboard > Safety Reports.
 
 Run TREND_ANALYSIS_ADMIN_SETUP.sql again in Supabase SQL Editor to replace
 the previous baseline with these updated cumulative values.
+
+OSH TEAM MEMBERS
+----------------
+1. Open Supabase > SQL Editor > New query.
+2. Open TEAM_MEMBERS_SETUP.sql from this package.
+3. Copy all SQL, paste it into Supabase and click Run.
+4. Confirm: Success. No rows returned.
+5. Open Admin Dashboard > OSH Team.
+6. Add each person's photo, name, designation and sort order.
+
+The public website displays four people in each carousel view. The carousel
+automatically moves from right to left. Team photos use the existing `gallery`
+Storage bucket under the `team-members` folder.

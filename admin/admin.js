@@ -78,7 +78,7 @@ db.auth.onAuthStateChange(async(event,session)=>{
 $("signOut").onclick=async()=>{await db.auth.signOut();location.reload();};
 document.querySelectorAll("[data-panel]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));$(b.dataset.panel).classList.add("active")});
 
-async function loadAll(){await Promise.all([loadSettings(),loadReports(),loadTrendAdmin(),loadDocuments(),loadTrainingVideos(),loadNews(),loadGallery(),loadLocations(),loadHolidays(),loadEnquiries()]);}
+async function loadAll(){await Promise.all([loadSettings(),loadReports(),loadTrendAdmin(),loadDocuments(),loadTrainingVideos(),loadNews(),loadTeamMembers(),loadGallery(),loadLocations(),loadHolidays(),loadEnquiries()]);}
 async function loadSettings(){const {data,error}=await db.from("settings").select("*").eq("id",1).maybeSingle();if(error)throw error;const s=data||{};$("dashManpower").textContent=Number(s.manpower||0).toLocaleString();$("dashManhours").textContent=Number(s.baseline_manhours||0).toLocaleString();
 const map={pManpower:s.manpower,pBaseline:s.baseline_manhours,pBaselineAt:s.baseline_at?new Date(s.baseline_at).toISOString().slice(0,16):"",pAdjustment:s.manhour_adjustment||0,pWorkStart:s.work_start?.slice(0,5),pLunchStart:s.lunch_start?.slice(0,5),pLunchEnd:s.lunch_end?.slice(0,5),pWorkEnd:s.work_end?.slice(0,5),pLastLti:s.last_lti_date,pTrainingSessions:s.training_sessions,pPersonnelTrained:s.personnel_trained,pTrainingHours:s.training_hours,pInductions:s.osh_inductions,pMeetings:s.osh_meetings,pAudits:s.osh_audits,pInspections:s.osh_inspections,pReviews:s.procedure_reviews,pDrills:s.emergency_drills};for(const [id,v] of Object.entries(map))if(v!==undefined&&v!==null)$(id).value=v;$("pPaused").checked=Boolean(s.counter_paused);}
 $("performanceForm").onsubmit=async e=>{e.preventDefault();setStatus("performanceStatus","Saving…");const payload={id:1,manpower:Number($("pManpower").value),baseline_manhours:Number($("pBaseline").value),baseline_at:new Date($("pBaselineAt").value).toISOString(),manhour_adjustment:Number($("pAdjustment").value||0),counter_paused:$("pPaused").checked,work_start:$("pWorkStart").value,lunch_start:$("pLunchStart").value,lunch_end:$("pLunchEnd").value,work_end:$("pWorkEnd").value,last_lti_date:$("pLastLti").value,training_sessions:Number($("pTrainingSessions").value||0),personnel_trained:Number($("pPersonnelTrained").value||0),training_hours:Number($("pTrainingHours").value||0),osh_inductions:Number($("pInductions").value||0),osh_meetings:Number($("pMeetings").value||0),osh_audits:Number($("pAudits").value||0),osh_inspections:Number($("pInspections").value||0),procedure_reviews:Number($("pReviews").value||0),emergency_drills:Number($("pDrills").value||0)};const {error}=await db.from("settings").upsert(payload);setStatus("performanceStatus",error?error.message:"Saved. Public figures will update on refresh.");if(!error)await loadSettings();};
@@ -622,8 +622,211 @@ $("trainingVideoForm").onsubmit=async event=>{
 async function loadNews(){const {data,error}=await db.from("news").select("*").order("created_at",{ascending:false});if(error)throw error;const list=$("newsList");list.innerHTML=data?.length?"":"<p>No news items.</p>";(data||[]).forEach(r=>{const d=document.createElement("div");d.className="data-item";d.innerHTML=`<strong>${r.title_en}</strong> <span class="small">${r.published?"Published":"Unpublished"}${r.pinned?" | Pinned":""}</span><p>${r.summary_en||""}</p><button class="danger">Delete</button>`;d.querySelector(".danger").onclick=async()=>{if(!confirm("Delete this news item?"))return;const {error}=await db.from("news").delete().eq("id",r.id);if(error)alert(error.message);else loadNews();};list.appendChild(d);});}
 $("newsForm").onsubmit=async e=>{e.preventDefault();setStatus("newsStatus","Saving…");try{const image=await upload("gallery",$("newsImage").files[0],"news");const attachment=await upload("documents",$("newsAttachment").files[0],"news-attachments");const payload={title_en:$("newsTitleEn").value,title_ar:$("newsTitleAr").value||null,summary_en:$("newsSummaryEn").value||null,summary_ar:$("newsSummaryAr").value||null,details_en:$("newsDetailsEn").value||null,details_ar:$("newsDetailsAr").value||null,image_url:image?.url||null,attachment_url:attachment?.url||null,published:$("newsPublished").checked,pinned:$("newsPinned").checked};const {error}=await db.from("news").insert(payload);if(error)throw error;e.target.reset();$("newsPublished").checked=true;setStatus("newsStatus","Saved.");loadNews();}catch(err){setStatus("newsStatus",err.message)}};
 
-async function loadGallery(){const {data,error}=await db.from("gallery").select("*").neq("gallery_type","Training Awareness Video").order("sort_order").order("created_at",{ascending:false});if(error)throw error;const list=$("galleryList");list.innerHTML=data?.length?"":"<p>No gallery images.</p>";(data||[]).forEach(r=>{const d=document.createElement("div");d.className="data-item";d.innerHTML=`<img class="preview-thumb" src="${r.image_url}" alt=""><br><strong>${r.title_en}</strong> <span class="small">${r.gallery_type}</span><br><button class="danger">Delete</button>`;d.querySelector(".danger").onclick=async()=>{if(!confirm("Delete this image?"))return;const path=storagePath(r.image_url,"gallery");if(path)await db.storage.from("gallery").remove([path]);const {error}=await db.from("gallery").delete().eq("id",r.id);if(error)alert(error.message);else loadGallery();};list.appendChild(d);});}
-$("galleryForm").onsubmit=async e=>{e.preventDefault();setStatus("galleryStatus","Uploading…");try{const image=await upload("gallery",$("galleryFile").files[0],$("galleryType").value==="Award"?"awards":"photos");const {error}=await db.from("gallery").insert({gallery_type:$("galleryType").value,title_en:$("galleryTitleEn").value,title_ar:$("galleryTitleAr").value||null,image_url:image.url,sort_order:Number($("galleryOrder").value||0)});if(error)throw error;e.target.reset();setStatus("galleryStatus","Uploaded.");loadGallery();}catch(err){setStatus("galleryStatus",err.message)}};
+
+async function loadTeamMembers(){
+  const {data,error}=await db
+    .from("team_members")
+    .select("*")
+    .order("sort_order")
+    .order("created_at",{ascending:true});
+
+  if(error)throw error;
+
+  const list=$("teamMemberList");
+  list.innerHTML=data?.length?"":"<p>No team members added.</p>";
+
+  (data||[]).forEach(member=>{
+    const card=document.createElement("div");
+    card.className="data-item team-member-admin-card";
+
+    card.innerHTML=`<img class="team-member-admin-photo"
+                         src="${member.photo_url}"
+                         alt="${member.name_en}">
+      <div class="team-member-admin-fields">
+        <label>English name
+          <input class="member-name-en" value="${member.name_en||""}">
+        </label>
+        <label>Arabic name
+          <input class="member-name-ar" value="${member.name_ar||""}">
+        </label>
+        <label>English designation
+          <input class="member-designation-en" value="${member.designation_en||""}">
+        </label>
+        <label>Arabic designation
+          <input class="member-designation-ar" value="${member.designation_ar||""}">
+        </label>
+        <label>Sort order
+          <input class="member-sort-order" type="number" value="${member.sort_order||0}">
+        </label>
+        <label>
+          <input class="member-active" type="checkbox" ${member.active?"checked":""}>
+          Show on public website
+        </label>
+        <div class="team-member-admin-actions">
+          <button class="primary save-team-member" type="button">Save Changes</button>
+          <button class="danger delete-team-member" type="button">Delete</button>
+        </div>
+      </div>`;
+
+    card.querySelector(".save-team-member").onclick=async()=>{
+      const saveButton=card.querySelector(".save-team-member");
+      saveButton.disabled=true;
+      saveButton.textContent="Saving…";
+
+      const {error}=await db.from("team_members").update({
+        name_en:card.querySelector(".member-name-en").value.trim(),
+        name_ar:card.querySelector(".member-name-ar").value.trim()||null,
+        designation_en:card.querySelector(".member-designation-en").value.trim(),
+        designation_ar:card.querySelector(".member-designation-ar").value.trim()||null,
+        sort_order:Number(card.querySelector(".member-sort-order").value||0),
+        active:card.querySelector(".member-active").checked,
+        updated_at:new Date().toISOString()
+      }).eq("id",member.id);
+
+      saveButton.disabled=false;
+      saveButton.textContent="Save Changes";
+
+      if(error)alert(error.message);
+      else{
+        alert("Team member updated.");
+        loadTeamMembers();
+      }
+    };
+
+    card.querySelector(".delete-team-member").onclick=async()=>{
+      if(!confirm(`Delete ${member.name_en}?`))return;
+
+      const photoPath=storagePath(member.photo_url,"gallery");
+      if(photoPath){
+        await db.storage.from("gallery").remove([photoPath]);
+      }
+
+      const {error}=await db.from("team_members").delete().eq("id",member.id);
+      if(error)alert(error.message);
+      else loadTeamMembers();
+    };
+
+    list.appendChild(card);
+  });
+}
+
+$("teamMemberForm").onsubmit=async event=>{
+  event.preventDefault();
+  setStatus("teamMemberStatus","Uploading…");
+
+  try{
+    const photo=$("teamPhoto").files[0];
+    if(!photo)throw new Error("Select a profile photo.");
+    if(!photo.type.startsWith("image/"))throw new Error("Select a valid image file.");
+
+    const uploaded=await upload("gallery",photo,"team-members");
+
+    const {error}=await db.from("team_members").insert({
+      name_en:$("teamNameEn").value.trim(),
+      name_ar:$("teamNameAr").value.trim()||null,
+      designation_en:$("teamDesignationEn").value.trim(),
+      designation_ar:$("teamDesignationAr").value.trim()||null,
+      photo_url:uploaded.url,
+      sort_order:Number($("teamSortOrder").value||0),
+      active:$("teamActive").checked
+    });
+
+    if(error)throw error;
+
+    event.target.reset();
+    $("teamSortOrder").value="0";
+    $("teamActive").checked=true;
+    setStatus("teamMemberStatus","Team member added.");
+    loadTeamMembers();
+  }catch(error){
+    setStatus("teamMemberStatus",error.message);
+  }
+};
+
+async function loadGallery(){
+  const {data,error}=await db
+    .from("gallery")
+    .select("*")
+    .neq("gallery_type","Training Awareness Video")
+    .order("sort_order")
+    .order("created_at",{ascending:false});
+
+  if(error)throw error;
+
+  const list=$("galleryList");
+  list.innerHTML=data?.length?"":"<p>No gallery media.</p>";
+
+  (data||[]).forEach(r=>{
+    const d=document.createElement("div");
+    d.className="data-item";
+
+    const isVideo=r.gallery_type==="OSH Gallery Video";
+    const preview=isVideo
+      ? `<video class="preview-video" controls preload="metadata"><source src="${r.image_url}"></video>`
+      : `<img class="preview-thumb" src="${r.image_url}" alt="">`;
+
+    d.innerHTML=`${preview}<br>
+      <strong>${r.title_en}</strong>
+      <span class="small">${r.gallery_type}</span><br>
+      <button class="danger" type="button">Delete</button>`;
+
+    d.querySelector(".danger").onclick=async()=>{
+      if(!confirm(`Delete this ${isVideo?"video":"image"}?`))return;
+      const path=storagePath(r.image_url,"gallery");
+      if(path)await db.storage.from("gallery").remove([path]);
+      const {error}=await db.from("gallery").delete().eq("id",r.id);
+      if(error)alert(error.message);
+      else loadGallery();
+    };
+
+    list.appendChild(d);
+  });
+}
+$("galleryForm").onsubmit=async e=>{
+  e.preventDefault();
+  setStatus("galleryStatus","Uploading…");
+
+  try{
+    const file=$("galleryFile").files[0];
+    if(!file)throw new Error("Select a photo or video file.");
+
+    const galleryType=$("galleryType").value;
+    const isVideo=galleryType==="OSH Gallery Video";
+
+    if(isVideo&&!file.type.startsWith("video/")){
+      throw new Error("Select a valid video file for OSH Gallery Video.");
+    }
+
+    if(!isVideo&&!file.type.startsWith("image/")){
+      throw new Error("Select a valid image file for this option.");
+    }
+
+    const folder=galleryType==="Award"
+      ?"awards"
+      :isVideo
+        ?"osh-gallery-videos"
+        :"photos";
+
+    const media=await upload("gallery",file,folder);
+
+    const {error}=await db.from("gallery").insert({
+      gallery_type:galleryType,
+      title_en:$("galleryTitleEn").value,
+      title_ar:$("galleryTitleAr").value||null,
+      image_url:media.url,
+      sort_order:Number($("galleryOrder").value||0)
+    });
+
+    if(error)throw error;
+
+    e.target.reset();
+    $("galleryOrder").value="0";
+    setStatus("galleryStatus",isVideo?"Video uploaded to OSH Gallery.":"Image uploaded.");
+    loadGallery();
+  }catch(err){
+    setStatus("galleryStatus",err.message);
+  }
+};
 
 async function loadLocations(){const {data,error}=await db.from("site_locations").select("*").order("sort_order");if(error)throw error;const list=$("locationList");list.innerHTML="";(data||[]).forEach(r=>{const d=document.createElement("div");d.className="data-item";d.innerHTML=`${r.name_en} <button class="danger">Delete</button>`;d.querySelector(".danger").onclick=async()=>{const {error}=await db.from("site_locations").delete().eq("id",r.id);if(error)alert(error.message);else loadLocations();};list.appendChild(d);});}
 $("locationForm").onsubmit=async e=>{e.preventDefault();const {error}=await db.from("site_locations").insert({name_en:$("locationNameEn").value,name_ar:$("locationNameAr").value||null});setStatus("locationStatus",error?error.message:"Added.");if(!error){e.target.reset();loadLocations();}};
