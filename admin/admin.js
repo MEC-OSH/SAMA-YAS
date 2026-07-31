@@ -78,7 +78,94 @@ db.auth.onAuthStateChange(async(event,session)=>{
 $("signOut").onclick=async()=>{await db.auth.signOut();location.reload();};
 document.querySelectorAll("[data-panel]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));$(b.dataset.panel).classList.add("active")});
 
-async function loadAll(){await Promise.all([loadSettings(),loadReports(),loadTrendAdmin(),loadDocuments(),loadTrainingVideos(),loadNews(),loadContactSettings(),loadTeamMembers(),loadGallery(),loadLocations(),loadHolidays(),loadEnquiries()]);}
+async function loadAll(){
+  const modules=[
+    ["Performance",loadSettings],["Safety Reports",loadReports],
+    ["Trend Analysis",loadTrendAdmin],["Documents",loadDocuments],
+    ["Training Videos",loadTrainingVideos],["News",loadNews],
+    ["Contact Section",loadContactSettings],["OSH Team",loadTeamMembers],
+    ["Gallery",loadGallery],["Locations",loadLocations],
+    ["Holidays",loadHolidays],["Enquiries",loadEnquiries]
+  ];
+  const results=await Promise.allSettled(modules.map(([,loader])=>loader()));
+  results.forEach((result,index)=>{
+    if(result.status==="rejected"){
+      console.warn(`${modules[index][0]} failed to load:`,result.reason);
+    }
+  });
+}
+
+async function setDocumentLibraryPassword(newPassword,statusId){
+  setStatus(statusId,"Saving…");
+
+  try{
+    const {data,error}=await db.rpc(
+      "set_document_library_password",
+      {new_password:newPassword}
+    );
+
+    if(error)throw error;
+    if(data!==true)throw new Error("Password was not updated.");
+
+    setStatus(statusId,"Document Library password updated successfully.");
+    return true;
+  }catch(error){
+    setStatus(statusId,error.message);
+    return false;
+  }
+}
+
+$("documentPasswordAdminForm").onsubmit=async event=>{
+  event.preventDefault();
+
+  const newPassword=$("documentNewPassword").value;
+  const confirmPassword=$("documentConfirmPassword").value;
+
+  if(newPassword.length<4){
+    setStatus(
+      "documentPasswordAdminStatus",
+      "Password must contain at least 4 characters."
+    );
+    return;
+  }
+
+  if(newPassword!==confirmPassword){
+    setStatus(
+      "documentPasswordAdminStatus",
+      "New password and confirmation do not match."
+    );
+    return;
+  }
+
+  const saved=await setDocumentLibraryPassword(
+    newPassword,
+    "documentPasswordAdminStatus"
+  );
+
+  if(saved){
+    event.target.reset();
+  }
+};
+
+$("resetDocumentPassword").onclick=async()=>{
+  const confirmed=confirm(
+    "Reset the Document Library password to 072024?"
+  );
+  if(!confirmed)return;
+
+  const button=$("resetDocumentPassword");
+  button.disabled=true;
+  button.textContent="Resetting…";
+
+  await setDocumentLibraryPassword(
+    "072024",
+    "documentPasswordResetStatus"
+  );
+
+  button.disabled=false;
+  button.textContent="Reset to 072024";
+};
+
 async function loadSettings(){const {data,error}=await db.from("settings").select("*").eq("id",1).maybeSingle();if(error)throw error;const s=data||{};$("dashManpower").textContent=Number(s.manpower||0).toLocaleString();$("dashManhours").textContent=Number(s.baseline_manhours||0).toLocaleString();
 const map={pManpower:s.manpower,pBaseline:s.baseline_manhours,pBaselineAt:s.baseline_at?new Date(s.baseline_at).toISOString().slice(0,16):"",pAdjustment:s.manhour_adjustment||0,pWorkStart:s.work_start?.slice(0,5),pLunchStart:s.lunch_start?.slice(0,5),pLunchEnd:s.lunch_end?.slice(0,5),pWorkEnd:s.work_end?.slice(0,5),pLastLti:s.last_lti_date,pTrainingSessions:s.training_sessions,pPersonnelTrained:s.personnel_trained,pTrainingHours:s.training_hours,pInductions:s.osh_inductions,pMeetings:s.osh_meetings,pAudits:s.osh_audits,pInspections:s.osh_inspections,pReviews:s.procedure_reviews,pDrills:s.emergency_drills};for(const [id,v] of Object.entries(map))if(v!==undefined&&v!==null)$(id).value=v;$("pPaused").checked=Boolean(s.counter_paused);}
 $("performanceForm").onsubmit=async e=>{e.preventDefault();setStatus("performanceStatus","Saving…");const payload={id:1,manpower:Number($("pManpower").value),baseline_manhours:Number($("pBaseline").value),baseline_at:new Date($("pBaselineAt").value).toISOString(),manhour_adjustment:Number($("pAdjustment").value||0),counter_paused:$("pPaused").checked,work_start:$("pWorkStart").value,lunch_start:$("pLunchStart").value,lunch_end:$("pLunchEnd").value,work_end:$("pWorkEnd").value,last_lti_date:$("pLastLti").value,training_sessions:Number($("pTrainingSessions").value||0),personnel_trained:Number($("pPersonnelTrained").value||0),training_hours:Number($("pTrainingHours").value||0),osh_inductions:Number($("pInductions").value||0),osh_meetings:Number($("pMeetings").value||0),osh_audits:Number($("pAudits").value||0),osh_inspections:Number($("pInspections").value||0),procedure_reviews:Number($("pReviews").value||0),emergency_drills:Number($("pDrills").value||0)};const {error}=await db.from("settings").upsert(payload);setStatus("performanceStatus",error?error.message:"Saved. Public figures will update on refresh.");if(!error)await loadSettings();};
@@ -635,13 +722,26 @@ function contactAdminImageUrl(url){
 }
 
 async function loadContactSettings(){
-  const {data,error}=await db
-    .from("contact_settings")
-    .select("*")
-    .eq("id",1)
-    .maybeSingle();
+  let data=null;
 
-  if(error)throw error;
+  try{
+    const response=await db
+      .from("contact_settings")
+      .select("*")
+      .eq("id",1)
+      .maybeSingle();
+
+    if(response.error)throw response.error;
+    data=response.data;
+  }catch(error){
+    console.warn("Contact settings table not available:",error.message);
+    setStatus(
+      "contactSettingsStatus",
+      error.message.includes("contact_settings")
+        ? "Contact database setup is required. Run CONTACT_SETTINGS_SCHEMA_FIX.sql in Supabase SQL Editor."
+        : error.message
+    );
+  }
 
   contactSettingsRow=data||{
     id:1,
@@ -758,14 +858,28 @@ $("contactSettingsForm").onsubmit=async event=>{
       "Contact section saved. The public website will update on refresh."
     );
   }catch(error){
-    setStatus("contactSettingsStatus",error.message);
+    const message=error.message.includes("contact_settings")
+      ? "Contact database setup is required. Run CONTACT_SETTINGS_SCHEMA_FIX.sql in Supabase SQL Editor."
+      : error.message;
+    setStatus("contactSettingsStatus",message);
   }
 };
+
+
+const TEAM_STAKEHOLDER_GROUPS=["Client","PMC","Consultant","Main Contractor"];
+
+function teamStakeholderOptions(selected){
+  const current=selected||"Main Contractor";
+  return TEAM_STAKEHOLDER_GROUPS.map(group=>
+    `<option value="${group}" ${group===current?"selected":""}>${group}</option>`
+  ).join("");
+}
 
 async function loadTeamMembers(){
   const {data,error}=await db
     .from("team_members")
     .select("*")
+    .order("stakeholder_group")
     .order("sort_order")
     .order("created_at",{ascending:true});
 
@@ -794,6 +908,11 @@ async function loadTeamMembers(){
         <label>Arabic designation
           <input class="member-designation-ar" value="${member.designation_ar||""}">
         </label>
+        <label>Stakeholder group
+          <select class="member-stakeholder-group">
+            ${teamStakeholderOptions(member.stakeholder_group)}
+          </select>
+        </label>
         <label>Sort order
           <input class="member-sort-order" type="number" value="${member.sort_order||0}">
         </label>
@@ -817,6 +936,7 @@ async function loadTeamMembers(){
         name_ar:card.querySelector(".member-name-ar").value.trim()||null,
         designation_en:card.querySelector(".member-designation-en").value.trim(),
         designation_ar:card.querySelector(".member-designation-ar").value.trim()||null,
+        stakeholder_group:card.querySelector(".member-stakeholder-group").value,
         sort_order:Number(card.querySelector(".member-sort-order").value||0),
         active:card.querySelector(".member-active").checked,
         updated_at:new Date().toISOString()
@@ -865,6 +985,7 @@ $("teamMemberForm").onsubmit=async event=>{
       name_ar:$("teamNameAr").value.trim()||null,
       designation_en:$("teamDesignationEn").value.trim(),
       designation_ar:$("teamDesignationAr").value.trim()||null,
+      stakeholder_group:$("teamStakeholderGroup").value,
       photo_url:uploaded.url,
       sort_order:Number($("teamSortOrder").value||0),
       active:$("teamActive").checked
@@ -873,6 +994,7 @@ $("teamMemberForm").onsubmit=async event=>{
     if(error)throw error;
 
     event.target.reset();
+    $("teamStakeholderGroup").value="Main Contractor";
     $("teamSortOrder").value="0";
     $("teamActive").checked=true;
     setStatus("teamMemberStatus","Team member added.");

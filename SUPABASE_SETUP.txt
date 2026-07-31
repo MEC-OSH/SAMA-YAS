@@ -108,3 +108,38 @@ EDITABLE CONTACT SECTION
 
 English and Arabic contact details are supported. A new uploaded contact photo
 is stored in the existing `gallery` Storage bucket under the `contact` folder.
+
+OSH TEAM STAKEHOLDER GROUPS
+---------------------------
+For a website where TEAM_MEMBERS_SETUP.sql was already run:
+
+1. Open Supabase > SQL Editor > New query.
+2. Open TEAM_STAKEHOLDER_GROUPS_UPDATE.sql from this package.
+3. Copy all SQL, paste it into Supabase and click Run.
+4. Open Admin Dashboard > OSH Team.
+5. Assign every person to Client, PMC, Consultant or Main Contractor.
+
+Existing team members will initially be assigned to Main Contractor.
+Client and PMC appear side by side in the first row. Consultant and Main
+Contractor each appear in their own full-width section below.
+
+DOCUMENT LIBRARY PASSWORD MANAGEMENT
+------------------------------------
+1. Open Supabase > SQL Editor > New query.
+2. Open DOCUMENT_LIBRARY_PASSWORD_SETUP.sql from this package.
+3. Copy all SQL, paste it into Supabase and click Run.
+4. Confirm: Success. No rows returned.
+5. The initial Document Library password is 072024.
+6. Open Admin Dashboard > Document Password to change or reset it.
+
+The public website verifies the password through a Supabase RPC. The password
+is stored as a private bcrypt hash and is not exposed in the public JavaScript.
+
+
+CONTACT SETTINGS SCHEMA CACHE FIX
+---------------------------------
+1. Open Supabase > SQL Editor > New query.
+2. Run CONTACT_SETTINGS_SCHEMA_FIX.sql.
+3. Confirm the final query returns one row.
+4. Wait about 10 seconds.
+5. Refresh the Admin Dashboard using Ctrl + F5.

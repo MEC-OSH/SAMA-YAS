@@ -147,6 +147,17 @@ body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-colum
   border-radius:50%;
   background:#222;
 }
+
+.document-default-password{
+  display:inline-block;
+  padding:12px 18px;
+  border:2px solid #ffd400;
+  border-radius:7px;
+  background:#111;
+  color:#ffd400;
+  font-size:24px;
+  letter-spacing:4px;
+}
 </style></head><body>
 <div id="loginView" class="login">
   <h1>Admin Login</h1>
@@ -164,7 +175,7 @@ body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-colum
 </div>
 <div id="adminApp" class="admin-shell" hidden>
 <aside class="sidebar"><h2>MEC OSH Admin</h2>
-<button data-panel="dashboard">Dashboard</button><button data-panel="performance">Performance</button><button data-panel="reports">Safety Reports</button><button data-panel="trend-analysis-admin">Trend Analysis</button><button data-panel="documents">Documents</button><button data-panel="training-videos">Training Videos</button><button data-panel="news">News</button><button data-panel="team-members">OSH Team</button><button data-panel="contact-settings">Contact Section</button><button data-panel="gallery">Gallery & Awards</button><button data-panel="locations">Locations & Holidays</button><button data-panel="enquiries">Enquiries</button><a href="../">View Website</a><button id="signOut">Sign Out</button></aside>
+<button data-panel="dashboard">Dashboard</button><button data-panel="performance">Performance</button><button data-panel="reports">Safety Reports</button><button data-panel="trend-analysis-admin">Trend Analysis</button><button data-panel="documents">Documents</button><button data-panel="document-password">Document Password</button><button data-panel="training-videos">Training Videos</button><button data-panel="news">News</button><button data-panel="team-members">OSH Team</button><button data-panel="contact-settings">Contact Section</button><button data-panel="gallery">Gallery & Awards</button><button data-panel="locations">Locations & Holidays</button><button data-panel="enquiries">Enquiries</button><a href="../">View Website</a><button id="signOut">Sign Out</button></aside>
 <main class="admin-main">
 <section id="dashboard" class="panel active"><div class="toolbar"><h1>Dashboard</h1><span class="spacer"></span><span id="adminIdentity" class="small"></span></div><div class="metrics"><div class="metric"><span>Manpower</span><strong id="dashManpower">—</strong></div><div class="metric"><span>Baseline Man-Hours</span><strong id="dashManhours">—</strong></div><div class="metric"><span>Open Reports</span><strong id="dashReports">—</strong></div></div></section>
 <section id="performance" class="panel"><h1>Performance Settings</h1><form id="performanceForm" class="admin-grid"><div class="admin-card"><label>Current manpower<input id="pManpower" type="number" required></label><label>Baseline man-hours<input id="pBaseline" type="number" step="0.01" required></label><label>Baseline date and time<input id="pBaselineAt" type="datetime-local" required></label><label>Manual adjustment (+/- hours)<input id="pAdjustment" type="number" step="0.01"></label><label><input id="pPaused" type="checkbox"> Pause counter</label></div><div class="admin-card"><label>Working start<input id="pWorkStart" type="time"></label><label>Lunch start<input id="pLunchStart" type="time"></label><label>Lunch end<input id="pLunchEnd" type="time"></label><label>Working end<input id="pWorkEnd" type="time"></label><label>Last LTI date<input id="pLastLti" type="date"></label></div><div class="admin-card"><label>Training sessions<input id="pTrainingSessions" type="number"></label><label>Personnel trained<input id="pPersonnelTrained" type="number"></label><label>Training hours<input id="pTrainingHours" type="number" step="0.01"></label><label>OSH inductions<input id="pInductions" type="number"></label></div><div class="admin-card"><label>OSH meetings<input id="pMeetings" type="number"></label><label>OSH audits<input id="pAudits" type="number"></label><label>OSH inspections<input id="pInspections" type="number"></label><label>Procedure reviews<input id="pReviews" type="number"></label><label>Emergency drills<input id="pDrills" type="number"></label></div><div><button class="primary" type="submit">Save Performance Settings</button><p id="performanceStatus" class="status"></p></div></form></section>
@@ -233,6 +244,64 @@ body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-colum
 
 <section id="documents" class="panel"><h1>Document Library</h1><form id="documentForm" class="admin-card"><label>English title<input id="docTitleEn" required></label><label>Arabic title<input id="docTitleAr"></label><label>Category<select id="docCategory"><option>OSH Plan</option><option>Procedure</option><option>MSRA</option><option>Legal Register</option><option>Risk Register</option><option>OSH Policy</option><option>OSH Campaign</option><option>Training</option><option>Organization Chart</option><option>Signages</option><option>Forms</option><option>Checklist</option>
 <option value="Third-Party Certificate">Third-Party Certificate</option></select></label><label>Original file<input id="docFile" type="file" required accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"></label><label>Optional PDF preview<input id="docPreview" type="file" accept=".pdf"></label><button class="primary" type="submit">Upload (50 MB max)</button><p id="documentStatus" class="status"></p></form><div id="documentList" class="data-list"></div></section>
+<section id="document-password" class="panel">
+  <h1>Document Library Password</h1>
+
+  <div class="admin-grid">
+    <form id="documentPasswordAdminForm" class="admin-card">
+      <h3>Change Password</h3>
+      <p class="small">
+        Set the password required to open the protected OSH Documents Library.
+      </p>
+
+      <label>New password
+        <input id="documentNewPassword"
+               type="password"
+               minlength="4"
+               maxlength="20"
+               autocomplete="new-password"
+               required>
+      </label>
+
+      <label>Confirm new password
+        <input id="documentConfirmPassword"
+               type="password"
+               minlength="4"
+               maxlength="20"
+               autocomplete="new-password"
+               required>
+      </label>
+
+      <button class="primary" type="submit">Change Password</button>
+      <p id="documentPasswordAdminStatus" class="status"></p>
+    </form>
+
+    <div class="admin-card">
+      <h3>Reset Password</h3>
+      <p>
+        Reset the protected Document Library password to the original default:
+      </p>
+      <p class="document-default-password"><strong>072024</strong></p>
+      <button id="resetDocumentPassword"
+              class="danger"
+              type="button">Reset to 072024</button>
+      <p id="documentPasswordResetStatus" class="status"></p>
+    </div>
+
+    <div class="admin-card">
+      <h3>Public Access Message</h3>
+      <p>
+        The password window tells users:
+        <strong>“For the access password, contact MEC OSH Admin.”</strong>
+      </p>
+      <p class="small">
+        The public password is verified through Supabase. The password itself
+        is not stored in the public website JavaScript.
+      </p>
+    </div>
+  </div>
+</section>
+
 <section id="training-videos" class="panel">
   <h1>Training Awareness Videos</h1>
   <form id="trainingVideoForm" class="admin-card">
@@ -364,6 +433,15 @@ body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-colum
 
     <label>Arabic designation
       <input id="teamDesignationAr">
+    </label>
+
+    <label>Stakeholder group
+      <select id="teamStakeholderGroup" required>
+        <option value="Client">Client</option>
+        <option value="PMC">PMC</option>
+        <option value="Consultant">Consultant</option>
+        <option value="Main Contractor" selected>Main Contractor</option>
+      </select>
     </label>
 
     <label>Profile photo

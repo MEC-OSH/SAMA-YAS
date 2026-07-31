@@ -98,3 +98,34 @@ Dashboard and displayed four at a time in a right-to-left carousel.
 
 Run `CONTACT_SECTION_SETUP.sql` once. The Admin Dashboard can then update the
 public Contact photo and all English/Arabic contact details.
+
+
+## OSH Team Stakeholder Groups
+
+Run `TEAM_STAKEHOLDER_GROUPS_UPDATE.sql` once for an existing Supabase project.
+The Admin Dashboard can then assign each team member to Client, PMC, Consultant
+or Main Contractor.
+
+
+## Protected Document Library
+
+The Public Document Library is no longer part of the normal page flow. It is
+opened only from the drawer menu and requires the password `072024`.
+
+The Risk Assessment Generator remains visible on the public website as a
+standalone section.
+
+Important: This is a client-side password gate on a static website. It prevents
+normal browsing access but is not a substitute for server-side authentication.
+
+
+## Document Library Password Management
+
+Run `DOCUMENT_LIBRARY_PASSWORD_SETUP.sql` once. The initial password is
+`072024`. The Admin Dashboard can change the password or reset it to `072024`.
+The public password window includes MEC OSH Admin contact information.
+
+
+## Contact Settings Schema Fix
+Run `CONTACT_SETTINGS_SCHEMA_FIX.sql` when Supabase reports that
+`public.contact_settings` is missing from the schema cache.

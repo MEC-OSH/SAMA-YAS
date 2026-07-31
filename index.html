@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="MEC OSH Department portal for Sama Yas Residential Development">
 <title>MEC OSH Department | Sama Yas</title>
-<link rel="stylesheet" href="styles.css?v=20260731-1029">
+<link rel="stylesheet" href="styles.css?v=20260731-1508">
 
 <style id="critical-top-navigation">
 .header .top-visible-links{
@@ -102,7 +102,6 @@
       <a class="top-nav-button" href="#home" data-i18n="home">Home</a>
       <a class="top-nav-button" href="#about" data-i18n="about">About OSH</a>
       <a class="top-nav-button" href="#contact" data-i18n="contact">Contact</a>
-      <a class="top-nav-button" href="#documents" data-i18n="documents">OSH Documents</a>
       <button id="topLangBtn" class="top-nav-button top-lang-btn" type="button">العربية</button>
       <button id="topOpenReport" class="top-nav-button top-report-btn" type="button" data-i18n="reportConcern">
         Report a Safety Concern
@@ -127,6 +126,7 @@
       </div>
 
       <a href="#performance" data-i18n="performance">Performance</a>
+      <a href="#documents" id="openDocumentLibrary" class="protected-document-link" data-i18n="documents">OSH Documents</a>
       <a class="risk-generator-nav" href="risk-assessment/">Risk Assessment Generator</a>
       <a href="#training-videos" data-i18n="trainingVideos">Training Awareness Videos</a>
       <a href="#reports" data-i18n="reports">Safety Reports</a>
@@ -251,35 +251,130 @@
 </div>
 </section>
 
-<section id="documents" class="section pale">
-<div class="container">
-  <div class="section-head"><span data-i18n="documents">OSH Documents</span><h2 data-i18n="library">Public document library</h2></div>
-  <div class="doc-tools"><input id="docSearch" type="search" placeholder="Search documents"><select id="docFilter"><option value="all">All sections</option></select></div>
-  <div class="document-categories persistent-document-tools">
-    <article class="document-category-card risk-generator-card">
-      <div class="document-category-icon risk-generator-icon" aria-hidden="true">RA</div>
-      <div>
+<section id="risk-assessment-tool" class="section risk-tool-public-section">
+  <div class="container">
+    <div class="section-head">
+      <span>Interactive OSH Tool</span>
+      <h2>Risk Assessment Generator</h2>
+    </div>
+
+    <article class="public-risk-tool-card">
+      <div class="public-risk-tool-icon" aria-hidden="true">RA</div>
+      <div class="public-risk-tool-copy">
         <span class="document-category-badge">Interactive Tool</span>
-        <h3>Risk Assessment Generator</h3>
-        <p>Select activities from the approved risk register, automatically load hazards and controls, calculate risk levels and generate an editable Word document.</p>
+        <h3>Create an Editable Risk Assessment</h3>
+        <p>
+          Select activities from the approved risk register, automatically load
+          hazards and controls, calculate risk levels, and generate an editable
+          Word document.
+        </p>
       </div>
-      <a class="primary risk-generator-open" href="risk-assessment/">Open Generator</a>
-    </article>
-    <article class="document-category-card third-party-certificates-card">
-      <div class="document-category-icon" aria-hidden="true">✓</div>
-      <div>
-        <span class="document-category-badge">Certification</span>
-        <h3>Third-Party Certificates</h3>
-        <p>Approved third-party inspection, testing, operator, lifting equipment, scaffold, machinery and competency certificates.</p>
-      </div>
-      <button type="button" class="secondary document-filter-button" data-document-category="Third-Party Certificate">
-        View Certificates
-      </button>
+      <a class="primary public-risk-tool-button" href="risk-assessment/">
+        Open RA Tool
+      </a>
     </article>
   </div>
-  <div id="documentGrid" class="document-grid"></div>
-</div>
 </section>
+
+<div id="documentPasswordModal"
+     class="document-access-modal"
+     hidden
+     aria-hidden="true"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="documentPasswordTitle">
+  <div class="document-access-card">
+    <button id="closeDocumentPassword"
+            class="document-access-close"
+            type="button"
+            aria-label="Close document password window">×</button>
+
+    <div class="document-lock-icon" aria-hidden="true">🔒</div>
+    <h2 id="documentPasswordTitle">Protected Document Library</h2>
+    <p>Enter the access password to open the OSH Documents Library.</p>
+
+    <div class="document-admin-contact">
+      <strong>For the access password, contact MEC OSH Admin.</strong>
+      <a id="documentAdminEmail"
+         href="mailto:muhammed.shamil@mecemirates.com">
+        muhammed.shamil@mecemirates.com
+      </a>
+      <a id="documentAdminPhone"
+         href="tel:+971585125005">
+        +971 58 512 5005
+      </a>
+    </div>
+
+    <form id="documentPasswordForm">
+      <label for="documentPasswordInput">Password</label>
+      <div class="document-password-row">
+        <input id="documentPasswordInput"
+               type="password"
+               autocomplete="current-password"
+               minlength="4"
+               maxlength="20"
+               required>
+        <button id="documentPasswordSubmit"
+                class="primary"
+                type="submit">Open Library</button>
+      </div>
+      <p id="documentPasswordError"
+         class="document-password-error"
+         aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+
+<div id="documents"
+     class="document-library-modal"
+     hidden
+     aria-hidden="true"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="documentLibraryTitle">
+  <div class="document-library-panel">
+    <div class="document-library-toolbar">
+      <div>
+        <span data-i18n="documents">OSH Documents</span>
+        <h2 id="documentLibraryTitle" data-i18n="library">
+          Public document library
+        </h2>
+      </div>
+      <button id="closeDocumentLibrary"
+              class="document-library-close"
+              type="button"
+              aria-label="Close document library">×</button>
+    </div>
+
+    <div class="doc-tools">
+      <input id="docSearch" type="search" placeholder="Search documents">
+      <select id="docFilter">
+        <option value="all">All sections</option>
+      </select>
+    </div>
+
+    <div class="document-categories persistent-document-tools">
+      <article class="document-category-card third-party-certificates-card">
+        <div class="document-category-icon" aria-hidden="true">✓</div>
+        <div>
+          <span class="document-category-badge">Certification</span>
+          <h3>Third-Party Certificates</h3>
+          <p>
+            Approved third-party inspection, testing, operator, lifting
+            equipment, scaffold, machinery and competency certificates.
+          </p>
+        </div>
+        <button type="button"
+                class="secondary document-filter-button"
+                data-document-category="Third-Party Certificate">
+          View Certificates
+        </button>
+      </article>
+    </div>
+
+    <div id="documentGrid" class="document-grid"></div>
+  </div>
+</div>
 
 <section id="training-videos" class="section training-videos-section">
   <div class="container">
@@ -481,28 +576,85 @@
   <div class="container">
     <div class="section-head organization-chart-heading">
       <span>OSH Team</span>
-      <h2>Meet Our OSH Team</h2>
+      <h2 data-i18n="teamTitle">Meet Our OSH Team</h2>
     </div>
 
-    <div class="team-carousel" id="teamCarousel" aria-label="OSH team member slideshow">
-      <div class="team-carousel-viewport">
-        <div class="team-carousel-track" id="teamCarouselTrack">
-          <div class="team-slide team-empty-slide">
-            <div class="team-empty-state">
-              <div class="team-empty-icon" aria-hidden="true">👥</div>
-              <h3>OSH Team profiles will appear here</h3>
-              <p>Add team members through the Admin Dashboard.</p>
-            </div>
-          </div>
+    <div class="team-stakeholder-grid">
+      <article class="team-stakeholder-section team-stakeholder-half">
+        <div class="team-stakeholder-heading">
+          <h3 data-i18n="teamClient">Client</h3>
         </div>
-      </div>
+        <div class="team-carousel stakeholder-team-carousel"
+             data-team-group="Client"
+             data-visible="2"
+             aria-label="Client OSH team slideshow">
+          <div class="team-carousel-viewport">
+            <div class="team-carousel-track"></div>
+          </div>
+          <button class="team-carousel-prev" type="button"
+                  aria-label="Previous Client team member">‹</button>
+          <button class="team-carousel-next" type="button"
+                  aria-label="Next Client team member">›</button>
+          <div class="team-carousel-dots" aria-label="Client team positions"></div>
+        </div>
+      </article>
 
-      <button class="team-carousel-prev" id="teamCarouselPrev" type="button"
-              aria-label="Show previous four team members">‹</button>
-      <button class="team-carousel-next" id="teamCarouselNext" type="button"
-              aria-label="Show next four team members">›</button>
+      <article class="team-stakeholder-section team-stakeholder-half">
+        <div class="team-stakeholder-heading">
+          <h3 data-i18n="teamPMC">PMC</h3>
+        </div>
+        <div class="team-carousel stakeholder-team-carousel"
+             data-team-group="PMC"
+             data-visible="2"
+             aria-label="PMC OSH team slideshow">
+          <div class="team-carousel-viewport">
+            <div class="team-carousel-track"></div>
+          </div>
+          <button class="team-carousel-prev" type="button"
+                  aria-label="Previous PMC team member">‹</button>
+          <button class="team-carousel-next" type="button"
+                  aria-label="Next PMC team member">›</button>
+          <div class="team-carousel-dots" aria-label="PMC team positions"></div>
+        </div>
+      </article>
 
-      <div class="team-carousel-dots" id="teamCarouselDots" aria-label="Team carousel pages"></div>
+      <article class="team-stakeholder-section team-stakeholder-full">
+        <div class="team-stakeholder-heading">
+          <h3 data-i18n="teamConsultant">Consultant</h3>
+        </div>
+        <div class="team-carousel stakeholder-team-carousel"
+             data-team-group="Consultant"
+             data-visible="4"
+             aria-label="Consultant OSH team slideshow">
+          <div class="team-carousel-viewport">
+            <div class="team-carousel-track"></div>
+          </div>
+          <button class="team-carousel-prev" type="button"
+                  aria-label="Previous Consultant team member">‹</button>
+          <button class="team-carousel-next" type="button"
+                  aria-label="Next Consultant team member">›</button>
+          <div class="team-carousel-dots" aria-label="Consultant team positions"></div>
+        </div>
+      </article>
+
+      <article class="team-stakeholder-section team-stakeholder-full">
+        <div class="team-stakeholder-heading">
+          <h3 data-i18n="teamMainContractor">Main Contractor</h3>
+        </div>
+        <div class="team-carousel stakeholder-team-carousel"
+             data-team-group="Main Contractor"
+             data-visible="4"
+             aria-label="Main Contractor OSH team slideshow">
+          <div class="team-carousel-viewport">
+            <div class="team-carousel-track"></div>
+          </div>
+          <button class="team-carousel-prev" type="button"
+                  aria-label="Previous Main Contractor team member">‹</button>
+          <button class="team-carousel-next" type="button"
+                  aria-label="Next Main Contractor team member">›</button>
+          <div class="team-carousel-dots" aria-label="Main Contractor team positions"></div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -735,7 +887,7 @@
 <script>window.CATEGORY_DATA=[{"name": "Housekeeping & General Workplace Amenities", "ua": 36, "uc": 188}, {"name": "Traffic Management & Logistics", "ua": 23, "uc": 51}, {"name": "Working at Height", "ua": 104, "uc": 89}, {"name": "Scaffolding/Ladder", "ua": 111, "uc": 195}, {"name": "Personal Protective Equipment", "ua": 87, "uc": 16}, {"name": "Electrical Safety", "ua": 29, "uc": 49}, {"name": "Hand Tools", "ua": 23, "uc": 25}, {"name": "Excavations", "ua": 4, "uc": 3}, {"name": "Lifting Equipment and Lifting Accessories", "ua": 31, "uc": 45}, {"name": "Portable Power Tools", "ua": 32, "uc": 49}, {"name": "Plant and Equipment", "ua": 20, "uc": 32}, {"name": "Confined Space", "ua": 1, "uc": 8}, {"name": "Hot Work Operations", "ua": 41, "uc": 41}, {"name": "Compressed Air and Gases", "ua": 0, "uc": 9}, {"name": "Manual Handling", "ua": 17, "uc": 9}, {"name": "Welfare Facilities", "ua": 28, "uc": 39}, {"name": "Hazardous Substances", "ua": 0, "uc": 20}, {"name": "Machine Guarding", "ua": 5, "uc": 8}, {"name": "Storage Arrangements", "ua": 22, "uc": 115}, {"name": "Barricading of Hazards", "ua": 62, "uc": 112}, {"name": "Access and Egress", "ua": 56, "uc": 78}, {"name": "Permit to Work", "ua": 20, "uc": 14}, {"name": "Safety Signage & Signals", "ua": 14, "uc": 14}, {"name": "Falsework/Formwork", "ua": 96, "uc": 112}, {"name": "Waste Management", "ua": 15, "uc": 66}, {"name": "First Aid Case", "ua": 4, "uc": 2}, {"name": "Near Miss Incident", "ua": 0, "uc": 0}, {"name": "Property Damage", "ua": 0, "uc": 0}, {"name": "Lost Time Injury", "ua": 0, "uc": 1}];</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20260731-1029"></script>
+<script src="app.js?v=20260731-1508"></script>
 
 <a
   class="floating-emergency-call"
