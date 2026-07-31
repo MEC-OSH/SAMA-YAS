@@ -92,3 +92,9 @@ converted to compact PNG thumbnails, and embedded inside the Photo column.
 
 Run `TEAM_MEMBERS_SETUP.sql` once. Team profiles are managed in the Admin
 Dashboard and displayed four at a time in a right-to-left carousel.
+
+
+## Editable Contact Section
+
+Run `CONTACT_SECTION_SETUP.sql` once. The Admin Dashboard can then update the
+public Contact photo and all English/Arabic contact details.

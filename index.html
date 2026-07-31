@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="MEC OSH Department portal for Sama Yas Residential Development">
 <title>MEC OSH Department | Sama Yas</title>
-<link rel="stylesheet" href="styles.css?v=20260731-1005">
+<link rel="stylesheet" href="styles.css?v=20260731-1029">
 
 <style id="critical-top-navigation">
 .header .top-visible-links{
@@ -611,6 +611,7 @@
   <div class="container contact-layout">
     <div class="contact-photo-wrap">
       <img
+        id="contactPhoto"
         class="contact-person-photo"
         src="assets/muhammed-shamil-contact.webp"
         alt="Muhammed Shamil, Senior OSH Officer"
@@ -620,23 +621,25 @@
     <div class="contact-content">
       <div class="section-head contact-heading">
         <span data-i18n="contact">Contact</span>
-        <h2>Muhammed Shamil</h2>
+        <h2 id="contactName">Muhammed Shamil</h2>
       </div>
 
       <div class="contact-details">
-        <p><strong>Sr. OSH Officer</strong></p>
+        <p><strong id="contactDesignation">Sr. OSH Officer</strong></p>
         <p>
-          Sama Yas Residential Development<br>
-          Yas Island, Abu Dhabi, UAE
+          <span id="contactProject">Sama Yas Residential Development</span><br>
+          <span id="contactLocation">Yas Island, Abu Dhabi, UAE</span>
         </p>
         <p>
-          <a href="mailto:muhammed.shamil@mecemirates.com">
+          <a id="contactEmail"
+             href="mailto:muhammed.shamil@mecemirates.com">
             muhammed.shamil@mecemirates.com
           </a>
         </p>
         <p>
-          Admin Shamil:
-          <a href="tel:+971585125005">+971 58 512 5005</a>
+          <span id="contactPhoneLabel">Admin Shamil:</span>
+          <a id="contactPhone"
+             href="tel:+971585125005">+971 58 512 5005</a>
         </p>
       </div>
     </div>
@@ -732,7 +735,7 @@
 <script>window.CATEGORY_DATA=[{"name": "Housekeeping & General Workplace Amenities", "ua": 36, "uc": 188}, {"name": "Traffic Management & Logistics", "ua": 23, "uc": 51}, {"name": "Working at Height", "ua": 104, "uc": 89}, {"name": "Scaffolding/Ladder", "ua": 111, "uc": 195}, {"name": "Personal Protective Equipment", "ua": 87, "uc": 16}, {"name": "Electrical Safety", "ua": 29, "uc": 49}, {"name": "Hand Tools", "ua": 23, "uc": 25}, {"name": "Excavations", "ua": 4, "uc": 3}, {"name": "Lifting Equipment and Lifting Accessories", "ua": 31, "uc": 45}, {"name": "Portable Power Tools", "ua": 32, "uc": 49}, {"name": "Plant and Equipment", "ua": 20, "uc": 32}, {"name": "Confined Space", "ua": 1, "uc": 8}, {"name": "Hot Work Operations", "ua": 41, "uc": 41}, {"name": "Compressed Air and Gases", "ua": 0, "uc": 9}, {"name": "Manual Handling", "ua": 17, "uc": 9}, {"name": "Welfare Facilities", "ua": 28, "uc": 39}, {"name": "Hazardous Substances", "ua": 0, "uc": 20}, {"name": "Machine Guarding", "ua": 5, "uc": 8}, {"name": "Storage Arrangements", "ua": 22, "uc": 115}, {"name": "Barricading of Hazards", "ua": 62, "uc": 112}, {"name": "Access and Egress", "ua": 56, "uc": 78}, {"name": "Permit to Work", "ua": 20, "uc": 14}, {"name": "Safety Signage & Signals", "ua": 14, "uc": 14}, {"name": "Falsework/Formwork", "ua": 96, "uc": 112}, {"name": "Waste Management", "ua": 15, "uc": 66}, {"name": "First Aid Case", "ua": 4, "uc": 2}, {"name": "Near Miss Incident", "ua": 0, "uc": 0}, {"name": "Property Damage", "ua": 0, "uc": 0}, {"name": "Lost Time Injury", "ua": 0, "uc": 1}];</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20260731-1005"></script>
+<script src="app.js?v=20260731-1029"></script>
 
 <a
   class="floating-emergency-call"

@@ -42,6 +42,9 @@ function applyLanguage(){
   if(typeof loadTeamMembers==="function"){
     loadTeamMembers();
   }
+  if(typeof renderContactSettings==="function"){
+    renderContactSettings();
+  }
 }
 
 const menuButton=document.querySelector(".menu-btn");
@@ -206,6 +209,87 @@ function updateCounters() {
   const todayUaeMidnight=new Date(`${todayParts.year}-${todayParts.month}-${todayParts.day}T00:00:00+04:00`);
   const days=Math.max(0,Math.floor((todayUaeMidnight-startNext)/86400000)+1);
   setText("ltiDays",days);
+}
+
+
+const contactFallback={
+  name_en:"Muhammed Shamil",
+  name_ar:"محمد شامل",
+  designation_en:"Sr. OSH Officer",
+  designation_ar:"مسؤول أول للسلامة والصحة المهنية",
+  project_en:"Sama Yas Residential Development",
+  project_ar:"مشروع سما ياس السكني",
+  location_en:"Yas Island, Abu Dhabi, UAE",
+  location_ar:"جزيرة ياس، أبوظبي، الإمارات العربية المتحدة",
+  email:"muhammed.shamil@mecemirates.com",
+  phone_label_en:"Admin Shamil:",
+  phone_label_ar:"المسؤول شامل:",
+  phone:"+971 58 512 5005",
+  photo_url:"assets/muhammed-shamil-contact.webp"
+};
+
+let contactSettingsData={...contactFallback};
+
+function contactText(englishField,arabicField){
+  if(lang==="ar"&&contactSettingsData[arabicField]){
+    return contactSettingsData[arabicField];
+  }
+  return contactSettingsData[englishField]||"";
+}
+
+function contactTelephoneLink(number){
+  const cleaned=String(number||"").replace(/[^\d+]/g,"");
+  return cleaned.startsWith("+")?cleaned:`+${cleaned.replace(/^\+/,"")}`;
+}
+
+function renderContactSettings(){
+  const name=contactText("name_en","name_ar");
+  const designation=contactText("designation_en","designation_ar");
+  const project=contactText("project_en","project_ar");
+  const location=contactText("location_en","location_ar");
+  const phoneLabel=contactText("phone_label_en","phone_label_ar");
+
+  setText("contactName",name);
+  setText("contactDesignation",designation);
+  setText("contactProject",project);
+  setText("contactLocation",location);
+  setText("contactPhoneLabel",phoneLabel);
+
+  const photo=document.getElementById("contactPhoto");
+  if(photo){
+    photo.src=contactSettingsData.photo_url||contactFallback.photo_url;
+    photo.alt=`${name}, ${designation}`;
+  }
+
+  const email=document.getElementById("contactEmail");
+  if(email){
+    email.textContent=contactSettingsData.email||contactFallback.email;
+    email.href=`mailto:${contactSettingsData.email||contactFallback.email}`;
+  }
+
+  const phone=document.getElementById("contactPhone");
+  if(phone){
+    const display=contactSettingsData.phone||contactFallback.phone;
+    phone.textContent=display;
+    phone.href=`tel:${contactTelephoneLink(display)}`;
+  }
+}
+
+async function loadContactSettings(){
+  try{
+    const {data,error}=await db
+      .from("contact_settings")
+      .select("*")
+      .eq("id",1)
+      .maybeSingle();
+
+    if(error)throw error;
+    if(data)contactSettingsData={...contactFallback,...data};
+  }catch(error){
+    console.warn("Using built-in Contact details:",error.message);
+  }
+
+  renderContactSettings();
 }
 
 async function loadLiveSettings() {
@@ -609,60 +693,95 @@ async function loadTrainingVideos(){
 }
 
 
+
 let teamCarouselIndex=0;
 let teamCarouselTimer=null;
+let teamCarouselMemberCount=0;
+const TEAM_VISIBLE_COUNT=4;
+const TEAM_SLIDE_INTERVAL=1000;
 
 function teamDisplayText(member,englishField,arabicField){
   if(lang==="ar"&&member[arabicField])return member[arabicField];
   return member[englishField]||"";
 }
 
-function setTeamCarouselPage(index,animate=true){
+function teamCardStep(){
+  const track=document.getElementById("teamCarouselTrack");
+  const firstCard=track?.querySelector(".team-member-card");
+  if(!firstCard)return 0;
+
+  const styles=getComputedStyle(track);
+  const gap=parseFloat(styles.columnGap||styles.gap||0);
+  return firstCard.getBoundingClientRect().width+gap;
+}
+
+function positionTeamCarousel(animate=true){
   const track=document.getElementById("teamCarouselTrack");
   if(!track)return;
 
-  const slides=[...track.querySelectorAll(".team-slide:not(.team-empty-slide)")];
-  if(!slides.length)return;
+  track.style.transition=animate
+    ?"transform .55s cubic-bezier(.22,.75,.23,1)"
+    :"none";
 
-  teamCarouselIndex=(index+slides.length)%slides.length;
-  track.style.transition=animate?"transform .7s cubic-bezier(.22,.75,.23,1)":"none";
-  track.style.transform=`translateX(-${teamCarouselIndex*100}%)`;
+  track.style.transform=`translateX(-${teamCarouselIndex*teamCardStep()}px)`;
 
-  document.querySelectorAll("#teamCarouselDots button").forEach((button,dotIndex)=>{
-    button.classList.toggle("active",dotIndex===teamCarouselIndex);
-    button.setAttribute("aria-current",dotIndex===teamCarouselIndex?"true":"false");
+  document.querySelectorAll("#teamCarouselDots button").forEach((button,index)=>{
+    const active=index===teamCarouselIndex%Math.max(teamCarouselMemberCount,1);
+    button.classList.toggle("active",active);
+    button.setAttribute("aria-current",active?"true":"false");
   });
+}
+
+function moveTeamCarousel(direction=1){
+  if(teamCarouselMemberCount<=TEAM_VISIBLE_COUNT)return;
+
+  teamCarouselIndex+=direction;
+
+  if(direction<0&&teamCarouselIndex<0){
+    teamCarouselIndex=teamCarouselMemberCount-1;
+    positionTeamCarousel(false);
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        teamCarouselIndex-=1;
+        positionTeamCarousel(true);
+      });
+    });
+    return;
+  }
+
+  positionTeamCarousel(true);
 }
 
 function restartTeamCarousel(){
   clearInterval(teamCarouselTimer);
-  const slideCount=document.querySelectorAll("#teamCarouselTrack .team-slide:not(.team-empty-slide)").length;
-  if(slideCount<=1)return;
+
+  if(teamCarouselMemberCount<=TEAM_VISIBLE_COUNT)return;
 
   teamCarouselTimer=setInterval(()=>{
-    setTeamCarouselPage(teamCarouselIndex+1);
-  },4500);
+    moveTeamCarousel(1);
+  },TEAM_SLIDE_INTERVAL);
 }
 
 function renderTeamMembers(members){
+  const carousel=document.getElementById("teamCarousel");
   const track=document.getElementById("teamCarouselTrack");
   const dots=document.getElementById("teamCarouselDots");
   const previous=document.getElementById("teamCarouselPrev");
   const next=document.getElementById("teamCarouselNext");
 
-  if(!track||!dots||!previous||!next)return;
+  if(!carousel||!track||!dots||!previous||!next)return;
 
   clearInterval(teamCarouselTimer);
   teamCarouselIndex=0;
+  teamCarouselMemberCount=members?.length||0;
 
-  if(!members?.length){
-    track.innerHTML=`<div class="team-slide team-empty-slide">
-      <div class="team-empty-state">
-        <div class="team-empty-icon" aria-hidden="true">👥</div>
-        <h3>OSH Team profiles will appear here</h3>
-        <p>Add team members through the Admin Dashboard.</p>
-      </div>
+  if(!teamCarouselMemberCount){
+    track.innerHTML=`<div class="team-empty-state">
+      <div class="team-empty-icon" aria-hidden="true">👥</div>
+      <h3>OSH Team profiles will appear here</h3>
+      <p>Add team members through the Admin Dashboard.</p>
     </div>`;
+
     dots.innerHTML="";
     previous.hidden=true;
     next.hidden=true;
@@ -670,17 +789,17 @@ function renderTeamMembers(members){
     return;
   }
 
-  const groups=[];
-  for(let index=0;index<members.length;index+=4){
-    groups.push(members.slice(index,index+4));
-  }
+  const repeatedMembers=teamCarouselMemberCount>TEAM_VISIBLE_COUNT
+    ? [...members,...members.slice(0,TEAM_VISIBLE_COUNT)]
+    : members;
 
-  track.innerHTML=groups.map(group=>{
-    const cards=group.map(member=>{
-      const name=teamDisplayText(member,"name_en","name_ar");
-      const designation=teamDisplayText(member,"designation_en","designation_ar");
+  track.innerHTML=repeatedMembers.map((member,index)=>{
+    const name=teamDisplayText(member,"name_en","name_ar");
+    const designation=teamDisplayText(member,"designation_en","designation_ar");
+    const cloneClass=index>=teamCarouselMemberCount?" team-member-clone":"";
 
-      return `<article class="team-member-card">
+    return `<article class="team-member-card${cloneClass}">
+      <div class="team-member-card-inner">
         <div class="team-member-photo-wrap">
           <img class="team-member-photo"
                src="${escapeHtml(member.photo_url)}"
@@ -691,46 +810,53 @@ function renderTeamMembers(members){
           <h3>${escapeHtml(name)}</h3>
           <p>${escapeHtml(designation)}</p>
         </div>
-      </article>`;
-    }).join("");
-
-    return `<div class="team-slide">${cards}</div>`;
+      </div>
+    </article>`;
   }).join("");
 
-  dots.innerHTML=groups.map((_,index)=>
-    `<button type="button"
-             aria-label="Show team group ${index+1}"
-             class="${index===0?"active":""}"
-             aria-current="${index===0?"true":"false"}"></button>`
-  ).join("");
+  dots.innerHTML=teamCarouselMemberCount>TEAM_VISIBLE_COUNT
+    ? members.map((_,index)=>
+        `<button type="button"
+                 aria-label="Show team member position ${index+1}"
+                 class="${index===0?"active":""}"
+                 aria-current="${index===0?"true":"false"}"></button>`
+      ).join("")
+    :"";
 
-  previous.hidden=groups.length<=1;
-  next.hidden=groups.length<=1;
+  previous.hidden=teamCarouselMemberCount<=TEAM_VISIBLE_COUNT;
+  next.hidden=teamCarouselMemberCount<=TEAM_VISIBLE_COUNT;
 
   previous.onclick=()=>{
-    setTeamCarouselPage(teamCarouselIndex-1);
+    moveTeamCarousel(-1);
     restartTeamCarousel();
   };
 
   next.onclick=()=>{
-    setTeamCarouselPage(teamCarouselIndex+1);
+    moveTeamCarousel(1);
     restartTeamCarousel();
   };
 
   dots.querySelectorAll("button").forEach((button,index)=>{
     button.onclick=()=>{
-      setTeamCarouselPage(index);
+      teamCarouselIndex=index;
+      positionTeamCarousel(true);
       restartTeamCarousel();
     };
   });
 
-  const carousel=document.getElementById("teamCarousel");
+  track.ontransitionend=()=>{
+    if(teamCarouselIndex>=teamCarouselMemberCount){
+      teamCarouselIndex=0;
+      positionTeamCarousel(false);
+    }
+  };
+
   carousel.onmouseenter=()=>clearInterval(teamCarouselTimer);
   carousel.onmouseleave=restartTeamCarousel;
   carousel.onfocusin=()=>clearInterval(teamCarouselTimer);
   carousel.onfocusout=restartTeamCarousel;
 
-  setTeamCarouselPage(0,false);
+  positionTeamCarousel(false);
   restartTeamCarousel();
 }
 
@@ -750,6 +876,12 @@ async function loadTeamMembers(){
     renderTeamMembers([]);
   }
 }
+
+window.addEventListener("resize",()=>{
+  if(teamCarouselMemberCount){
+    positionTeamCarousel(false);
+  }
+});
 
 async function loadGallery(){
   const slideshow=document.querySelector("#gallery .slideshow");
@@ -908,6 +1040,7 @@ document.addEventListener("keydown",event=>{
 });
 
 applyLanguage();
+loadContactSettings();
 loadLiveSettings();
 loadDocuments();
 loadNews();

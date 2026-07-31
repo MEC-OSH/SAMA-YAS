@@ -78,7 +78,7 @@ db.auth.onAuthStateChange(async(event,session)=>{
 $("signOut").onclick=async()=>{await db.auth.signOut();location.reload();};
 document.querySelectorAll("[data-panel]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));$(b.dataset.panel).classList.add("active")});
 
-async function loadAll(){await Promise.all([loadSettings(),loadReports(),loadTrendAdmin(),loadDocuments(),loadTrainingVideos(),loadNews(),loadTeamMembers(),loadGallery(),loadLocations(),loadHolidays(),loadEnquiries()]);}
+async function loadAll(){await Promise.all([loadSettings(),loadReports(),loadTrendAdmin(),loadDocuments(),loadTrainingVideos(),loadNews(),loadContactSettings(),loadTeamMembers(),loadGallery(),loadLocations(),loadHolidays(),loadEnquiries()]);}
 async function loadSettings(){const {data,error}=await db.from("settings").select("*").eq("id",1).maybeSingle();if(error)throw error;const s=data||{};$("dashManpower").textContent=Number(s.manpower||0).toLocaleString();$("dashManhours").textContent=Number(s.baseline_manhours||0).toLocaleString();
 const map={pManpower:s.manpower,pBaseline:s.baseline_manhours,pBaselineAt:s.baseline_at?new Date(s.baseline_at).toISOString().slice(0,16):"",pAdjustment:s.manhour_adjustment||0,pWorkStart:s.work_start?.slice(0,5),pLunchStart:s.lunch_start?.slice(0,5),pLunchEnd:s.lunch_end?.slice(0,5),pWorkEnd:s.work_end?.slice(0,5),pLastLti:s.last_lti_date,pTrainingSessions:s.training_sessions,pPersonnelTrained:s.personnel_trained,pTrainingHours:s.training_hours,pInductions:s.osh_inductions,pMeetings:s.osh_meetings,pAudits:s.osh_audits,pInspections:s.osh_inspections,pReviews:s.procedure_reviews,pDrills:s.emergency_drills};for(const [id,v] of Object.entries(map))if(v!==undefined&&v!==null)$(id).value=v;$("pPaused").checked=Boolean(s.counter_paused);}
 $("performanceForm").onsubmit=async e=>{e.preventDefault();setStatus("performanceStatus","Saving…");const payload={id:1,manpower:Number($("pManpower").value),baseline_manhours:Number($("pBaseline").value),baseline_at:new Date($("pBaselineAt").value).toISOString(),manhour_adjustment:Number($("pAdjustment").value||0),counter_paused:$("pPaused").checked,work_start:$("pWorkStart").value,lunch_start:$("pLunchStart").value,lunch_end:$("pLunchEnd").value,work_end:$("pWorkEnd").value,last_lti_date:$("pLastLti").value,training_sessions:Number($("pTrainingSessions").value||0),personnel_trained:Number($("pPersonnelTrained").value||0),training_hours:Number($("pTrainingHours").value||0),osh_inductions:Number($("pInductions").value||0),osh_meetings:Number($("pMeetings").value||0),osh_audits:Number($("pAudits").value||0),osh_inspections:Number($("pInspections").value||0),procedure_reviews:Number($("pReviews").value||0),emergency_drills:Number($("pDrills").value||0)};const {error}=await db.from("settings").upsert(payload);setStatus("performanceStatus",error?error.message:"Saved. Public figures will update on refresh.");if(!error)await loadSettings();};
@@ -622,6 +622,145 @@ $("trainingVideoForm").onsubmit=async event=>{
 async function loadNews(){const {data,error}=await db.from("news").select("*").order("created_at",{ascending:false});if(error)throw error;const list=$("newsList");list.innerHTML=data?.length?"":"<p>No news items.</p>";(data||[]).forEach(r=>{const d=document.createElement("div");d.className="data-item";d.innerHTML=`<strong>${r.title_en}</strong> <span class="small">${r.published?"Published":"Unpublished"}${r.pinned?" | Pinned":""}</span><p>${r.summary_en||""}</p><button class="danger">Delete</button>`;d.querySelector(".danger").onclick=async()=>{if(!confirm("Delete this news item?"))return;const {error}=await db.from("news").delete().eq("id",r.id);if(error)alert(error.message);else loadNews();};list.appendChild(d);});}
 $("newsForm").onsubmit=async e=>{e.preventDefault();setStatus("newsStatus","Saving…");try{const image=await upload("gallery",$("newsImage").files[0],"news");const attachment=await upload("documents",$("newsAttachment").files[0],"news-attachments");const payload={title_en:$("newsTitleEn").value,title_ar:$("newsTitleAr").value||null,summary_en:$("newsSummaryEn").value||null,summary_ar:$("newsSummaryAr").value||null,details_en:$("newsDetailsEn").value||null,details_ar:$("newsDetailsAr").value||null,image_url:image?.url||null,attachment_url:attachment?.url||null,published:$("newsPublished").checked,pinned:$("newsPinned").checked};const {error}=await db.from("news").insert(payload);if(error)throw error;e.target.reset();$("newsPublished").checked=true;setStatus("newsStatus","Saved.");loadNews();}catch(err){setStatus("newsStatus",err.message)}};
 
+
+
+let contactSettingsRow=null;
+
+function contactAdminImageUrl(url){
+  if(!url)return "../assets/muhammed-shamil-contact.webp";
+  if(/^https?:\/\//i.test(url)||url.startsWith("data:")||url.startsWith("blob:")){
+    return url;
+  }
+  return `../${url.replace(/^\/+/,"")}`;
+}
+
+async function loadContactSettings(){
+  const {data,error}=await db
+    .from("contact_settings")
+    .select("*")
+    .eq("id",1)
+    .maybeSingle();
+
+  if(error)throw error;
+
+  contactSettingsRow=data||{
+    id:1,
+    name_en:"Muhammed Shamil",
+    name_ar:"محمد شامل",
+    designation_en:"Sr. OSH Officer",
+    designation_ar:"مسؤول أول للسلامة والصحة المهنية",
+    project_en:"Sama Yas Residential Development",
+    project_ar:"مشروع سما ياس السكني",
+    location_en:"Yas Island, Abu Dhabi, UAE",
+    location_ar:"جزيرة ياس، أبوظبي، الإمارات العربية المتحدة",
+    email:"muhammed.shamil@mecemirates.com",
+    phone_label_en:"Admin Shamil:",
+    phone_label_ar:"المسؤول شامل:",
+    phone:"+971 58 512 5005",
+    photo_url:"assets/muhammed-shamil-contact.webp"
+  };
+
+  const values={
+    contactNameEn:contactSettingsRow.name_en,
+    contactNameAr:contactSettingsRow.name_ar,
+    contactDesignationEn:contactSettingsRow.designation_en,
+    contactDesignationAr:contactSettingsRow.designation_ar,
+    contactProjectEn:contactSettingsRow.project_en,
+    contactProjectAr:contactSettingsRow.project_ar,
+    contactLocationEn:contactSettingsRow.location_en,
+    contactLocationAr:contactSettingsRow.location_ar,
+    contactPhoneLabelEn:contactSettingsRow.phone_label_en,
+    contactPhoneLabelAr:contactSettingsRow.phone_label_ar,
+    contactAdminEmail:contactSettingsRow.email,
+    contactAdminPhone:contactSettingsRow.phone
+  };
+
+  Object.entries(values).forEach(([id,value])=>{
+    if($(id))$(id).value=value||"";
+  });
+
+  $("contactAdminPreview").src=contactAdminImageUrl(contactSettingsRow.photo_url);
+  $("contactAdminPhoto").value="";
+}
+
+$("contactAdminPhoto").addEventListener("change",event=>{
+  const file=event.target.files[0];
+  if(!file){
+    $("contactAdminPreview").src=contactAdminImageUrl(contactSettingsRow?.photo_url);
+    return;
+  }
+
+  if(!file.type.startsWith("image/")){
+    event.target.value="";
+    alert("Select a valid image file.");
+    return;
+  }
+
+  $("contactAdminPreview").src=URL.createObjectURL(file);
+});
+
+$("contactSettingsForm").onsubmit=async event=>{
+  event.preventDefault();
+  setStatus("contactSettingsStatus","Saving…");
+
+  try{
+    const newPhoto=$("contactAdminPhoto").files[0];
+    let photoUrl=contactSettingsRow?.photo_url||"assets/muhammed-shamil-contact.webp";
+    let uploadedPhotoPath=null;
+
+    if(newPhoto){
+      if(!newPhoto.type.startsWith("image/")){
+        throw new Error("Select a valid image file.");
+      }
+
+      const uploaded=await upload("gallery",newPhoto,"contact");
+      photoUrl=uploaded.url;
+      uploadedPhotoPath=uploaded.path;
+    }
+
+    const payload={
+      id:1,
+      name_en:$("contactNameEn").value.trim(),
+      name_ar:$("contactNameAr").value.trim()||null,
+      designation_en:$("contactDesignationEn").value.trim(),
+      designation_ar:$("contactDesignationAr").value.trim()||null,
+      project_en:$("contactProjectEn").value.trim(),
+      project_ar:$("contactProjectAr").value.trim()||null,
+      location_en:$("contactLocationEn").value.trim(),
+      location_ar:$("contactLocationAr").value.trim()||null,
+      email:$("contactAdminEmail").value.trim(),
+      phone_label_en:$("contactPhoneLabelEn").value.trim(),
+      phone_label_ar:$("contactPhoneLabelAr").value.trim()||null,
+      phone:$("contactAdminPhone").value.trim(),
+      photo_url:photoUrl,
+      updated_at:new Date().toISOString()
+    };
+
+    const {error}=await db
+      .from("contact_settings")
+      .upsert(payload,{onConflict:"id"});
+
+    if(error){
+      if(uploadedPhotoPath){
+        await db.storage.from("gallery").remove([uploadedPhotoPath]);
+      }
+      throw error;
+    }
+
+    const oldPhotoPath=storagePath(contactSettingsRow?.photo_url,"gallery");
+    if(newPhoto&&oldPhotoPath&&oldPhotoPath!==uploadedPhotoPath){
+      await db.storage.from("gallery").remove([oldPhotoPath]);
+    }
+
+    await loadContactSettings();
+    setStatus(
+      "contactSettingsStatus",
+      "Contact section saved. The public website will update on refresh."
+    );
+  }catch(error){
+    setStatus("contactSettingsStatus",error.message);
+  }
+};
 
 async function loadTeamMembers(){
   const {data,error}=await db

@@ -95,3 +95,16 @@ OSH TEAM MEMBERS
 The public website displays four people in each carousel view. The carousel
 automatically moves from right to left. Team photos use the existing `gallery`
 Storage bucket under the `team-members` folder.
+
+EDITABLE CONTACT SECTION
+------------------------
+1. Open Supabase > SQL Editor > New query.
+2. Open CONTACT_SECTION_SETUP.sql from this package.
+3. Copy all SQL, paste it into Supabase and click Run.
+4. Confirm: Success. No rows returned.
+5. Open Admin Dashboard > Contact Section.
+6. Edit the photo, name, designation, project, location, email and phone.
+7. Click Save Contact Section.
+
+English and Arabic contact details are supported. A new uploaded contact photo
+is stored in the existing `gallery` Storage bucket under the `contact` folder.
