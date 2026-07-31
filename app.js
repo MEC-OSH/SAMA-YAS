@@ -698,7 +698,7 @@ let teamCarouselIndex=0;
 let teamCarouselTimer=null;
 let teamCarouselMemberCount=0;
 const TEAM_VISIBLE_COUNT=4;
-const TEAM_SLIDE_INTERVAL=1000;
+const TEAM_SLIDE_INTERVAL=2000;
 
 function teamDisplayText(member,englishField,arabicField){
   if(lang==="ar"&&member[arabicField])return member[arabicField];
