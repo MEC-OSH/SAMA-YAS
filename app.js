@@ -1,5 +1,5 @@
 const translations={
-en:{home:"Home",about:"About OSH",performance:"Performance",reports:"Safety Reports",documents:"OSH Documents",trainingVideos:"Training Awareness Videos",trainingVideosTitle:"Watch, learn and work safely",news:"News",gallery:"Gallery",emergency:"Emergency",contact:"Contact",adminLogin:"Admin Login",heroTitle:"Building Safely. Protecting Every Life.",heroSub:"MEC OSH Department, Sama Yas Residential Development",aboutTitle:"A prevention-led safety culture",mission:"Mission",missionText:"To protect every person involved in the Sama Yas Residential Development through proactive risk management, competent supervision, effective consultation and strict compliance with ALDAR OSHMS, ADOSH-SF and UAE legal requirements.",vision:"Vision",visionText:"To achieve Zero Harm by creating a workplace where safe decisions are embedded in every activity, every day and at every level.",objectives:"Objectives",objectivesText:"Prevent injuries and occupational illness, maintain legal compliance, strengthen workforce competence, close findings promptly, improve contractor performance and continuously enhance the OSH management system.",roles:"Roles & Responsibilities",rolesText:"The OSH Department plans, advises, inspects, trains, monitors and reports. Management provides resources, supervisors enforce controls, and every worker has the authority and duty to stop unsafe work.",livePerformance:"Live cumulative OSH performance",performanceClickHint:"Select any performance card to view last week, this week and cumulative figures.",performanceDetails:"Performance Details",asOfLastWeek:"As of Last Week",thisWeek:"This Week",cumulative:"Cumulative",performanceDetailNote:"Weekly figures are maintained by the MEC OSH Admin. Cumulative figures update from the live performance counter.",manpower:"Total Manpower",manhours:"Man-Hours",liveCounter:"Live UAE working-time counter",ltiDays:"LTI-Free Days",trainingSessions:"Training Sessions",personnelTrained:"Personnel Trained",trainingHours:"Training Hours",inductions:"OSH Inductions",meetings:"OSH Meetings",audits:"OSH Audits",inspections:"OSH Inspections",reviews:"Procedure Reviews",drills:"Emergency Drills",reportTrend:"Safety observation trend analysis",unsafeActs:"Unsafe Acts",unsafeConditions:"Unsafe Conditions",goodPractices:"Good Practices",reportConcern:"Report a Safety Concern",whatsappConcern:"Report a Safety Concern on WhatsApp",category:"Category",trackReport:"Track a Report",library:"Public document library",newsTitle:"OSH news and announcements",teamTitle:"Meet Our OSH Team",teamClient:"Client",teamPMC:"PMC",teamConsultant:"Consultant",teamMainContractor:"Main Contractor",galleryTitle:"OSH Gallery",emergencyTitle:"Emergency information"},
+en:{home:"Home",about:"About OSH",performance:"Performance",reports:"Safety Reports",documents:"OSH Documents",trainingVideos:"Training Awareness Videos",trainingVideosTitle:"Watch, learn and work safely",news:"News",gallery:"Gallery",emergency:"Emergency",contact:"Contact",adminLogin:"Admin Login",heroTitle:"Building Safely. Protecting Every Life.",heroSub:"MEC OSH Department, Sama Yas Residential Development",aboutTitle:"A prevention-led safety culture",mission:"Mission",missionText:"To protect every person involved in the Sama Yas Residential Development through proactive risk management, competent supervision, effective consultation and strict compliance with ALDAR OSHMS, ADOSH-SF and UAE legal requirements.",vision:"Vision",visionText:"To achieve Zero Harm by creating a workplace where safe decisions are embedded in every activity, every day and at every level.",objectives:"Objectives",objectivesText:"Prevent injuries and occupational illness, maintain legal compliance, strengthen workforce competence, close findings promptly, improve contractor performance and continuously enhance the OSH management system.",roles:"Roles & Responsibilities",rolesText:"The OSH Department plans, advises, inspects, trains, monitors and reports. Management provides resources, supervisors enforce controls, and every worker has the authority and duty to stop unsafe work.",livePerformance:"Live cumulative OSH performance",performanceClickHint:"Select any performance card to view last week, this week and cumulative figures.",performanceDetails:"Performance Details",asOfLastWeek:"As of Last Week",thisWeek:"This Week",cumulative:"Cumulative",performanceDetailNote:"Weekly figures are maintained by the MEC OSH Admin. Cumulative figures update from the live performance counter.",manpower:"Total Manpower",manhours:"Man-Hours",liveCounter:"Live UAE working-time counter",ltiDays:"LTI-Free Days",trainingSessions:"Training Sessions",personnelTrained:"Personnel Trained",trainingHours:"Training Hours",inductions:"OSH Inductions",meetings:"OSH Meetings",audits:"OSH Audits",inspections:"OSH Inspections",reviews:"Procedure Reviews",drills:"Emergency Drills",reportTrend:"Safety observation trend analysis",unsafeActs:"Unsafe Acts",unsafeConditions:"Unsafe Conditions",goodPractices:"Good Practices",reportConcern:"Report a Safety Concern",whatsappConcern:"Report a Safety Concern on WhatsApp",category:"Category",trackReport:"Track a Report",library:"Document Library",newsTitle:"OSH news and announcements",teamTitle:"Meet Our OSH Team",teamClient:"Client",teamPMC:"PMC",teamConsultant:"Consultant",teamMainContractor:"Main Contractor",galleryTitle:"OSH Gallery",emergencyTitle:"Emergency information"},
 ar:{home:"الرئيسية",about:"عن السلامة والصحة المهنية",performance:"الأداء",reports:"تقارير السلامة",documents:"وثائق السلامة",trainingVideos:"فيديوهات التدريب والتوعية",trainingVideosTitle:"شاهد وتعلم واعمل بأمان",news:"الأخبار",gallery:"المعرض",emergency:"الطوارئ",contact:"اتصل بنا",adminLogin:"دخول المسؤول",heroTitle:"نبني بأمان. نحمي كل حياة.",heroSub:"قسم السلامة والصحة المهنية في مشروع سما ياس السكني",aboutTitle:"ثقافة سلامة قائمة على الوقاية",mission:"الرسالة",missionText:"حماية جميع العاملين في مشروع سما ياس من خلال الإدارة الاستباقية للمخاطر والإشراف الفعّال والالتزام بمتطلبات الدار وADOSH والقوانين الإماراتية.",vision:"الرؤية",visionText:"تحقيق هدف صفر ضرر من خلال ترسيخ القرارات الآمنة في كل نشاط وكل يوم وعلى جميع المستويات.",objectives:"الأهداف",objectivesText:"منع الإصابات والأمراض المهنية وتعزيز الكفاءة وإغلاق الملاحظات وتحسين أداء المقاولين والتطوير المستمر لنظام السلامة.",roles:"الأدوار والمسؤوليات",rolesText:"يقوم قسم السلامة بالتخطيط والمشورة والتفتيش والتدريب والمتابعة والتقارير، وتوفر الإدارة الموارد ويطبق المشرفون الضوابط ويحق لكل عامل إيقاف العمل غير الآمن.",livePerformance:"الأداء التراكمي المباشر",performanceClickHint:"اختر أي بطاقة أداء لعرض بيانات الأسبوع الماضي وهذا الأسبوع والإجمالي التراكمي.",performanceDetails:"تفاصيل الأداء",asOfLastWeek:"حتى نهاية الأسبوع الماضي",thisWeek:"هذا الأسبوع",cumulative:"الإجمالي التراكمي",performanceDetailNote:"يتم تحديث البيانات الأسبوعية بواسطة مسؤول السلامة في MEC، بينما يتم تحديث القيم التراكمية من عداد الأداء المباشر.",manpower:"إجمالي القوى العاملة",manhours:"ساعات العمل",liveCounter:"عداد مباشر وفق وقت العمل في الإمارات",ltiDays:"أيام بدون إصابة مضيعة للوقت",trainingSessions:"جلسات التدريب",personnelTrained:"الأشخاص المدربون",trainingHours:"ساعات التدريب",inductions:"تعريف السلامة",meetings:"اجتماعات السلامة",audits:"تدقيقات السلامة",inspections:"تفتيشات السلامة",reviews:"مراجعات الإجراءات",drills:"تمارين الطوارئ",reportTrend:"تحليل اتجاه ملاحظات السلامة",unsafeActs:"الأفعال غير الآمنة",unsafeConditions:"الظروف غير الآمنة",goodPractices:"الممارسات الجيدة",reportConcern:"الإبلاغ عن ملاحظة سلامة",whatsappConcern:"الإبلاغ عبر واتساب",category:"الفئة",trackReport:"تتبع التقرير",library:"مكتبة الوثائق العامة",newsTitle:"أخبار وإعلانات السلامة",teamTitle:"تعرف على فريق السلامة والصحة المهنية",teamClient:"العميل",teamPMC:"مدير المشروع",teamConsultant:"الاستشاري",teamMainContractor:"المقاول الرئيسي",galleryTitle:"معرض صور السلامة",emergencyTitle:"معلومات الطوارئ"}};
 let lang=localStorage.getItem("mecLanguage")==="ar"?"ar":"en";
 
@@ -241,6 +241,100 @@ document.getElementById("topOpenReport")?.addEventListener("click",()=>{
 
 
 
+
+const teamPhotoModal=document.getElementById("teamPhotoModal");
+const teamPhotoModalImage=document.getElementById("teamPhotoModalImage");
+const teamPhotoModalName=document.getElementById("teamPhotoModalName");
+const teamPhotoModalDesignation=document.getElementById(
+  "teamPhotoModalDesignation"
+);
+const closeTeamPhotoModalButton=document.getElementById(
+  "closeTeamPhotoModal"
+);
+let activeTeamPhotoTrigger=null;
+
+function pauseAllTeamCarousels(){
+  if(typeof teamCarouselStates==="undefined")return;
+
+  teamCarouselStates.forEach(state=>{
+    if(state?.timer){
+      clearInterval(state.timer);
+      state.timer=null;
+    }
+  });
+}
+
+function resumeAllTeamCarousels(){
+  if(typeof restartStakeholderCarousel!=="function")return;
+
+  document.querySelectorAll(".stakeholder-team-carousel").forEach(carousel=>{
+    restartStakeholderCarousel(carousel);
+  });
+}
+
+function openTeamPhotoModal(trigger){
+  if(!teamPhotoModal||!trigger)return;
+
+  activeTeamPhotoTrigger=trigger;
+  const photo=trigger.dataset.teamPhoto||"";
+  const name=trigger.dataset.teamName||"OSH Team Member";
+  const designation=trigger.dataset.teamDesignation||"";
+
+  if(teamPhotoModalImage){
+    teamPhotoModalImage.src=photo;
+    teamPhotoModalImage.alt=name;
+  }
+
+  if(teamPhotoModalName){
+    teamPhotoModalName.textContent=name;
+  }
+
+  if(teamPhotoModalDesignation){
+    teamPhotoModalDesignation.textContent=designation;
+  }
+
+  pauseAllTeamCarousels();
+  teamPhotoModal.hidden=false;
+  teamPhotoModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("team-photo-popup-open");
+
+  setTimeout(()=>closeTeamPhotoModalButton?.focus(),30);
+}
+
+function closeTeamPhotoModal(){
+  if(!teamPhotoModal)return;
+
+  teamPhotoModal.hidden=true;
+  teamPhotoModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("team-photo-popup-open");
+
+  if(teamPhotoModalImage){
+    teamPhotoModalImage.removeAttribute("src");
+  }
+
+  resumeAllTeamCarousels();
+  activeTeamPhotoTrigger?.focus();
+  activeTeamPhotoTrigger=null;
+}
+
+document.addEventListener("click",event=>{
+  const trigger=event.target.closest(".team-member-photo-button");
+  if(trigger){
+    openTeamPhotoModal(trigger);
+  }
+});
+
+closeTeamPhotoModalButton?.addEventListener(
+  "click",
+  closeTeamPhotoModal
+);
+
+teamPhotoModal?.addEventListener("click",event=>{
+  if(event.target===teamPhotoModal){
+    closeTeamPhotoModal();
+  }
+});
+
 document.addEventListener("keydown",event=>{
   if(event.key!=="Escape")return;
 
@@ -258,6 +352,11 @@ document.addEventListener("keydown",event=>{
 
   if(performanceDetailModal&&!performanceDetailModal.hidden){
     closePerformanceDetail();
+    return;
+  }
+
+  if(teamPhotoModal&&!teamPhotoModal.hidden){
+    closeTeamPhotoModal();
   }
 });
 
@@ -1011,7 +1110,19 @@ document.getElementById("reportForm")?.addEventListener("submit",async event=>{
       const {error:uploadError}=await db.storage.from("report-photos").upload(photoPath,photo,{contentType:photo.type,upsert:false});
       if(uploadError) throw uploadError;
     }
-    const payload={reference:ref,report_type:fd.get("type"),category:fd.get("category"),location:fd.get("location"),location_details:fd.get("locationDetails")||null,urgency:fd.get("urgency"),description:fd.get("description"),photo_url:photoPath,status:"New"};
+    const payload={
+      reference:ref,
+      reporter_name:(fd.get("reporterName")||"").trim()||null,
+      reporter_designation:(fd.get("reporterDesignation")||"").trim()||null,
+      report_type:fd.get("type"),
+      category:fd.get("category"),
+      location:fd.get("location"),
+      location_details:fd.get("locationDetails")||null,
+      urgency:fd.get("urgency"),
+      description:fd.get("description"),
+      photo_url:photoPath,
+      status:"New"
+    };
     const {error}=await db.from("safety_reports").insert(payload); if(error) throw error;
     msg.textContent=`Submitted successfully. Reference: ${ref}`; form.reset(); clearReportPhotoPreview(); await loadSafetyTrend();
   }catch(error){msg.textContent=`Submission failed: ${error.message}`;}
@@ -1199,10 +1310,18 @@ function renderStakeholderCarousel(carousel,members){
     return `<article class="team-member-card${cloneClass}">
       <div class="team-member-card-inner">
         <div class="team-member-photo-wrap">
-          <img class="team-member-photo"
-               src="${escapeHtml(member.photo_url)}"
-               alt="${escapeHtml(name)}"
-               loading="lazy">
+          <button class="team-member-photo-button"
+                  type="button"
+                  data-team-photo="${escapeHtml(member.photo_url)}"
+                  data-team-name="${escapeHtml(name)}"
+                  data-team-designation="${escapeHtml(designation)}"
+                  aria-label="Enlarge photo of ${escapeHtml(name)}">
+            <img class="team-member-photo"
+                 src="${escapeHtml(member.photo_url)}"
+                 alt="${escapeHtml(name)}"
+                 loading="lazy">
+            <span class="team-photo-zoom-hint" aria-hidden="true">⌕</span>
+          </button>
         </div>
         <div class="team-member-copy">
           <h4>${escapeHtml(name)}</h4>

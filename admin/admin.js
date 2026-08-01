@@ -187,12 +187,56 @@ function weeklyPerformanceObject(value){
   return value;
 }
 
+function adminLtiDaysFromDate(dateValue){
+  if(!dateValue)return 0;
+  const incident=new Date(`${dateValue}T00:00:00`);
+  const today=new Date();
+  today.setHours(0,0,0,0);
+  return Math.max(
+    0,
+    Math.round((today.getTime()-incident.getTime())/86400000)
+  );
+}
+
+function adminDateFromLtiDays(daysValue){
+  const days=Math.max(0,Math.floor(Number(daysValue)||0));
+  const date=new Date();
+  date.setHours(0,0,0,0);
+  date.setDate(date.getDate()-days);
+
+  const year=date.getFullYear();
+  const month=String(date.getMonth()+1).padStart(2,"0");
+  const day=String(date.getDate()).padStart(2,"0");
+  return `${year}-${month}-${day}`;
+}
+
+function cumulativePerformanceValues(settings){
+  return {
+    manpower:Number(settings.manpower||0),
+    manhours:Math.floor(
+      Number(settings.baseline_manhours||0)
+      +Number(settings.manhour_adjustment||0)
+    ),
+    ltiDays:adminLtiDaysFromDate(settings.last_lti_date),
+    trainingSessions:Number(settings.training_sessions||0),
+    personnelTrained:Number(settings.personnel_trained||0),
+    trainingHours:Number(settings.training_hours||0),
+    oshInductions:Number(settings.osh_inductions||0),
+    oshMeetings:Number(settings.osh_meetings||0),
+    oshAudits:Number(settings.osh_audits||0),
+    oshInspections:Number(settings.osh_inspections||0),
+    procedureReviews:Number(settings.procedure_reviews||0),
+    emergencyDrills:Number(settings.emergency_drills||0)
+  };
+}
+
 function renderWeeklyPerformanceAdmin(settings){
   const rows=$("weeklyPerformanceRows");
   if(!rows)return;
 
   const lastWeek=weeklyPerformanceObject(settings.performance_last_week);
   const thisWeek=weeklyPerformanceObject(settings.performance_this_week);
+  const cumulative=cumulativePerformanceValues(settings);
 
   rows.innerHTML=WEEKLY_PERFORMANCE_METRICS.map(metric=>{
     const lastValue=Object.prototype.hasOwnProperty.call(lastWeek,metric.key)
@@ -200,6 +244,12 @@ function renderWeeklyPerformanceAdmin(settings){
       :"";
     const thisValue=Object.prototype.hasOwnProperty.call(thisWeek,metric.key)
       ? thisWeek[metric.key]
+      :"";
+    const cumulativeValue=Object.prototype.hasOwnProperty.call(
+      cumulative,
+      metric.key
+    )
+      ? cumulative[metric.key]
       :"";
 
     return `<tr>
@@ -218,6 +268,13 @@ function renderWeeklyPerformanceAdmin(settings){
                value="${thisValue}"
                placeholder="0">
       </td>
+      <td>
+        <input id="weekly-${metric.key}-cumulative"
+               type="number"
+               step="${metric.step}"
+               value="${cumulativeValue}"
+               placeholder="0">
+      </td>
     </tr>`;
   }).join("");
 }
@@ -228,21 +285,42 @@ $("performanceWeeklyForm").onsubmit=async event=>{
 
   const lastWeek={};
   const thisWeek={};
+  const cumulative={};
 
   WEEKLY_PERFORMANCE_METRICS.forEach(metric=>{
-    const lastInput=$(`weekly-${metric.key}-last`);
-    const thisInput=$(`weekly-${metric.key}-this`);
-
-    lastWeek[metric.key]=Number(lastInput?.value||0);
-    thisWeek[metric.key]=Number(thisInput?.value||0);
+    lastWeek[metric.key]=Number(
+      $(`weekly-${metric.key}-last`)?.value||0
+    );
+    thisWeek[metric.key]=Number(
+      $(`weekly-${metric.key}-this`)?.value||0
+    );
+    cumulative[metric.key]=Number(
+      $(`weekly-${metric.key}-cumulative`)?.value||0
+    );
   });
+
+  const payload={
+    performance_last_week:lastWeek,
+    performance_this_week:thisWeek,
+    manpower:cumulative.manpower,
+    baseline_manhours:cumulative.manhours,
+    baseline_at:new Date().toISOString(),
+    manhour_adjustment:0,
+    last_lti_date:adminDateFromLtiDays(cumulative.ltiDays),
+    training_sessions:cumulative.trainingSessions,
+    personnel_trained:cumulative.personnelTrained,
+    training_hours:cumulative.trainingHours,
+    osh_inductions:cumulative.oshInductions,
+    osh_meetings:cumulative.oshMeetings,
+    osh_audits:cumulative.oshAudits,
+    osh_inspections:cumulative.oshInspections,
+    procedure_reviews:cumulative.procedureReviews,
+    emergency_drills:cumulative.emergencyDrills
+  };
 
   const {error}=await db
     .from("settings")
-    .update({
-      performance_last_week:lastWeek,
-      performance_this_week:thisWeek
-    })
+    .update(payload)
     .eq("id",1);
 
   if(error){
@@ -255,16 +333,41 @@ $("performanceWeeklyForm").onsubmit=async event=>{
 
   setStatus(
     "performanceWeeklyStatus",
-    "Weekly performance popup details saved."
+    "Performance details saved. Cumulative values will appear on the public website."
   );
+
   await loadSettings();
 };
 
-async function loadSettings(){const {data,error}=await db.from("settings").select("*").eq("id",1).maybeSingle();if(error)throw error;const s=data||{};$("dashManpower").textContent=Number(s.manpower||0).toLocaleString();$("dashManhours").textContent=Number(s.baseline_manhours||0).toLocaleString();
-const map={pManpower:s.manpower,pBaseline:s.baseline_manhours,pBaselineAt:s.baseline_at?new Date(s.baseline_at).toISOString().slice(0,16):"",pAdjustment:s.manhour_adjustment||0,pWorkStart:s.work_start?.slice(0,5),pLunchStart:s.lunch_start?.slice(0,5),pLunchEnd:s.lunch_end?.slice(0,5),pWorkEnd:s.work_end?.slice(0,5),pLastLti:s.last_lti_date,pTrainingSessions:s.training_sessions,pPersonnelTrained:s.personnel_trained,pTrainingHours:s.training_hours,pInductions:s.osh_inductions,pMeetings:s.osh_meetings,pAudits:s.osh_audits,pInspections:s.osh_inspections,pReviews:s.procedure_reviews,pDrills:s.emergency_drills};for(const [id,v] of Object.entries(map))if(v!==undefined&&v!==null)$(id).value=v;$("pPaused").checked=Boolean(s.counter_paused);renderWeeklyPerformanceAdmin(s);}
-$("performanceForm").onsubmit=async e=>{e.preventDefault();setStatus("performanceStatus","Saving…");const payload={id:1,manpower:Number($("pManpower").value),baseline_manhours:Number($("pBaseline").value),baseline_at:new Date($("pBaselineAt").value).toISOString(),manhour_adjustment:Number($("pAdjustment").value||0),counter_paused:$("pPaused").checked,work_start:$("pWorkStart").value,lunch_start:$("pLunchStart").value,lunch_end:$("pLunchEnd").value,work_end:$("pWorkEnd").value,last_lti_date:$("pLastLti").value,training_sessions:Number($("pTrainingSessions").value||0),personnel_trained:Number($("pPersonnelTrained").value||0),training_hours:Number($("pTrainingHours").value||0),osh_inductions:Number($("pInductions").value||0),osh_meetings:Number($("pMeetings").value||0),osh_audits:Number($("pAudits").value||0),osh_inspections:Number($("pInspections").value||0),procedure_reviews:Number($("pReviews").value||0),emergency_drills:Number($("pDrills").value||0)};const {error}=await db.from("settings").upsert(payload);setStatus("performanceStatus",error?error.message:"Saved. Public figures will update on refresh.");if(!error)await loadSettings();};
+async function loadSettings(){
+  const {data,error}=await db
+    .from("settings")
+    .select("*")
+    .eq("id",1)
+    .maybeSingle();
 
-let reportRows=[];async function loadReports(){const {data,error}=await db.from("safety_reports").select("*").order("created_at",{ascending:false});if(error)throw error;reportRows=data||[];$("dashReports").textContent=reportRows.filter(r=>r.status!=="Closed").length;const list=$("reportList");list.innerHTML=reportRows.length?"":"<p>No reports submitted yet.</p>";for(const r of reportRows){const d=document.createElement("div");d.className=`data-item ${r.urgency==="Critical"?"critical":""}`;d.innerHTML=`<strong>${r.reference}</strong> | ${r.report_type} | ${r.category}<br><span class="small">${new Date(r.created_at).toLocaleString()} | ${r.location||""} ${r.location_details||""} | ${r.urgency||""}</span><p>${r.description||""}</p><label>Status<select class="report-status"><option>New</option><option>Under Review</option><option>Action Required</option><option>Closed</option></select></label><label>Admin remarks<textarea class="report-remarks">${r.admin_remarks||""}</textarea></label><div class="row-actions"><button class="primary save-report" type="button">Save</button>${r.photo_url?'<button class="primary view-photo" type="button">View Photo</button>':""}<button class="danger delete-report" type="button">Delete Report</button></div>`;d.querySelector(".report-status").value=r.status;d.querySelector(".save-report").onclick=async()=>{const status=d.querySelector(".report-status").value;const payload={status,admin_remarks:d.querySelector(".report-remarks").value,updated_at:new Date().toISOString(),closure_date:status==="Closed"?(r.closure_date||new Date().toISOString().slice(0,10)):null};const {error}=await db.from("safety_reports").update(payload).eq("id",r.id);if(error)alert(error.message);else {await loadReports();await loadTrendAdmin();}};d.querySelector(".view-photo")?.addEventListener("click",async()=>{const {data,error}=await db.storage.from("report-photos").createSignedUrl(r.photo_url,3600);if(error)alert(error.message);else window.open(data.signedUrl,"_blank","noopener")});
+  if(error)throw error;
+
+  const settings=data||{};
+  const cumulative=cumulativePerformanceValues(settings);
+
+  $("dashManpower").textContent=Number(
+    cumulative.manpower||0
+  ).toLocaleString();
+
+  $("dashManhours").textContent=Number(
+    cumulative.manhours||0
+  ).toLocaleString();
+
+  renderWeeklyPerformanceAdmin(settings);
+}
+
+let reportRows=[];async function loadReports(){const {data,error}=await db.from("safety_reports").select("*").order("created_at",{ascending:false});if(error)throw error;reportRows=data||[];$("dashReports").textContent=reportRows.filter(r=>r.status!=="Closed").length;const list=$("reportList");list.innerHTML=reportRows.length?"":"<p>No reports submitted yet.</p>";for(const r of reportRows){const d=document.createElement("div");d.className=`data-item ${r.urgency==="Critical"?"critical":""}`;const reporterName=r.reporter_name||"Not provided";
+const reporterDesignation=r.reporter_designation||"Not provided";
+d.innerHTML=`<strong>${r.reference}</strong> | ${r.report_type} | ${r.category}<br>
+<span class="small">${new Date(r.created_at).toLocaleString()} | ${r.location||""} ${r.location_details||""} | ${r.urgency||""}</span>
+<p><strong>Name:</strong> ${reporterName}<br><strong>Designation:</strong> ${reporterDesignation}</p>
+<p>${r.description||""}</p><label>Status<select class="report-status"><option>New</option><option>Under Review</option><option>Action Required</option><option>Closed</option></select></label><label>Admin remarks<textarea class="report-remarks">${r.admin_remarks||""}</textarea></label><div class="row-actions"><button class="primary save-report" type="button">Save</button>${r.photo_url?'<button class="primary view-photo" type="button">View Photo</button>':""}<button class="danger delete-report" type="button">Delete Report</button></div>`;d.querySelector(".report-status").value=r.status;d.querySelector(".save-report").onclick=async()=>{const status=d.querySelector(".report-status").value;const payload={status,admin_remarks:d.querySelector(".report-remarks").value,updated_at:new Date().toISOString(),closure_date:status==="Closed"?(r.closure_date||new Date().toISOString().slice(0,10)):null};const {error}=await db.from("safety_reports").update(payload).eq("id",r.id);if(error)alert(error.message);else {await loadReports();await loadTrendAdmin();}};d.querySelector(".view-photo")?.addEventListener("click",async()=>{const {data,error}=await db.storage.from("report-photos").createSignedUrl(r.photo_url,3600);if(error)alert(error.message);else window.open(data.signedUrl,"_blank","noopener")});
 d.querySelector(".delete-report").onclick=async()=>{
   const confirmed=confirm(`Permanently delete safety report ${r.reference}?\n\nThis action cannot be undone.`);
   if(!confirmed)return;
@@ -392,27 +495,29 @@ $("exportExcel").onclick=async()=>{
       views:[{state:"frozen",ySplit:4}]
     });
 
-    worksheet.mergeCells("A1:K1");
+    worksheet.mergeCells("A1:M1");
     worksheet.getCell("A1").value="SAMA YAS RESIDENTIAL DEVELOPMENT";
     worksheet.getCell("A1").font={bold:true,size:18,color:{argb:"FFFFFFFF"}};
     worksheet.getCell("A1").fill={type:"pattern",pattern:"solid",fgColor:{argb:"FF111111"}};
     worksheet.getCell("A1").alignment={horizontal:"center",vertical:"middle"};
     worksheet.getRow(1).height=30;
 
-    worksheet.mergeCells("A2:K2");
+    worksheet.mergeCells("A2:M2");
     worksheet.getCell("A2").value="MEC OSH Department - Safety Reports Register";
     worksheet.getCell("A2").font={bold:true,size:13,color:{argb:"FF000000"}};
     worksheet.getCell("A2").fill={type:"pattern",pattern:"solid",fgColor:{argb:"FFFFD400"}};
     worksheet.getCell("A2").alignment={horizontal:"center",vertical:"middle"};
     worksheet.getRow(2).height=24;
 
-    worksheet.mergeCells("A3:K3");
+    worksheet.mergeCells("A3:M3");
     worksheet.getCell("A3").value=`Exported: ${new Date().toLocaleString("en-GB",{timeZone:"Asia/Dubai"})} UAE time`;
     worksheet.getCell("A3").font={italic:true,color:{argb:"FF555555"}};
     worksheet.getCell("A3").alignment={horizontal:"right"};
 
     const headers=[
       "Report ID",
+      "Name",
+      "Designation",
       "Date",
       "Report Type",
       "Category",
@@ -442,6 +547,8 @@ $("exportExcel").onclick=async()=>{
 
     worksheet.columns=[
       {key:"reference",width:18},
+      {key:"reporter_name",width:23},
+      {key:"reporter_designation",width:23},
       {key:"created",width:20},
       {key:"type",width:20},
       {key:"category",width:32},
@@ -463,6 +570,8 @@ $("exportExcel").onclick=async()=>{
 
       row.values=[
         report.reference||"",
+        report.reporter_name||"",
+        report.reporter_designation||"",
         excelDateValue(report.created_at),
         report.report_type||"",
         report.category||"",
@@ -488,13 +597,13 @@ $("exportExcel").onclick=async()=>{
         if(index%2===1){
           cell.fill={type:"pattern",pattern:"solid",fgColor:{argb:"FFF7F7F7"}};
         }
-        if([1,2,3,6,7,9,10].includes(columnNumber)){
+        if([1,2,3,4,5,8,9,11,12].includes(columnNumber)){
           cell.alignment={horizontal:"center",vertical:"middle",wrapText:true};
         }
       });
 
-      row.getCell(2).numFmt="dd/mm/yyyy hh:mm";
-      row.getCell(10).numFmt="dd/mm/yyyy";
+      row.getCell(4).numFmt="dd/mm/yyyy hh:mm";
+      row.getCell(12).numFmt="dd/mm/yyyy";
 
       const urgencyColors={
         Low:"FFDCFCE7",
@@ -503,16 +612,16 @@ $("exportExcel").onclick=async()=>{
         Critical:"FFFECACA"
       };
       if(urgencyColors[report.urgency]){
-        row.getCell(6).fill={
+        row.getCell(8).fill={
           type:"pattern",
           pattern:"solid",
           fgColor:{argb:urgencyColors[report.urgency]}
         };
-        row.getCell(6).font={bold:true};
+        row.getCell(8).font={bold:true};
       }
 
       if(report.status==="Closed"){
-        row.getCell(7).fill={type:"pattern",pattern:"solid",fgColor:{argb:"FFBBF7D0"}};
+        row.getCell(9).fill={type:"pattern",pattern:"solid",fgColor:{argb:"FFBBF7D0"}};
       }
 
       if(report.photo_url){
@@ -531,21 +640,21 @@ $("exportExcel").onclick=async()=>{
             const imageHeight=Math.max(1,Math.round(photo.height*scale));
 
             worksheet.addImage(imageId,{
-              tl:{col:8.12,row:rowNumber-1+0.10},
+              tl:{col:10.12,row:rowNumber-1+0.10},
               ext:{width:imageWidth,height:imageHeight},
               editAs:"oneCell"
             });
-            row.getCell(9).value="";
+            row.getCell(11).value="";
           }
         }catch(photoError){
-          row.getCell(9).value="Photo unavailable";
-          row.getCell(9).note=photoError.message;
+          row.getCell(11).value="Photo unavailable";
+          row.getCell(11).note=photoError.message;
         }
       }
     }
 
-    worksheet.autoFilter="A4:K4";
-    worksheet.getColumn(9).alignment={horizontal:"center",vertical:"middle"};
+    worksheet.autoFilter="A4:M4";
+    worksheet.getColumn(11).alignment={horizontal:"center",vertical:"middle"};
 
     worksheet.pageSetup={
       orientation:"landscape",

@@ -136,3 +136,15 @@ Run `CONTACT_SETTINGS_SCHEMA_FIX.sql` when Supabase reports that
 Run `PERFORMANCE_WEEKLY_POPUP_SETUP.sql` once. Every public performance card
 then opens a popup showing As of Last Week, This Week and Cumulative values.
 Weekly values are maintained from Admin → Performance.
+
+
+## Simplified Performance Admin
+
+Admin → Performance now contains one table with As of Last Week, This Week and
+Cumulative data columns. The previous duplicate Performance Settings form was
+removed. Cumulative values save directly to the public performance cards.
+
+
+## Safety Report Name and Designation
+Run `SAFETY_REPORT_NAME_DESIGNATION_SETUP.sql` once. Name and Designation are
+optional on the public form and appear in Admin reports and Excel exports.

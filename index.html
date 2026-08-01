@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="MEC OSH Department portal for Sama Yas Residential Development">
 <title>MEC OSH Department | Sama Yas</title>
-<link rel="stylesheet" href="styles.css?v=20260801-1036">
+<link rel="stylesheet" href="styles.css?v=20260801-1128">
 
 <style id="critical-top-navigation">
 .header .top-visible-links{
@@ -445,7 +445,7 @@
       <div>
         <span data-i18n="documents">OSH Documents</span>
         <h2 id="documentLibraryTitle" data-i18n="library">
-          Public document library
+          Document Library
         </h2>
       </div>
       <button id="closeDocumentLibrary"
@@ -787,6 +787,33 @@
   </div>
 </section>
 
+<div id="teamPhotoModal"
+     class="team-photo-modal"
+     hidden
+     aria-hidden="true"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="teamPhotoModalName">
+  <div class="team-photo-modal-card">
+    <button id="closeTeamPhotoModal"
+            class="team-photo-modal-close"
+            type="button"
+            aria-label="Close enlarged team member photo">×</button>
+
+    <div class="team-photo-modal-image-wrap">
+      <img id="teamPhotoModalImage"
+           src=""
+           alt="">
+    </div>
+
+    <div class="team-photo-modal-copy">
+      <h2 id="teamPhotoModalName">OSH Team Member</h2>
+      <p id="teamPhotoModalDesignation"></p>
+    </div>
+  </div>
+</div>
+
+
 <section id="gallery" class="section pale">
 <div class="container">
   <div class="section-head"><span data-i18n="gallery">Gallery</span><h2 data-i18n="galleryTitle">OSH Gallery</h2></div>
@@ -932,6 +959,23 @@
     <button class="modal-close">×</button>
     <h2 data-i18n="reportConcern">Report a Safety Concern</h2>
     <form id="reportForm">
+      <div class="report-person-grid">
+        <label>Name <span class="optional-field">(Optional)</span>
+          <input name="reporterName"
+                 id="reporterName"
+                 type="text"
+                 maxlength="120"
+                 autocomplete="name"
+                 placeholder="Enter your name">
+        </label>
+        <label>Designation <span class="optional-field">(Optional)</span>
+          <input name="reporterDesignation"
+                 id="reporterDesignation"
+                 type="text"
+                 maxlength="120"
+                 placeholder="Enter your designation">
+        </label>
+      </div>
       <label>Report Type<select name="type" required><option>Unsafe Act</option><option>Unsafe Condition</option><option>Good Practice</option><option>Accident</option><option>Near Miss</option><option>Property Damage</option></select></label>
       <label>Category<select name="category" id="reportCategory" required></select></label>
       <label>Predefined Location<select name="location"><option>Zone 1</option><option>Zone 2</option><option>Zone 3</option><option>Basement</option><option>Ground Floor</option><option>Building 1</option><option>Building 2</option><option>Building 3</option><option>Building 4</option><option>Building 5</option><option>Roof</option><option>Laydown Area</option><option>Logistics Area</option><option>Welfare Area</option><option>Office Area</option><option>Waste Collection Area</option><option>Other</option></select></label>
@@ -1015,7 +1059,7 @@
 <script>window.CATEGORY_DATA=[{"name": "Housekeeping & General Workplace Amenities", "ua": 36, "uc": 188}, {"name": "Traffic Management & Logistics", "ua": 23, "uc": 51}, {"name": "Working at Height", "ua": 104, "uc": 89}, {"name": "Scaffolding/Ladder", "ua": 111, "uc": 195}, {"name": "Personal Protective Equipment", "ua": 87, "uc": 16}, {"name": "Electrical Safety", "ua": 29, "uc": 49}, {"name": "Hand Tools", "ua": 23, "uc": 25}, {"name": "Excavations", "ua": 4, "uc": 3}, {"name": "Lifting Equipment and Lifting Accessories", "ua": 31, "uc": 45}, {"name": "Portable Power Tools", "ua": 32, "uc": 49}, {"name": "Plant and Equipment", "ua": 20, "uc": 32}, {"name": "Confined Space", "ua": 1, "uc": 8}, {"name": "Hot Work Operations", "ua": 41, "uc": 41}, {"name": "Compressed Air and Gases", "ua": 0, "uc": 9}, {"name": "Manual Handling", "ua": 17, "uc": 9}, {"name": "Welfare Facilities", "ua": 28, "uc": 39}, {"name": "Hazardous Substances", "ua": 0, "uc": 20}, {"name": "Machine Guarding", "ua": 5, "uc": 8}, {"name": "Storage Arrangements", "ua": 22, "uc": 115}, {"name": "Barricading of Hazards", "ua": 62, "uc": 112}, {"name": "Access and Egress", "ua": 56, "uc": 78}, {"name": "Permit to Work", "ua": 20, "uc": 14}, {"name": "Safety Signage & Signals", "ua": 14, "uc": 14}, {"name": "Falsework/Formwork", "ua": 96, "uc": 112}, {"name": "Waste Management", "ua": 15, "uc": 66}, {"name": "First Aid Case", "ua": 4, "uc": 2}, {"name": "Near Miss Incident", "ua": 0, "uc": 0}, {"name": "Property Damage", "ua": 0, "uc": 0}, {"name": "Lost Time Injury", "ua": 0, "uc": 1}];</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20260801-1036"></script>
+<script src="app.js?v=20260801-1128"></script>
 
 <a
   class="floating-emergency-call"

@@ -155,3 +155,12 @@ PERFORMANCE WEEKLY POPUP
 7. Click Save Weekly Details.
 
 The public cumulative figure is always taken from the live performance card.
+
+
+SAFETY REPORT NAME AND DESIGNATION
+----------------------------------
+1. Open Supabase > SQL Editor > New query.
+2. Run SAFETY_REPORT_NAME_DESIGNATION_SETUP.sql.
+3. Confirm the final query returns reporter_name and reporter_designation.
+4. Wait about 10 seconds.
+5. Refresh the website and Admin Dashboard using Ctrl + F5.

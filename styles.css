@@ -3273,3 +3273,163 @@ html[dir=rtl] .performance-detail-card h2{
     padding:28px 20px;
   }
 }
+
+
+/* Click-to-enlarge OSH Team member photos */
+.team-member-photo-button{
+  position:relative;
+  display:block;
+  width:max-content;
+  max-width:100%;
+  margin:0 auto;
+  padding:0;
+  overflow:hidden;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  cursor:zoom-in;
+}
+.team-member-photo-button:focus-visible{
+  outline:3px solid #ffd400;
+  outline-offset:4px;
+}
+.team-member-photo-button .team-member-photo{
+  transition:transform .24s ease,filter .24s ease;
+}
+.team-member-photo-button:hover .team-member-photo,
+.team-member-photo-button:focus-visible .team-member-photo{
+  transform:scale(1.035);
+  filter:brightness(.78);
+}
+.team-photo-zoom-hint{
+  position:absolute;
+  right:9px;
+  bottom:9px;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:50%;
+  background:rgba(0,0,0,.72);
+  color:#ffd400;
+  font-size:24px;
+  font-weight:900;
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .2s ease,transform .2s ease;
+}
+.team-member-photo-button:hover .team-photo-zoom-hint,
+.team-member-photo-button:focus-visible .team-photo-zoom-hint{
+  opacity:1;
+  transform:translateY(0);
+}
+.team-photo-popup-open{
+  overflow:hidden;
+}
+.team-photo-modal{
+  position:fixed;
+  inset:0;
+  z-index:10080;
+  display:grid;
+  place-items:center;
+  padding:22px;
+  background:rgba(0,0,0,.91);
+  backdrop-filter:blur(8px);
+}
+.team-photo-modal[hidden]{
+  display:none!important;
+}
+.team-photo-modal-card{
+  position:relative;
+  width:min(620px,100%);
+  max-height:calc(100vh - 44px);
+  overflow:auto;
+  border:1px solid #414141;
+  border-top:6px solid #ffd400;
+  border-radius:13px;
+  background:#101010;
+  box-shadow:0 30px 100px rgba(0,0,0,.72);
+}
+.team-photo-modal-close{
+  position:absolute;
+  top:13px;
+  right:14px;
+  z-index:3;
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:50%;
+  background:rgba(0,0,0,.74);
+  color:#fff;
+  font-size:30px;
+  line-height:1;
+  cursor:pointer;
+}
+.team-photo-modal-image-wrap{
+  display:flex;
+  justify-content:center;
+  padding:26px 26px 0;
+  background:#050505;
+}
+.team-photo-modal-image-wrap img{
+  display:block;
+  width:auto;
+  max-width:100%;
+  max-height:68vh;
+  object-fit:contain;
+  object-position:center top;
+  border-radius:8px;
+  background:#111;
+}
+.team-photo-modal-copy{
+  padding:22px 26px 27px;
+  text-align:center;
+}
+.team-photo-modal-copy h2{
+  margin:0 0 7px;
+  color:#fff;
+  font-size:clamp(28px,5vw,42px);
+}
+.team-photo-modal-copy p{
+  margin:0;
+  color:#ffd400;
+  font-size:18px;
+  font-weight:800;
+}
+html[dir=rtl] .team-photo-modal-close{
+  right:auto;
+  left:14px;
+}
+@media(max-width:520px){
+  .team-photo-modal{
+    padding:12px;
+  }
+  .team-photo-modal-image-wrap{
+    padding:18px 14px 0;
+  }
+  .team-photo-modal-copy{
+    padding:18px 14px 22px;
+  }
+  .team-photo-modal-image-wrap img{
+    max-height:64vh;
+  }
+}
+
+
+/* Optional reporter identity fields */
+.report-person-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.optional-field{
+  color:#999;
+  font-size:.82em;
+  font-weight:500;
+}
+@media(max-width:620px){
+  .report-person-grid{grid-template-columns:1fr}
+}
