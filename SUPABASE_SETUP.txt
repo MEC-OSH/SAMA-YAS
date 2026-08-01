@@ -143,3 +143,15 @@ CONTACT SETTINGS SCHEMA CACHE FIX
 3. Confirm the final query returns one row.
 4. Wait about 10 seconds.
 5. Refresh the Admin Dashboard using Ctrl + F5.
+
+PERFORMANCE WEEKLY POPUP
+------------------------
+1. Open Supabase > SQL Editor > New query.
+2. Run PERFORMANCE_WEEKLY_POPUP_SETUP.sql.
+3. Confirm that the final query returns the settings row.
+4. Wait about 10 seconds and refresh the Admin Dashboard with Ctrl + F5.
+5. Open Admin > Performance.
+6. Enter “As of Last Week” and “This Week” values for each metric.
+7. Click Save Weekly Details.
+
+The public cumulative figure is always taken from the live performance card.

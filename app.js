@@ -1,6 +1,6 @@
 const translations={
-en:{home:"Home",about:"About OSH",performance:"Performance",reports:"Safety Reports",documents:"OSH Documents",trainingVideos:"Training Awareness Videos",trainingVideosTitle:"Watch, learn and work safely",news:"News",gallery:"Gallery",emergency:"Emergency",contact:"Contact",adminLogin:"Admin Login",heroTitle:"Building Safely. Protecting Every Life.",heroSub:"MEC OSH Department, Sama Yas Residential Development",aboutTitle:"A prevention-led safety culture",mission:"Mission",missionText:"To protect every person involved in the Sama Yas Residential Development through proactive risk management, competent supervision, effective consultation and strict compliance with ALDAR OSHMS, ADOSH-SF and UAE legal requirements.",vision:"Vision",visionText:"To achieve Zero Harm by creating a workplace where safe decisions are embedded in every activity, every day and at every level.",objectives:"Objectives",objectivesText:"Prevent injuries and occupational illness, maintain legal compliance, strengthen workforce competence, close findings promptly, improve contractor performance and continuously enhance the OSH management system.",roles:"Roles & Responsibilities",rolesText:"The OSH Department plans, advises, inspects, trains, monitors and reports. Management provides resources, supervisors enforce controls, and every worker has the authority and duty to stop unsafe work.",livePerformance:"Live cumulative OSH performance",manpower:"Total Manpower",manhours:"Man-Hours",liveCounter:"Live UAE working-time counter",ltiDays:"LTI-Free Days",trainingSessions:"Training Sessions",personnelTrained:"Personnel Trained",trainingHours:"Training Hours",inductions:"OSH Inductions",meetings:"OSH Meetings",audits:"OSH Audits",inspections:"OSH Inspections",reviews:"Procedure Reviews",drills:"Emergency Drills",reportTrend:"Safety observation trend analysis",unsafeActs:"Unsafe Acts",unsafeConditions:"Unsafe Conditions",goodPractices:"Good Practices",reportConcern:"Report a Safety Concern",whatsappConcern:"Report a Safety Concern on WhatsApp",category:"Category",trackReport:"Track a Report",library:"Public document library",newsTitle:"OSH news and announcements",teamTitle:"Meet Our OSH Team",teamClient:"Client",teamPMC:"PMC",teamConsultant:"Consultant",teamMainContractor:"Main Contractor",galleryTitle:"OSH Gallery",emergencyTitle:"Emergency information"},
-ar:{home:"الرئيسية",about:"عن السلامة والصحة المهنية",performance:"الأداء",reports:"تقارير السلامة",documents:"وثائق السلامة",trainingVideos:"فيديوهات التدريب والتوعية",trainingVideosTitle:"شاهد وتعلم واعمل بأمان",news:"الأخبار",gallery:"المعرض",emergency:"الطوارئ",contact:"اتصل بنا",adminLogin:"دخول المسؤول",heroTitle:"نبني بأمان. نحمي كل حياة.",heroSub:"قسم السلامة والصحة المهنية في مشروع سما ياس السكني",aboutTitle:"ثقافة سلامة قائمة على الوقاية",mission:"الرسالة",missionText:"حماية جميع العاملين في مشروع سما ياس من خلال الإدارة الاستباقية للمخاطر والإشراف الفعّال والالتزام بمتطلبات الدار وADOSH والقوانين الإماراتية.",vision:"الرؤية",visionText:"تحقيق هدف صفر ضرر من خلال ترسيخ القرارات الآمنة في كل نشاط وكل يوم وعلى جميع المستويات.",objectives:"الأهداف",objectivesText:"منع الإصابات والأمراض المهنية وتعزيز الكفاءة وإغلاق الملاحظات وتحسين أداء المقاولين والتطوير المستمر لنظام السلامة.",roles:"الأدوار والمسؤوليات",rolesText:"يقوم قسم السلامة بالتخطيط والمشورة والتفتيش والتدريب والمتابعة والتقارير، وتوفر الإدارة الموارد ويطبق المشرفون الضوابط ويحق لكل عامل إيقاف العمل غير الآمن.",livePerformance:"الأداء التراكمي المباشر",manpower:"إجمالي القوى العاملة",manhours:"ساعات العمل",liveCounter:"عداد مباشر وفق وقت العمل في الإمارات",ltiDays:"أيام بدون إصابة مضيعة للوقت",trainingSessions:"جلسات التدريب",personnelTrained:"الأشخاص المدربون",trainingHours:"ساعات التدريب",inductions:"تعريف السلامة",meetings:"اجتماعات السلامة",audits:"تدقيقات السلامة",inspections:"تفتيشات السلامة",reviews:"مراجعات الإجراءات",drills:"تمارين الطوارئ",reportTrend:"تحليل اتجاه ملاحظات السلامة",unsafeActs:"الأفعال غير الآمنة",unsafeConditions:"الظروف غير الآمنة",goodPractices:"الممارسات الجيدة",reportConcern:"الإبلاغ عن ملاحظة سلامة",whatsappConcern:"الإبلاغ عبر واتساب",category:"الفئة",trackReport:"تتبع التقرير",library:"مكتبة الوثائق العامة",newsTitle:"أخبار وإعلانات السلامة",teamTitle:"تعرف على فريق السلامة والصحة المهنية",teamClient:"العميل",teamPMC:"مدير المشروع",teamConsultant:"الاستشاري",teamMainContractor:"المقاول الرئيسي",galleryTitle:"معرض صور السلامة",emergencyTitle:"معلومات الطوارئ"}};
+en:{home:"Home",about:"About OSH",performance:"Performance",reports:"Safety Reports",documents:"OSH Documents",trainingVideos:"Training Awareness Videos",trainingVideosTitle:"Watch, learn and work safely",news:"News",gallery:"Gallery",emergency:"Emergency",contact:"Contact",adminLogin:"Admin Login",heroTitle:"Building Safely. Protecting Every Life.",heroSub:"MEC OSH Department, Sama Yas Residential Development",aboutTitle:"A prevention-led safety culture",mission:"Mission",missionText:"To protect every person involved in the Sama Yas Residential Development through proactive risk management, competent supervision, effective consultation and strict compliance with ALDAR OSHMS, ADOSH-SF and UAE legal requirements.",vision:"Vision",visionText:"To achieve Zero Harm by creating a workplace where safe decisions are embedded in every activity, every day and at every level.",objectives:"Objectives",objectivesText:"Prevent injuries and occupational illness, maintain legal compliance, strengthen workforce competence, close findings promptly, improve contractor performance and continuously enhance the OSH management system.",roles:"Roles & Responsibilities",rolesText:"The OSH Department plans, advises, inspects, trains, monitors and reports. Management provides resources, supervisors enforce controls, and every worker has the authority and duty to stop unsafe work.",livePerformance:"Live cumulative OSH performance",performanceClickHint:"Select any performance card to view last week, this week and cumulative figures.",performanceDetails:"Performance Details",asOfLastWeek:"As of Last Week",thisWeek:"This Week",cumulative:"Cumulative",performanceDetailNote:"Weekly figures are maintained by the MEC OSH Admin. Cumulative figures update from the live performance counter.",manpower:"Total Manpower",manhours:"Man-Hours",liveCounter:"Live UAE working-time counter",ltiDays:"LTI-Free Days",trainingSessions:"Training Sessions",personnelTrained:"Personnel Trained",trainingHours:"Training Hours",inductions:"OSH Inductions",meetings:"OSH Meetings",audits:"OSH Audits",inspections:"OSH Inspections",reviews:"Procedure Reviews",drills:"Emergency Drills",reportTrend:"Safety observation trend analysis",unsafeActs:"Unsafe Acts",unsafeConditions:"Unsafe Conditions",goodPractices:"Good Practices",reportConcern:"Report a Safety Concern",whatsappConcern:"Report a Safety Concern on WhatsApp",category:"Category",trackReport:"Track a Report",library:"Public document library",newsTitle:"OSH news and announcements",teamTitle:"Meet Our OSH Team",teamClient:"Client",teamPMC:"PMC",teamConsultant:"Consultant",teamMainContractor:"Main Contractor",galleryTitle:"OSH Gallery",emergencyTitle:"Emergency information"},
+ar:{home:"الرئيسية",about:"عن السلامة والصحة المهنية",performance:"الأداء",reports:"تقارير السلامة",documents:"وثائق السلامة",trainingVideos:"فيديوهات التدريب والتوعية",trainingVideosTitle:"شاهد وتعلم واعمل بأمان",news:"الأخبار",gallery:"المعرض",emergency:"الطوارئ",contact:"اتصل بنا",adminLogin:"دخول المسؤول",heroTitle:"نبني بأمان. نحمي كل حياة.",heroSub:"قسم السلامة والصحة المهنية في مشروع سما ياس السكني",aboutTitle:"ثقافة سلامة قائمة على الوقاية",mission:"الرسالة",missionText:"حماية جميع العاملين في مشروع سما ياس من خلال الإدارة الاستباقية للمخاطر والإشراف الفعّال والالتزام بمتطلبات الدار وADOSH والقوانين الإماراتية.",vision:"الرؤية",visionText:"تحقيق هدف صفر ضرر من خلال ترسيخ القرارات الآمنة في كل نشاط وكل يوم وعلى جميع المستويات.",objectives:"الأهداف",objectivesText:"منع الإصابات والأمراض المهنية وتعزيز الكفاءة وإغلاق الملاحظات وتحسين أداء المقاولين والتطوير المستمر لنظام السلامة.",roles:"الأدوار والمسؤوليات",rolesText:"يقوم قسم السلامة بالتخطيط والمشورة والتفتيش والتدريب والمتابعة والتقارير، وتوفر الإدارة الموارد ويطبق المشرفون الضوابط ويحق لكل عامل إيقاف العمل غير الآمن.",livePerformance:"الأداء التراكمي المباشر",performanceClickHint:"اختر أي بطاقة أداء لعرض بيانات الأسبوع الماضي وهذا الأسبوع والإجمالي التراكمي.",performanceDetails:"تفاصيل الأداء",asOfLastWeek:"حتى نهاية الأسبوع الماضي",thisWeek:"هذا الأسبوع",cumulative:"الإجمالي التراكمي",performanceDetailNote:"يتم تحديث البيانات الأسبوعية بواسطة مسؤول السلامة في MEC، بينما يتم تحديث القيم التراكمية من عداد الأداء المباشر.",manpower:"إجمالي القوى العاملة",manhours:"ساعات العمل",liveCounter:"عداد مباشر وفق وقت العمل في الإمارات",ltiDays:"أيام بدون إصابة مضيعة للوقت",trainingSessions:"جلسات التدريب",personnelTrained:"الأشخاص المدربون",trainingHours:"ساعات التدريب",inductions:"تعريف السلامة",meetings:"اجتماعات السلامة",audits:"تدقيقات السلامة",inspections:"تفتيشات السلامة",reviews:"مراجعات الإجراءات",drills:"تمارين الطوارئ",reportTrend:"تحليل اتجاه ملاحظات السلامة",unsafeActs:"الأفعال غير الآمنة",unsafeConditions:"الظروف غير الآمنة",goodPractices:"الممارسات الجيدة",reportConcern:"الإبلاغ عن ملاحظة سلامة",whatsappConcern:"الإبلاغ عبر واتساب",category:"الفئة",trackReport:"تتبع التقرير",library:"مكتبة الوثائق العامة",newsTitle:"أخبار وإعلانات السلامة",teamTitle:"تعرف على فريق السلامة والصحة المهنية",teamClient:"العميل",teamPMC:"مدير المشروع",teamConsultant:"الاستشاري",teamMainContractor:"المقاول الرئيسي",galleryTitle:"معرض صور السلامة",emergencyTitle:"معلومات الطوارئ"}};
 let lang=localStorage.getItem("mecLanguage")==="ar"?"ar":"en";
 
 
@@ -44,6 +44,9 @@ function applyLanguage(){
   }
   if(typeof renderContactSettings==="function"){
     renderContactSettings();
+  }
+  if(typeof refreshPerformancePopupLanguage==="function"){
+    refreshPerformancePopupLanguage();
   }
 }
 
@@ -250,6 +253,11 @@ document.addEventListener("keydown",event=>{
 
   if(documentLibraryModal&&!documentLibraryModal.hidden){
     closeProtectedDocumentLibrary();
+    return;
+  }
+
+  if(performanceDetailModal&&!performanceDetailModal.hidden){
+    closePerformanceDetail();
   }
 });
 
@@ -360,6 +368,166 @@ function workingSecondsBetween(start, end) {
   return total;
 }
 
+
+const performanceMetricConfig={
+  manpower:{elementId:"manpower",decimals:0},
+  manhours:{elementId:"manhours",decimals:0},
+  ltiDays:{elementId:"ltiDays",decimals:0},
+  trainingSessions:{elementId:"trainingSessions",decimals:0},
+  personnelTrained:{elementId:"personnelTrained",decimals:0},
+  trainingHours:{elementId:"trainingHours",decimals:2},
+  oshInductions:{elementId:"oshInductions",decimals:0},
+  oshMeetings:{elementId:"oshMeetings",decimals:0},
+  oshAudits:{elementId:"oshAudits",decimals:0},
+  oshInspections:{elementId:"oshInspections",decimals:0},
+  procedureReviews:{elementId:"procedureReviews",decimals:0},
+  emergencyDrills:{elementId:"emergencyDrills",decimals:0}
+};
+
+let performanceWeeklyData={
+  lastWeek:{},
+  thisWeek:{}
+};
+let activePerformanceMetric=null;
+let activePerformanceCard=null;
+
+const performanceDetailModal=document.getElementById("performanceDetailModal");
+const closePerformanceDetailButton=document.getElementById("closePerformanceDetail");
+
+function normalizedWeeklyPerformanceData(value){
+  if(!value||typeof value!=="object"||Array.isArray(value))return {};
+  return value;
+}
+
+function performanceDisplayNumber(metricKey,value){
+  const config=performanceMetricConfig[metricKey]||{decimals:0};
+  const number=Number(value);
+
+  if(!Number.isFinite(number))return "—";
+
+  return number.toLocaleString("en-US",{
+    minimumFractionDigits:config.decimals,
+    maximumFractionDigits:config.decimals
+  });
+}
+
+function currentPerformanceMetricValue(metricKey){
+  const config=performanceMetricConfig[metricKey];
+  const element=config?document.getElementById(config.elementId):null;
+  if(!element)return 0;
+
+  const number=Number(
+    element.textContent.replace(/,/g,"").replace(/[^\d.-]/g,"")
+  );
+  return Number.isFinite(number)?number:0;
+}
+
+function performanceWeeklyValue(group,metricKey,fallback){
+  const values=performanceWeeklyData[group]||{};
+  if(Object.prototype.hasOwnProperty.call(values,metricKey)){
+    const number=Number(values[metricKey]);
+    if(Number.isFinite(number))return number;
+  }
+  return fallback;
+}
+
+function refreshPerformancePopupLanguage(){
+  if(!activePerformanceMetric||!activePerformanceCard)return;
+  const title=activePerformanceCard.querySelector("label")?.textContent
+    ||"OSH Performance";
+  setText("performanceDetailTitle",title);
+}
+
+function refreshOpenPerformanceDetail(){
+  if(!activePerformanceMetric||!performanceDetailModal||
+     performanceDetailModal.hidden)return;
+
+  const cumulative=currentPerformanceMetricValue(activePerformanceMetric);
+  const lastWeek=performanceWeeklyValue(
+    "lastWeek",
+    activePerformanceMetric,
+    cumulative
+  );
+  const thisWeek=performanceWeeklyValue(
+    "thisWeek",
+    activePerformanceMetric,
+    0
+  );
+
+  const lastWeekElement=document.getElementById("performanceLastWeekValue");
+  const thisWeekElement=document.getElementById("performanceThisWeekValue");
+  const cumulativeElement=document.getElementById("performanceCumulativeValue");
+
+  if(lastWeekElement){
+    lastWeekElement.textContent=performanceDisplayNumber(
+      activePerformanceMetric,
+      lastWeek
+    );
+  }
+
+  if(thisWeekElement){
+    thisWeekElement.textContent=performanceDisplayNumber(
+      activePerformanceMetric,
+      thisWeek
+    );
+  }
+
+  if(cumulativeElement){
+    cumulativeElement.textContent=performanceDisplayNumber(
+      activePerformanceMetric,
+      cumulative
+    );
+  }
+}
+
+function openPerformanceDetail(card){
+  activePerformanceCard=card;
+  activePerformanceMetric=card.dataset.performanceKey;
+
+  refreshPerformancePopupLanguage();
+  refreshOpenPerformanceDetail();
+
+  if(performanceDetailModal){
+    performanceDetailModal.hidden=false;
+    performanceDetailModal.setAttribute("aria-hidden","false");
+    document.body.classList.add("performance-popup-open");
+  }
+
+  setTimeout(()=>closePerformanceDetailButton?.focus(),30);
+}
+
+function closePerformanceDetail(){
+  if(performanceDetailModal){
+    performanceDetailModal.hidden=true;
+    performanceDetailModal.setAttribute("aria-hidden","true");
+  }
+  document.body.classList.remove("performance-popup-open");
+  activePerformanceCard?.focus();
+  activePerformanceMetric=null;
+  activePerformanceCard=null;
+}
+
+document.querySelectorAll(".performance-stat-card").forEach(card=>{
+  card.addEventListener("click",()=>openPerformanceDetail(card));
+  card.addEventListener("keydown",event=>{
+    if(event.key==="Enter"||event.key===" "){
+      event.preventDefault();
+      openPerformanceDetail(card);
+    }
+  });
+});
+
+closePerformanceDetailButton?.addEventListener(
+  "click",
+  closePerformanceDetail
+);
+
+performanceDetailModal?.addEventListener("click",event=>{
+  if(event.target===performanceDetailModal){
+    closePerformanceDetail();
+  }
+});
+
 function updateCounters() {
   const baselineDate=new Date(performance.baseline_at);
   const seconds=workingSecondsBetween(baselineDate,new Date());
@@ -371,6 +539,7 @@ function updateCounters() {
   const todayUaeMidnight=new Date(`${todayParts.year}-${todayParts.month}-${todayParts.day}T00:00:00+04:00`);
   const days=Math.max(0,Math.floor((todayUaeMidnight-startNext)/86400000)+1);
   setText("ltiDays",days);
+  refreshOpenPerformanceDetail();
 }
 
 
@@ -475,7 +644,13 @@ async function loadLiveSettings() {
       db.from("holidays").select("holiday_date").eq("active",true)
     ]);
     if (error) throw error;
-    if (row) performance={...performance,...row};
+    if (row){
+      performance={...performance,...row};
+      performanceWeeklyData={
+        lastWeek:normalizedWeeklyPerformanceData(row.performance_last_week),
+        thisWeek:normalizedWeeklyPerformanceData(row.performance_this_week)
+      };
+    }
     holidays=new Set((holidayRows||[]).map(x=>x.holiday_date));
     setText("manpower",performance.manpower);
     setText("trainingSessions",performance.training_sessions);
@@ -708,11 +883,30 @@ function updateTrendSummary(rows){
 function renderSafetyTrend(rows){
   updateTrendSummary(rows);
 
-  renderGroupedTrendChart("safetyStatusTrendChart",rows,[
-    {field:"unsafe_act_open_count",label:"Unsafe Act Open",color:"#f59e0b"},
-    {field:"unsafe_act_closed_count",label:"Unsafe Act Closed",color:"#0aa34f"},
-    {field:"unsafe_condition_open_count",label:"Unsafe Condition Open",color:"#ef1717"},
-    {field:"unsafe_condition_closed_count",label:"Unsafe Condition Closed",color:"#2563eb"}
+  renderGroupedTrendChart("unsafeActTrendChart",rows,[
+    {
+      field:"unsafe_act_open_count",
+      label:"Unsafe Act Open",
+      color:"#f59e0b"
+    },
+    {
+      field:"unsafe_act_closed_count",
+      label:"Unsafe Act Closed",
+      color:"#0aa34f"
+    }
+  ]);
+
+  renderGroupedTrendChart("unsafeConditionTrendChart",rows,[
+    {
+      field:"unsafe_condition_open_count",
+      label:"Unsafe Condition Open",
+      color:"#ef1717"
+    },
+    {
+      field:"unsafe_condition_closed_count",
+      label:"Unsafe Condition Closed",
+      color:"#2563eb"
+    }
   ]);
 }
 
@@ -978,6 +1172,11 @@ function renderStakeholderCarousel(carousel,members){
   const state={index:0,count:members.length,visible,timer:null};
   teamCarouselStates.set(carousel,state);
   carousel.style.setProperty("--team-visible",visible);
+  carousel.classList.toggle("single-team-member",members.length===1);
+  carousel.classList.toggle(
+    "partial-team-group",
+    members.length>1&&members.length<visible
+  );
 
   if(!members.length){
     track.innerHTML=emptyTeamMarkup(group);

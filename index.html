@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="MEC OSH Department portal for Sama Yas Residential Development">
 <title>MEC OSH Department | Sama Yas</title>
-<link rel="stylesheet" href="styles.css?v=20260731-1508">
+<link rel="stylesheet" href="styles.css?v=20260801-1036">
 
 <style id="critical-top-navigation">
 .header .top-visible-links{
@@ -233,23 +233,131 @@
 
 <section id="performance" class="section dark">
 <div class="container">
-  <div class="section-head light"><span data-i18n="performance">Performance</span><h2 data-i18n="livePerformance">Live cumulative OSH performance</h2></div>
+  <div class="section-head light">
+    <span data-i18n="performance">Performance</span>
+    <h2 data-i18n="livePerformance">Live cumulative OSH performance</h2>
+  </div>
+
+  <p class="performance-click-hint" data-i18n="performanceClickHint">
+    Select any performance card to view last week, this week and cumulative figures.
+  </p>
+
   <div class="stats">
-    <div class="stat"><label data-i18n="manpower">Total Manpower</label><strong id="manpower">1500</strong></div>
-    <div class="stat"><label data-i18n="manhours">Man-Hours</label><strong id="manhours">2,568,386</strong><small data-i18n="liveCounter">Live UAE working-time counter</small></div>
-    <div class="stat"><label data-i18n="ltiDays">LTI-Free Days</label><strong id="ltiDays">0</strong></div>
-    <div class="stat"><label data-i18n="trainingSessions">Training Sessions</label><strong id="trainingSessions">1,773</strong></div>
-    <div class="stat"><label data-i18n="personnelTrained">Personnel Trained</label><strong id="personnelTrained">39,442</strong></div>
-    <div class="stat"><label data-i18n="trainingHours">Training Hours</label><strong id="trainingHours">18,433.55</strong></div>
-    <div class="stat"><label data-i18n="inductions">OSH Inductions</label><strong id="oshInductions">2,238</strong></div>
-    <div class="stat"><label data-i18n="meetings">OSH Meetings</label><strong id="oshMeetings">73</strong></div>
-    <div class="stat"><label data-i18n="audits">OSH Audits</label><strong id="oshAudits">6</strong></div>
-    <div class="stat"><label data-i18n="inspections">OSH Inspections</label><strong id="oshInspections">167</strong></div>
-    <div class="stat"><label data-i18n="reviews">Procedure Reviews</label><strong id="procedureReviews">64</strong></div>
-    <div class="stat"><label data-i18n="drills">Emergency Drills</label><strong id="emergencyDrills">6</strong></div>
+    <div class="stat performance-stat-card" data-performance-key="manpower"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="manpower">Total Manpower</label>
+      <strong id="manpower">1500</strong>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="manhours"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="manhours">Man-Hours</label>
+      <strong id="manhours">2,568,386</strong>
+      <small data-i18n="liveCounter">Live UAE working-time counter</small>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="ltiDays"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="ltiDays">LTI-Free Days</label>
+      <strong id="ltiDays">0</strong>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="trainingSessions"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="trainingSessions">Training Sessions</label>
+      <strong id="trainingSessions">1,773</strong>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="personnelTrained"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="personnelTrained">Personnel Trained</label>
+      <strong id="personnelTrained">39,442</strong>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="trainingHours"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="trainingHours">Training Hours</label>
+      <strong id="trainingHours">18,433.55</strong>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="oshInductions"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="inductions">OSH Inductions</label>
+      <strong id="oshInductions">2,238</strong>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="oshMeetings"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="meetings">OSH Meetings</label>
+      <strong id="oshMeetings">73</strong>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="oshAudits"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="audits">OSH Audits</label>
+      <strong id="oshAudits">6</strong>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="oshInspections"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="inspections">OSH Inspections</label>
+      <strong id="oshInspections">167</strong>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="procedureReviews"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="reviews">Procedure Reviews</label>
+      <strong id="procedureReviews">64</strong>
+    </div>
+
+    <div class="stat performance-stat-card" data-performance-key="emergencyDrills"
+         role="button" tabindex="0" aria-haspopup="dialog">
+      <label data-i18n="drills">Emergency Drills</label>
+      <strong id="emergencyDrills">6</strong>
+    </div>
   </div>
 </div>
 </section>
+
+<div id="performanceDetailModal"
+     class="performance-detail-modal"
+     hidden
+     aria-hidden="true"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="performanceDetailTitle">
+  <div class="performance-detail-card">
+    <button id="closePerformanceDetail"
+            class="performance-detail-close"
+            type="button"
+            aria-label="Close performance details">×</button>
+
+    <span class="performance-detail-eyebrow"
+          data-i18n="performanceDetails">Performance Details</span>
+    <h2 id="performanceDetailTitle">OSH Performance</h2>
+
+    <div class="performance-comparison-grid">
+      <article>
+        <span data-i18n="asOfLastWeek">As of Last Week</span>
+        <strong id="performanceLastWeekValue">0</strong>
+      </article>
+
+      <article>
+        <span data-i18n="thisWeek">This Week</span>
+        <strong id="performanceThisWeekValue">0</strong>
+      </article>
+
+      <article>
+        <span data-i18n="cumulative">Cumulative</span>
+        <strong id="performanceCumulativeValue">0</strong>
+      </article>
+    </div>
+
+    <p class="performance-detail-note" data-i18n="performanceDetailNote">
+      Weekly figures are maintained by the MEC OSH Admin. Cumulative figures update from the live performance counter.
+    </p>
+  </div>
+</div>
 
 <section id="risk-assessment-tool" class="section risk-tool-public-section">
   <div class="container">
@@ -448,25 +556,45 @@
       </article>
     </div>
 
-    <article class="trend-chart-panel">
-      <div class="trend-chart-heading">
-        <div>
-          <span>Category and Closure Analysis</span>
-          <h3>Unsafe Act and Unsafe Condition: Open vs Closed</h3>
+    <div class="separate-trend-charts">
+      <article class="trend-chart-panel unsafe-act-chart-panel">
+        <div class="trend-chart-heading">
+          <div>
+            <span>Unsafe Act Analysis</span>
+            <h3>Unsafe Act: Open vs Closed</h3>
+          </div>
+          <div class="trend-legend" aria-label="Unsafe Act chart legend">
+            <span><i class="legend-ua-open"></i> Open</span>
+            <span><i class="legend-ua-closed"></i> Closed</span>
+          </div>
         </div>
-        <div class="trend-legend" aria-label="Chart legend">
-          <span><i class="legend-ua-open"></i> Unsafe Act Open</span>
-          <span><i class="legend-ua-closed"></i> Unsafe Act Closed</span>
-          <span><i class="legend-uc-open"></i> Unsafe Condition Open</span>
-          <span><i class="legend-uc-closed"></i> Unsafe Condition Closed</span>
+        <div class="trend-chart-scroll">
+          <div id="unsafeActTrendChart"
+               class="trend-chart"
+               role="img"
+               aria-label="Unsafe Act Open and Closed observations by category"></div>
         </div>
-      </div>
-      <div class="trend-chart-scroll">
-        <div id="safetyStatusTrendChart" class="trend-chart"
-             role="img"
-             aria-label="Unsafe Act Open and Closed and Unsafe Condition Open and Closed by category"></div>
-      </div>
-    </article>
+      </article>
+
+      <article class="trend-chart-panel unsafe-condition-chart-panel">
+        <div class="trend-chart-heading">
+          <div>
+            <span>Unsafe Condition Analysis</span>
+            <h3>Unsafe Condition: Open vs Closed</h3>
+          </div>
+          <div class="trend-legend" aria-label="Unsafe Condition chart legend">
+            <span><i class="legend-uc-open"></i> Open</span>
+            <span><i class="legend-uc-closed"></i> Closed</span>
+          </div>
+        </div>
+        <div class="trend-chart-scroll">
+          <div id="unsafeConditionTrendChart"
+               class="trend-chart"
+               role="img"
+               aria-label="Unsafe Condition Open and Closed observations by category"></div>
+        </div>
+      </article>
+    </div>
 
     <div class="trend-live-status">
       <span class="trend-live-dot" aria-hidden="true"></span>
@@ -887,7 +1015,7 @@
 <script>window.CATEGORY_DATA=[{"name": "Housekeeping & General Workplace Amenities", "ua": 36, "uc": 188}, {"name": "Traffic Management & Logistics", "ua": 23, "uc": 51}, {"name": "Working at Height", "ua": 104, "uc": 89}, {"name": "Scaffolding/Ladder", "ua": 111, "uc": 195}, {"name": "Personal Protective Equipment", "ua": 87, "uc": 16}, {"name": "Electrical Safety", "ua": 29, "uc": 49}, {"name": "Hand Tools", "ua": 23, "uc": 25}, {"name": "Excavations", "ua": 4, "uc": 3}, {"name": "Lifting Equipment and Lifting Accessories", "ua": 31, "uc": 45}, {"name": "Portable Power Tools", "ua": 32, "uc": 49}, {"name": "Plant and Equipment", "ua": 20, "uc": 32}, {"name": "Confined Space", "ua": 1, "uc": 8}, {"name": "Hot Work Operations", "ua": 41, "uc": 41}, {"name": "Compressed Air and Gases", "ua": 0, "uc": 9}, {"name": "Manual Handling", "ua": 17, "uc": 9}, {"name": "Welfare Facilities", "ua": 28, "uc": 39}, {"name": "Hazardous Substances", "ua": 0, "uc": 20}, {"name": "Machine Guarding", "ua": 5, "uc": 8}, {"name": "Storage Arrangements", "ua": 22, "uc": 115}, {"name": "Barricading of Hazards", "ua": 62, "uc": 112}, {"name": "Access and Egress", "ua": 56, "uc": 78}, {"name": "Permit to Work", "ua": 20, "uc": 14}, {"name": "Safety Signage & Signals", "ua": 14, "uc": 14}, {"name": "Falsework/Formwork", "ua": 96, "uc": 112}, {"name": "Waste Management", "ua": 15, "uc": 66}, {"name": "First Aid Case", "ua": 4, "uc": 2}, {"name": "Near Miss Incident", "ua": 0, "uc": 0}, {"name": "Property Damage", "ua": 0, "uc": 0}, {"name": "Lost Time Injury", "ua": 0, "uc": 1}];</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20260731-1508"></script>
+<script src="app.js?v=20260801-1036"></script>
 
 <a
   class="floating-emergency-call"

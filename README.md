@@ -129,3 +129,10 @@ The public password window includes MEC OSH Admin contact information.
 ## Contact Settings Schema Fix
 Run `CONTACT_SETTINGS_SCHEMA_FIX.sql` when Supabase reports that
 `public.contact_settings` is missing from the schema cache.
+
+
+## Performance Weekly Popup
+
+Run `PERFORMANCE_WEEKLY_POPUP_SETUP.sql` once. Every public performance card
+then opens a popup showing As of Last Week, This Week and Cumulative values.
+Weekly values are maintained from Admin → Performance.

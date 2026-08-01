@@ -166,8 +166,102 @@ $("resetDocumentPassword").onclick=async()=>{
   button.textContent="Reset to 072024";
 };
 
+
+const WEEKLY_PERFORMANCE_METRICS=[
+  {key:"manpower",label:"Total Manpower",step:"1"},
+  {key:"manhours",label:"Man-Hours",step:"1"},
+  {key:"ltiDays",label:"LTI-Free Days",step:"1"},
+  {key:"trainingSessions",label:"Training Sessions",step:"1"},
+  {key:"personnelTrained",label:"Personnel Trained",step:"1"},
+  {key:"trainingHours",label:"Training Hours",step:"0.01"},
+  {key:"oshInductions",label:"OSH Inductions",step:"1"},
+  {key:"oshMeetings",label:"OSH Meetings",step:"1"},
+  {key:"oshAudits",label:"OSH Audits",step:"1"},
+  {key:"oshInspections",label:"OSH Inspections",step:"1"},
+  {key:"procedureReviews",label:"Procedure Reviews",step:"1"},
+  {key:"emergencyDrills",label:"Emergency Drills",step:"1"}
+];
+
+function weeklyPerformanceObject(value){
+  if(!value||typeof value!=="object"||Array.isArray(value))return {};
+  return value;
+}
+
+function renderWeeklyPerformanceAdmin(settings){
+  const rows=$("weeklyPerformanceRows");
+  if(!rows)return;
+
+  const lastWeek=weeklyPerformanceObject(settings.performance_last_week);
+  const thisWeek=weeklyPerformanceObject(settings.performance_this_week);
+
+  rows.innerHTML=WEEKLY_PERFORMANCE_METRICS.map(metric=>{
+    const lastValue=Object.prototype.hasOwnProperty.call(lastWeek,metric.key)
+      ? lastWeek[metric.key]
+      :"";
+    const thisValue=Object.prototype.hasOwnProperty.call(thisWeek,metric.key)
+      ? thisWeek[metric.key]
+      :"";
+
+    return `<tr>
+      <td><strong>${metric.label}</strong></td>
+      <td>
+        <input id="weekly-${metric.key}-last"
+               type="number"
+               step="${metric.step}"
+               value="${lastValue}"
+               placeholder="0">
+      </td>
+      <td>
+        <input id="weekly-${metric.key}-this"
+               type="number"
+               step="${metric.step}"
+               value="${thisValue}"
+               placeholder="0">
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+$("performanceWeeklyForm").onsubmit=async event=>{
+  event.preventDefault();
+  setStatus("performanceWeeklyStatus","Saving…");
+
+  const lastWeek={};
+  const thisWeek={};
+
+  WEEKLY_PERFORMANCE_METRICS.forEach(metric=>{
+    const lastInput=$(`weekly-${metric.key}-last`);
+    const thisInput=$(`weekly-${metric.key}-this`);
+
+    lastWeek[metric.key]=Number(lastInput?.value||0);
+    thisWeek[metric.key]=Number(thisInput?.value||0);
+  });
+
+  const {error}=await db
+    .from("settings")
+    .update({
+      performance_last_week:lastWeek,
+      performance_this_week:thisWeek
+    })
+    .eq("id",1);
+
+  if(error){
+    const message=error.message.includes("performance_last_week")
+      ?"Run PERFORMANCE_WEEKLY_POPUP_SETUP.sql in Supabase SQL Editor first."
+      :error.message;
+    setStatus("performanceWeeklyStatus",message);
+    return;
+  }
+
+  setStatus(
+    "performanceWeeklyStatus",
+    "Weekly performance popup details saved."
+  );
+  await loadSettings();
+};
+
 async function loadSettings(){const {data,error}=await db.from("settings").select("*").eq("id",1).maybeSingle();if(error)throw error;const s=data||{};$("dashManpower").textContent=Number(s.manpower||0).toLocaleString();$("dashManhours").textContent=Number(s.baseline_manhours||0).toLocaleString();
-const map={pManpower:s.manpower,pBaseline:s.baseline_manhours,pBaselineAt:s.baseline_at?new Date(s.baseline_at).toISOString().slice(0,16):"",pAdjustment:s.manhour_adjustment||0,pWorkStart:s.work_start?.slice(0,5),pLunchStart:s.lunch_start?.slice(0,5),pLunchEnd:s.lunch_end?.slice(0,5),pWorkEnd:s.work_end?.slice(0,5),pLastLti:s.last_lti_date,pTrainingSessions:s.training_sessions,pPersonnelTrained:s.personnel_trained,pTrainingHours:s.training_hours,pInductions:s.osh_inductions,pMeetings:s.osh_meetings,pAudits:s.osh_audits,pInspections:s.osh_inspections,pReviews:s.procedure_reviews,pDrills:s.emergency_drills};for(const [id,v] of Object.entries(map))if(v!==undefined&&v!==null)$(id).value=v;$("pPaused").checked=Boolean(s.counter_paused);}
+const map={pManpower:s.manpower,pBaseline:s.baseline_manhours,pBaselineAt:s.baseline_at?new Date(s.baseline_at).toISOString().slice(0,16):"",pAdjustment:s.manhour_adjustment||0,pWorkStart:s.work_start?.slice(0,5),pLunchStart:s.lunch_start?.slice(0,5),pLunchEnd:s.lunch_end?.slice(0,5),pWorkEnd:s.work_end?.slice(0,5),pLastLti:s.last_lti_date,pTrainingSessions:s.training_sessions,pPersonnelTrained:s.personnel_trained,pTrainingHours:s.training_hours,pInductions:s.osh_inductions,pMeetings:s.osh_meetings,pAudits:s.osh_audits,pInspections:s.osh_inspections,pReviews:s.procedure_reviews,pDrills:s.emergency_drills};for(const [id,v] of Object.entries(map))if(v!==undefined&&v!==null)$(id).value=v;$("pPaused").checked=Boolean(s.counter_paused);renderWeeklyPerformanceAdmin(s);}
 $("performanceForm").onsubmit=async e=>{e.preventDefault();setStatus("performanceStatus","Saving…");const payload={id:1,manpower:Number($("pManpower").value),baseline_manhours:Number($("pBaseline").value),baseline_at:new Date($("pBaselineAt").value).toISOString(),manhour_adjustment:Number($("pAdjustment").value||0),counter_paused:$("pPaused").checked,work_start:$("pWorkStart").value,lunch_start:$("pLunchStart").value,lunch_end:$("pLunchEnd").value,work_end:$("pWorkEnd").value,last_lti_date:$("pLastLti").value,training_sessions:Number($("pTrainingSessions").value||0),personnel_trained:Number($("pPersonnelTrained").value||0),training_hours:Number($("pTrainingHours").value||0),osh_inductions:Number($("pInductions").value||0),osh_meetings:Number($("pMeetings").value||0),osh_audits:Number($("pAudits").value||0),osh_inspections:Number($("pInspections").value||0),procedure_reviews:Number($("pReviews").value||0),emergency_drills:Number($("pDrills").value||0)};const {error}=await db.from("settings").upsert(payload);setStatus("performanceStatus",error?error.message:"Saved. Public figures will update on refresh.");if(!error)await loadSettings();};
 
 let reportRows=[];async function loadReports(){const {data,error}=await db.from("safety_reports").select("*").order("created_at",{ascending:false});if(error)throw error;reportRows=data||[];$("dashReports").textContent=reportRows.filter(r=>r.status!=="Closed").length;const list=$("reportList");list.innerHTML=reportRows.length?"":"<p>No reports submitted yet.</p>";for(const r of reportRows){const d=document.createElement("div");d.className=`data-item ${r.urgency==="Critical"?"critical":""}`;d.innerHTML=`<strong>${r.reference}</strong> | ${r.report_type} | ${r.category}<br><span class="small">${new Date(r.created_at).toLocaleString()} | ${r.location||""} ${r.location_details||""} | ${r.urgency||""}</span><p>${r.description||""}</p><label>Status<select class="report-status"><option>New</option><option>Under Review</option><option>Action Required</option><option>Closed</option></select></label><label>Admin remarks<textarea class="report-remarks">${r.admin_remarks||""}</textarea></label><div class="row-actions"><button class="primary save-report" type="button">Save</button>${r.photo_url?'<button class="primary view-photo" type="button">View Photo</button>':""}<button class="danger delete-report" type="button">Delete Report</button></div>`;d.querySelector(".report-status").value=r.status;d.querySelector(".save-report").onclick=async()=>{const status=d.querySelector(".report-status").value;const payload={status,admin_remarks:d.querySelector(".report-remarks").value,updated_at:new Date().toISOString(),closure_date:status==="Closed"?(r.closure_date||new Date().toISOString().slice(0,10)):null};const {error}=await db.from("safety_reports").update(payload).eq("id",r.id);if(error)alert(error.message);else {await loadReports();await loadTrendAdmin();}};d.querySelector(".view-photo")?.addEventListener("click",async()=>{const {data,error}=await db.storage.from("report-photos").createSignedUrl(r.photo_url,3600);if(error)alert(error.message);else window.open(data.signedUrl,"_blank","noopener")});
