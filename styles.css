@@ -3833,3 +3833,39 @@ html[dir=rtl] .performance-sidebar{
     grid-template-columns:1fr!important;
   }
 }
+
+
+/* Performance sidebar refinements */
+@media(min-width:1181px){
+  .post-hero-layout{
+    grid-template-columns:390px minmax(0,1fr)!important;
+  }
+}
+.performance-stats-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+.performance-stats-grid .stat{
+  min-width:0!important;
+  overflow:hidden!important;
+}
+.performance-stats-grid .stat label{
+  padding-right:0!important;
+}
+.performance-stats-grid .stat strong{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  font-size:clamp(19px,1.65vw,26px)!important;
+  letter-spacing:-0.45px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.performance-stat-card::after,
+html[dir=rtl] .performance-stat-card::after{
+  content:none!important;
+  display:none!important;
+}

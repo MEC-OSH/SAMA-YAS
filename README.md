@@ -163,3 +163,10 @@ sticky left-side panel after the hero section.
 Admin → OSH Team now includes a Replace Photo input for every existing member.
 Select a new image and click Save Changes. The public profile is updated and the
 previous uploaded photo is removed after the database update succeeds.
+
+
+## Performance Sidebar Refinements
+
+The sticky performance panel is slightly wider. Statistic values stay on one
+line, card arrows are removed, and the Man-Hours caption is hidden. Live
+Man-Hours uses the current manpower value shown in the performance statistics.
