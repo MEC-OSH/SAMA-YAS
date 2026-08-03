@@ -131,8 +131,39 @@
     return `<w:p><w:pPr>${align}${spacing}${options.keepNext?"<w:keepNext/>":""}</w:pPr>${run(text,options)}</w:p>`;
   }
 
+  function splitControlMeasureText(value){
+    const source=String(value||"")
+      .replace(/\r/g,"")
+      .replace(/[•▪◦●]/g,"\n")
+      .trim();
+
+    if(!source)return [];
+
+    return source
+      .split(/\n+/)
+      .flatMap(line=>{
+        const clean=line.trim();
+        if(!clean)return [];
+        if(/^references?\s*:/i.test(clean))return [clean];
+
+        const sentences=clean
+          .split(/(?<=[.!?])\s+(?=(?:[A-Z0-9]|\())/)
+          .map(sentence=>sentence.trim())
+          .filter(Boolean);
+
+        return sentences.length?sentences:[clean];
+      })
+      .map(item=>item.replace(/^[-–—]\s*/,"").trim())
+      .filter(Boolean);
+  }
+
+  function normalizedListItems(items){
+    const values=Array.isArray(items)?items:[items];
+    return values.flatMap(splitControlMeasureText);
+  }
+
   function listParagraphs(items,options={}){
-    const values=Array.isArray(items)?items:[String(items||"")];
+    const values=normalizedListItems(items);
     if(!values.length) return paragraph("",options);
     return values.map(item=>paragraph(`• ${item}`,options)).join("");
   }
@@ -256,7 +287,10 @@
           align:"center",bold:true,size:13,
           fill:initialColours.fill,color:initialColours.text
         }),
-        cell(activity.controls,widths[7],{size:13,vertical:"top"}),
+        cell(normalizedListItems(activity.controls),widths[7],{
+          size:13,
+          vertical:"top"
+        }),
         cell(String(activity.revisedProbability),widths[8],{align:"center",size:13}),
         cell(String(activity.revisedSeverity),widths[9],{align:"center",size:13}),
         cell(String(revisedRating),widths[10],{align:"center",size:13}),

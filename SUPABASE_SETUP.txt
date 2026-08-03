@@ -177,3 +177,14 @@ DYNAMIC PERFORMANCE STATISTICS
 
 The performance dashboard remains sticky on the left side after the hero
 section. On tablets and phones it returns to a normal full-width section.
+
+AI CHATBOT: ENGLISH, HINDI AND ARABIC
+-------------------------------------
+1. Read AI_CHATBOT_SETUP.md.
+2. Add OPENAI_API_KEY as a Supabase secret. Never put it in website files.
+3. Deploy the included `osh-chatbot` Supabase Edge Function.
+4. Upload all updated website files and refresh with Ctrl + F5.
+
+The text interface works immediately with basic fallback safety guidance.
+Full AI answers require the Edge Function deployment. Voice uses the visitor's
+browser microphone and speech-synthesis features.

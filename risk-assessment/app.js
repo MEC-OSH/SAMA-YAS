@@ -48,8 +48,53 @@ function fillRatingSelect(select,labels){
     .join("");
 }
 
+function splitControlMeasureText(value){
+  const source=String(value||"")
+    .replace(/\r/g,"")
+    .replace(/[•▪◦●]/g,"\n")
+    .trim();
+
+  if(!source)return [];
+
+  const lines=source
+    .split(/\n+/)
+    .map(line=>line.trim())
+    .filter(Boolean);
+
+  const result=[];
+
+  lines.forEach(line=>{
+    // Keep legal-reference lines intact, including semicolon-separated CoPs.
+    if(/^references?\s*:/i.test(line)){
+      result.push(line);
+      return;
+    }
+
+    // Split long control paragraphs into individual sentence-level measures.
+    const sentences=line
+      .split(/(?<=[.!?])\s+(?=(?:[A-Z0-9]|\())/)
+      .map(sentence=>sentence.trim())
+      .filter(Boolean);
+
+    result.push(...(sentences.length?sentences:[line]));
+  });
+
+  return result
+    .map(item=>item.replace(/^[-–—]\s*/,"").trim())
+    .filter(Boolean);
+}
+
+function normalizeControlMeasures(items){
+  const values=Array.isArray(items)?items:[items];
+  return values.flatMap(splitControlMeasureText);
+}
+
 function listToTextarea(items){
   return (items||[]).map(item=>`• ${item}`).join("\n");
+}
+
+function controlsToTextarea(items){
+  return listToTextarea(normalizeControlMeasures(items));
 }
 
 function textareaToList(value){
@@ -114,7 +159,13 @@ function loadActivity(id){
   byId("hazards").value=listToTextarea(activity.hazards);
   byId("probability").value=String(activity.probability);
   byId("severity").value=String(activity.severity);
-  byId("controls").value=listToTextarea(legalReferences.withRequiredReferences(activity.activity,activity.hazards,activity.controls));
+  byId("controls").value=controlsToTextarea(
+    legalReferences.withRequiredReferences(
+      activity.activity,
+      activity.hazards,
+      normalizeControlMeasures(activity.controls)
+    )
+  );
   byId("revisedProbability").value=String(activity.revisedProbability);
   byId("revisedSeverity").value=String(activity.revisedSeverity);
   calculateRatings();
@@ -140,8 +191,12 @@ function clearBuilder(resetSelect=true){
 function activityFromBuilder(){
   const activity=byId("activityName").value.trim();
   const hazards=textareaToList(byId("hazards").value);
-  const rawControls=textareaToList(byId("controls").value);
-  const controls=legalReferences.withRequiredReferences(activity,hazards,rawControls);
+  const rawControls=normalizeControlMeasures(
+    textareaToList(byId("controls").value)
+  );
+  const controls=normalizeControlMeasures(
+    legalReferences.withRequiredReferences(activity,hazards,rawControls)
+  );
 
   if(!activity) throw new Error("Enter or select an activity.");
   if(!hazards.length) throw new Error("Add at least one significant potential hazard.");
@@ -170,7 +225,13 @@ function saveDraft(){
     reference:byId("referenceNumber").value,
     activities:state.activities.map(item=>({
       ...item,
-      controls:legalReferences.withRequiredReferences(item.activity,item.hazards,item.controls)
+      controls:normalizeControlMeasures(
+        legalReferences.withRequiredReferences(
+          item.activity,
+          item.hazards,
+          normalizeControlMeasures(item.controls)
+        )
+      )
     }))
   };
   localStorage.setItem(draftKey,JSON.stringify(details));
@@ -191,7 +252,13 @@ function restoreDraft(){
     byId("referenceNumber").value=saved.reference||"YAPLR-BW-MEC-ZZ-ZZ-XX-RR-HS-00026";
     state.activities=(Array.isArray(saved.activities)?saved.activities:[]).map(item=>({
       ...item,
-      controls:legalReferences.withRequiredReferences(item.activity,item.hazards,item.controls)
+      controls:normalizeControlMeasures(
+        legalReferences.withRequiredReferences(
+          item.activity,
+          item.hazards,
+          normalizeControlMeasures(item.controls)
+        )
+      )
     }));
   }catch(error){
     console.warn("Draft could not be restored:",error);
@@ -263,7 +330,7 @@ function editActivity(index){
   byId("hazards").value=listToTextarea(item.hazards);
   byId("probability").value=String(item.probability);
   byId("severity").value=String(item.severity);
-  byId("controls").value=listToTextarea(item.controls);
+  byId("controls").value=controlsToTextarea(item.controls);
   byId("revisedProbability").value=String(item.revisedProbability);
   byId("revisedSeverity").value=String(item.revisedSeverity);
   byId("addActivity").textContent="Update Activity";

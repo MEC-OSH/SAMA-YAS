@@ -462,7 +462,436 @@ document.addEventListener("keydown",event=>{
 
 
 
+
 const db = window.mecSupabase;
+
+const OSH_CHATBOT_UI={
+  en:{
+    title:"AI Safety Assistant",
+    subtitle:"Text and voice support",
+    language:"Language",
+    speak:"Speak replies",
+    placeholder:"Ask an OSH question…",
+    send:"Send",
+    welcome:"Hello. I am the MEC OSH AI Assistant. Ask me about site safety, PPE, work at height, lifting, heat stress, emergency procedures, or reporting a safety concern.",
+    thinking:"Checking OSH guidance…",
+    listening:"Listening… Speak now.",
+    voiceUnsupported:"Voice input is not supported by this browser. You can continue using text.",
+    voiceError:"I could not hear that clearly. Please try again or type your question.",
+    serviceError:"The AI service is not available yet. Basic safety guidance is shown instead.",
+    disclaimer:"AI guidance is general. For an emergency, call +971 50 332 5318. Do not share confidential or personal information.",
+    quick:[
+      ["Emergency","What should I do in an emergency?"],
+      ["Work at Height","What are the main work-at-height controls?"],
+      ["Heat Stress","How can heat stress be prevented?"],
+      ["Report Concern","How do I report a safety concern?"]
+    ]
+  },
+  hi:{
+    title:"AI सुरक्षा सहायक",
+    subtitle:"टेक्स्ट और वॉइस सहायता",
+    language:"भाषा",
+    speak:"उत्तर बोलें",
+    placeholder:"OSH से संबंधित प्रश्न पूछें…",
+    send:"भेजें",
+    welcome:"नमस्ते। मैं MEC OSH AI सुरक्षा सहायक हूँ। साइट सुरक्षा, PPE, ऊंचाई पर काम, लिफ्टिंग, गर्मी से तनाव, आपातकाल या सुरक्षा चिंता रिपोर्ट करने के बारे में पूछें।",
+    thinking:"OSH मार्गदर्शन जाँचा जा रहा है…",
+    listening:"सुन रहा हूँ… अब बोलें।",
+    voiceUnsupported:"इस ब्राउज़र में वॉइस इनपुट उपलब्ध नहीं है। आप टेक्स्ट का उपयोग कर सकते हैं।",
+    voiceError:"आवाज़ स्पष्ट नहीं मिली। कृपया फिर प्रयास करें या प्रश्न लिखें।",
+    serviceError:"AI सेवा अभी उपलब्ध नहीं है। इसके बदले मूल सुरक्षा मार्गदर्शन दिखाया गया है।",
+    disclaimer:"AI मार्गदर्शन सामान्य है। आपातकाल में +971 50 332 5318 पर कॉल करें। गोपनीय या व्यक्तिगत जानकारी साझा न करें।",
+    quick:[
+      ["आपातकाल","आपातकाल में मुझे क्या करना चाहिए?"],
+      ["ऊंचाई पर काम","ऊंचाई पर काम के मुख्य नियंत्रण क्या हैं?"],
+      ["हीट स्ट्रेस","हीट स्ट्रेस को कैसे रोका जाए?"],
+      ["चिंता रिपोर्ट करें","सुरक्षा चिंता कैसे रिपोर्ट करें?"]
+    ]
+  },
+  ar:{
+    title:"مساعد السلامة بالذكاء الاصطناعي",
+    subtitle:"دعم نصي وصوتي",
+    language:"اللغة",
+    speak:"قراءة الردود صوتياً",
+    placeholder:"اسأل سؤالاً عن السلامة والصحة المهنية…",
+    send:"إرسال",
+    welcome:"مرحباً. أنا مساعد MEC للسلامة والصحة المهنية. اسألني عن سلامة الموقع، معدات الوقاية، العمل على الارتفاع، الرفع، الإجهاد الحراري، الطوارئ أو الإبلاغ عن مخاوف السلامة.",
+    thinking:"جارٍ التحقق من إرشادات السلامة…",
+    listening:"أستمع الآن… تفضل بالكلام.",
+    voiceUnsupported:"الإدخال الصوتي غير مدعوم في هذا المتصفح. يمكنك استخدام النص.",
+    voiceError:"لم أتمكن من سماعك بوضوح. حاول مرة أخرى أو اكتب سؤالك.",
+    serviceError:"خدمة الذكاء الاصطناعي غير متاحة حالياً. سيتم عرض إرشادات سلامة أساسية.",
+    disclaimer:"إرشادات الذكاء الاصطناعي عامة. في الطوارئ اتصل على +971 50 332 5318. لا تشارك معلومات سرية أو شخصية.",
+    quick:[
+      ["الطوارئ","ماذا أفعل في حالة الطوارئ؟"],
+      ["العمل على الارتفاع","ما أهم ضوابط العمل على الارتفاع؟"],
+      ["الإجهاد الحراري","كيف يمكن الوقاية من الإجهاد الحراري؟"],
+      ["الإبلاغ","كيف أبلغ عن ملاحظة سلامة؟"]
+    ]
+  }
+};
+
+const OSH_CHATBOT_SPEECH_LANG={
+  en:"en-US",
+  hi:"hi-IN",
+  ar:"ar-AE"
+};
+
+const OSH_CHATBOT_FALLBACK={
+  en:{
+    emergency:"Stop work if safe to do so, warn nearby people, move to the designated safe area, and call the site emergency number +971 50 332 5318. Police: 999, Ambulance: 998, Civil Defence: 997.",
+    height:"Use an approved work-at-height permit and risk assessment. Provide certified access equipment, full edge protection, inspected scaffolds, suitable fall protection, exclusion below, and competent supervision.",
+    heat:"Provide cool drinking water, shaded or cooled rest areas, scheduled breaks, acclimatization, suitable clothing, worker monitoring, and immediate first aid for symptoms. Follow the UAE midday-break requirements.",
+    report:"Select “Report a Safety Concern” on this website. Choose the report type, category, location and urgency, add a description and photo, then submit the report.",
+    default:"I can provide basic OSH guidance. Please ask about emergency response, PPE, work at height, lifting, hot work, confined spaces, heat stress, housekeeping, or reporting a safety concern. For project-specific approval, contact the MEC OSH Admin."
+  },
+  hi:{
+    emergency:"यदि सुरक्षित हो तो काम रोकें, आसपास के लोगों को चेतावनी दें, निर्धारित सुरक्षित स्थान पर जाएँ और साइट आपातकाल नंबर +971 50 332 5318 पर कॉल करें। पुलिस: 999, एम्बुलेंस: 998, सिविल डिफेंस: 997।",
+    height:"अनुमोदित वर्क-एट-हाइट परमिट और जोखिम आकलन का उपयोग करें। प्रमाणित पहुंच उपकरण, पूर्ण एज प्रोटेक्शन, निरीक्षित स्कैफोल्ड, उचित फॉल प्रोटेक्शन, नीचे एक्सक्लूजन ज़ोन और सक्षम पर्यवेक्षण सुनिश्चित करें।",
+    heat:"ठंडा पीने का पानी, छायादार या ठंडा विश्राम क्षेत्र, निर्धारित ब्रेक, अनुकूलन, उपयुक्त कपड़े, कामगार निगरानी और लक्षण दिखने पर तुरंत प्राथमिक उपचार दें। UAE मिडडे ब्रेक नियमों का पालन करें।",
+    report:"इस वेबसाइट पर “Report a Safety Concern” चुनें। रिपोर्ट प्रकार, श्रेणी, स्थान और तात्कालिकता चुनें, विवरण और फोटो जोड़ें, फिर रिपोर्ट जमा करें।",
+    default:"मैं मूल OSH मार्गदर्शन दे सकता हूँ। आपातकाल, PPE, ऊंचाई पर काम, लिफ्टिंग, हॉट वर्क, कन्फाइंड स्पेस, हीट स्ट्रेस, हाउसकीपिंग या सुरक्षा चिंता रिपोर्ट करने के बारे में पूछें। परियोजना-विशिष्ट अनुमोदन के लिए MEC OSH Admin से संपर्क करें।"
+  },
+  ar:{
+    emergency:"أوقف العمل إذا كان ذلك آمناً، وحذّر الأشخاص القريبين، وانتقل إلى المنطقة الآمنة المحددة، واتصل برقم طوارئ الموقع +971 50 332 5318. الشرطة: 999، الإسعاف: 998، الدفاع المدني: 997.",
+    height:"استخدم تصريح عمل وتقييم مخاطر معتمدين للعمل على الارتفاع. وفّر معدات وصول معتمدة، وحماية كاملة للحواف، وسقالات مفحوصة، وحماية مناسبة من السقوط، ومنطقة عزل أسفل العمل، وإشرافاً مختصاً.",
+    heat:"وفّر مياه شرب باردة، ومناطق راحة مظللة أو مبردة، وفترات راحة مجدولة، والتأقلم، والملابس المناسبة، ومراقبة العمال، والإسعافات الأولية الفورية عند ظهور الأعراض. التزم بمتطلبات حظر العمل وقت الظهيرة في دولة الإمارات.",
+    report:"اختر “Report a Safety Concern” في هذا الموقع. حدد نوع البلاغ والفئة والموقع ودرجة الاستعجال، وأضف الوصف والصورة، ثم أرسل البلاغ.",
+    default:"يمكنني تقديم إرشادات أساسية للسلامة والصحة المهنية. اسأل عن الطوارئ، معدات الوقاية، العمل على الارتفاع، الرفع، الأعمال الساخنة، الأماكن المحصورة، الإجهاد الحراري، النظافة والترتيب أو الإبلاغ عن ملاحظة سلامة. للاعتماد الخاص بالمشروع تواصل مع مسؤول MEC للسلامة."
+  }
+};
+
+let oshChatbotHistory=[];
+let oshChatbotRecognition=null;
+let oshChatbotBusy=false;
+let oshChatbotInitialized=false;
+
+function oshChatbotUi(){
+  const language=document.getElementById("oshChatbotLanguage")?.value||"en";
+  return OSH_CHATBOT_UI[language]||OSH_CHATBOT_UI.en;
+}
+
+function oshChatbotEscape(value=""){
+  return String(value).replace(/[&<>"']/g,character=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[character]);
+}
+
+function oshChatbotAddMessage(role,text,{error=false,speak=false}={}){
+  const messages=document.getElementById("oshChatbotMessages");
+  if(!messages)return;
+
+  const item=document.createElement("div");
+  item.className=`osh-chatbot-message ${role}${error?" error":""}`;
+  item.innerHTML=`<div class="osh-chatbot-bubble">${oshChatbotEscape(text)}</div>`;
+  messages.appendChild(item);
+  messages.scrollTop=messages.scrollHeight;
+
+  if(role==="assistant"&&!error){
+    oshChatbotHistory.push({role:"assistant",content:text});
+    oshChatbotHistory=oshChatbotHistory.slice(-10);
+  }
+
+  if(speak){
+    oshChatbotSpeak(text);
+  }
+}
+
+function oshChatbotSetStatus(text=""){
+  const status=document.getElementById("oshChatbotStatus");
+  if(status)status.textContent=text;
+}
+
+function oshChatbotApplyLanguage(){
+  const language=document.getElementById("oshChatbotLanguage")?.value||"en";
+  const ui=OSH_CHATBOT_UI[language]||OSH_CHATBOT_UI.en;
+  const panel=document.getElementById("oshChatbotPanel");
+
+  if(panel){
+    panel.dir=language==="ar"?"rtl":"ltr";
+    panel.lang=OSH_CHATBOT_SPEECH_LANG[language];
+  }
+
+  const values={
+    oshChatbotTitle:ui.title,
+    oshChatbotSubtitle:ui.subtitle,
+    oshChatbotLanguageLabel:ui.language,
+    oshChatbotVoiceLabel:ui.speak,
+    oshChatbotDisclaimer:ui.disclaimer
+  };
+
+  Object.entries(values).forEach(([id,value])=>{
+    const element=document.getElementById(id);
+    if(element)element.textContent=value;
+  });
+
+  const input=document.getElementById("oshChatbotInput");
+  if(input)input.placeholder=ui.placeholder;
+
+  const send=document.getElementById("oshChatbotSend");
+  if(send)send.textContent=ui.send;
+
+  const quickActions=document.getElementById("oshChatbotQuickActions");
+  if(quickActions){
+    quickActions.innerHTML=ui.quick.map(([label,prompt])=>
+      `<button type="button" data-chatbot-prompt="${oshChatbotEscape(prompt)}">${oshChatbotEscape(label)}</button>`
+    ).join("");
+  }
+}
+
+function oshChatbotFallback(message,language){
+  const content=String(message||"").toLowerCase();
+  const responses=OSH_CHATBOT_FALLBACK[language]||OSH_CHATBOT_FALLBACK.en;
+
+  if(/emergency|accident|fire|ambulance|injur|आपात|दुर्घटना|आग|طوارئ|حادث|حريق/.test(content)){
+    return responses.emergency;
+  }
+  if(/height|scaffold|ladder|fall|ऊंचाई|स्कैफोल्ड|सीढ़ी|ارتفاع|سقال|سلم|سقوط/.test(content)){
+    return responses.height;
+  }
+  if(/heat|summer|dehydrat|गर्मी|हीट|حرار|صيف|جفاف/.test(content)){
+    return responses.heat;
+  }
+  if(/report|concern|unsafe|रिपोर्ट|चिंता|بلاغ|ملاحظة|غير آمن/.test(content)){
+    return responses.report;
+  }
+  return responses.default;
+}
+
+function oshChatbotSpeak(text){
+  const voiceEnabled=document.getElementById("oshChatbotVoiceReply")?.checked;
+  if(!voiceEnabled||!("speechSynthesis" in window))return;
+
+  window.speechSynthesis.cancel();
+
+  const language=document.getElementById("oshChatbotLanguage")?.value||"en";
+  const utterance=new SpeechSynthesisUtterance(text);
+  utterance.lang=OSH_CHATBOT_SPEECH_LANG[language]||"en-US";
+  utterance.rate=0.96;
+  utterance.pitch=1;
+
+  const voices=window.speechSynthesis.getVoices();
+  const prefix=utterance.lang.split("-")[0].toLowerCase();
+  const matchingVoice=voices.find(voice=>
+    String(voice.lang||"").toLowerCase().startsWith(prefix)
+  );
+  if(matchingVoice)utterance.voice=matchingVoice;
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function oshChatbotStopVoice(){
+  if("speechSynthesis" in window){
+    window.speechSynthesis.cancel();
+  }
+}
+
+function oshChatbotOpen(){
+  const panel=document.getElementById("oshChatbotPanel");
+  const toggle=document.getElementById("oshChatbotToggle");
+  if(!panel)return;
+
+  panel.hidden=false;
+  panel.setAttribute("aria-hidden","false");
+  toggle?.setAttribute("aria-expanded","true");
+  document.body.classList.add("osh-chatbot-open");
+  document.getElementById("oshChatbotInput")?.focus();
+}
+
+function oshChatbotClose(){
+  const panel=document.getElementById("oshChatbotPanel");
+  const toggle=document.getElementById("oshChatbotToggle");
+  if(!panel)return;
+
+  panel.hidden=true;
+  panel.setAttribute("aria-hidden","true");
+  toggle?.setAttribute("aria-expanded","false");
+  document.body.classList.remove("osh-chatbot-open");
+  oshChatbotStopVoice();
+
+  if(oshChatbotRecognition){
+    try{oshChatbotRecognition.stop()}catch(_){}
+  }
+
+  toggle?.focus();
+}
+
+function oshChatbotStartVoice(){
+  const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const ui=oshChatbotUi();
+
+  if(!Recognition){
+    oshChatbotSetStatus(ui.voiceUnsupported);
+    return;
+  }
+
+  if(oshChatbotRecognition){
+    try{oshChatbotRecognition.abort()}catch(_){}
+  }
+
+  const language=document.getElementById("oshChatbotLanguage")?.value||"en";
+  const mic=document.getElementById("oshChatbotMic");
+
+  oshChatbotRecognition=new Recognition();
+  oshChatbotRecognition.lang=OSH_CHATBOT_SPEECH_LANG[language]||"en-US";
+  oshChatbotRecognition.interimResults=true;
+  oshChatbotRecognition.continuous=false;
+  oshChatbotRecognition.maxAlternatives=1;
+
+  oshChatbotRecognition.onstart=()=>{
+    mic?.classList.add("listening");
+    oshChatbotSetStatus(ui.listening);
+  };
+
+  oshChatbotRecognition.onresult=event=>{
+    let transcript="";
+    for(let index=event.resultIndex;index<event.results.length;index+=1){
+      transcript+=event.results[index][0].transcript;
+    }
+    const input=document.getElementById("oshChatbotInput");
+    if(input)input.value=transcript.trim();
+  };
+
+  oshChatbotRecognition.onerror=()=>{
+    oshChatbotSetStatus(ui.voiceError);
+  };
+
+  oshChatbotRecognition.onend=()=>{
+    mic?.classList.remove("listening");
+    if(document.getElementById("oshChatbotInput")?.value.trim()){
+      oshChatbotSetStatus("");
+    }
+  };
+
+  try{
+    oshChatbotRecognition.start();
+  }catch(error){
+    oshChatbotSetStatus(error.message);
+  }
+}
+
+async function oshChatbotSend(message){
+  if(oshChatbotBusy)return;
+
+  const language=document.getElementById("oshChatbotLanguage")?.value||"en";
+  const ui=OSH_CHATBOT_UI[language]||OSH_CHATBOT_UI.en;
+  const sendButton=document.getElementById("oshChatbotSend");
+  const micButton=document.getElementById("oshChatbotMic");
+
+  oshChatbotBusy=true;
+  if(sendButton)sendButton.disabled=true;
+  if(micButton)micButton.disabled=true;
+
+  oshChatbotAddMessage("user",message);
+  oshChatbotHistory.push({role:"user",content:message});
+  oshChatbotHistory=oshChatbotHistory.slice(-10);
+  oshChatbotSetStatus(ui.thinking);
+
+  try{
+    const {data,error}=await db.functions.invoke("osh-chatbot",{
+      body:{
+        message,
+        language,
+        history:oshChatbotHistory.slice(-8)
+      }
+    });
+
+    if(error)throw error;
+
+    const answer=String(data?.answer||"").trim();
+    if(!answer)throw new Error("Empty AI response.");
+
+    oshChatbotAddMessage("assistant",answer,{speak:true});
+    oshChatbotSetStatus("");
+  }catch(error){
+    console.warn("OSH chatbot AI service:",error.message);
+    const fallback=oshChatbotFallback(message,language);
+    oshChatbotAddMessage("assistant",fallback,{speak:true});
+    oshChatbotSetStatus(ui.serviceError);
+  }finally{
+    oshChatbotBusy=false;
+    if(sendButton)sendButton.disabled=false;
+    if(micButton)micButton.disabled=false;
+  }
+}
+
+function initOshChatbot(){
+  if(oshChatbotInitialized)return;
+  oshChatbotInitialized=true;
+
+  const toggle=document.getElementById("oshChatbotToggle");
+  const panel=document.getElementById("oshChatbotPanel");
+  const close=document.getElementById("oshChatbotClose");
+  const form=document.getElementById("oshChatbotForm");
+  const language=document.getElementById("oshChatbotLanguage");
+  const mic=document.getElementById("oshChatbotMic");
+  const stopVoice=document.getElementById("oshChatbotStopVoice");
+  const quickActions=document.getElementById("oshChatbotQuickActions");
+
+  if(!toggle||!panel||!form)return;
+
+  const initialLanguage=document.documentElement.dir==="rtl"?"ar":"en";
+  if(language)language.value=initialLanguage;
+  oshChatbotApplyLanguage();
+
+  const initialUi=OSH_CHATBOT_UI[initialLanguage]||OSH_CHATBOT_UI.en;
+  oshChatbotAddMessage("assistant",initialUi.welcome);
+
+  toggle.addEventListener("click",()=>{
+    if(panel.hidden)oshChatbotOpen();
+    else oshChatbotClose();
+  });
+
+  close?.addEventListener("click",oshChatbotClose);
+  mic?.addEventListener("click",oshChatbotStartVoice);
+  stopVoice?.addEventListener("click",oshChatbotStopVoice);
+
+  language?.addEventListener("change",()=>{
+    oshChatbotStopVoice();
+    oshChatbotApplyLanguage();
+    oshChatbotSetStatus("");
+  });
+
+  quickActions?.addEventListener("click",event=>{
+    const button=event.target.closest("[data-chatbot-prompt]");
+    if(!button)return;
+    const prompt=button.dataset.chatbotPrompt||"";
+    const input=document.getElementById("oshChatbotInput");
+    if(input)input.value=prompt;
+    oshChatbotSend(prompt);
+  });
+
+  form.addEventListener("submit",event=>{
+    event.preventDefault();
+    const input=document.getElementById("oshChatbotInput");
+    const message=input?.value.trim()||"";
+    if(!message)return;
+    input.value="";
+    oshChatbotSend(message);
+  });
+
+  document.getElementById("oshChatbotInput")?.addEventListener(
+    "keydown",
+    event=>{
+      if(event.key==="Enter"&&!event.shiftKey){
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    }
+  );
+
+  document.addEventListener("keydown",event=>{
+    if(event.key==="Escape"&&!panel.hidden){
+      oshChatbotClose();
+    }
+  });
+}
+
+window.addEventListener("DOMContentLoaded",initOshChatbot);
 
 const DEFAULT_ADMIN_EMAIL = "muhammed.shamil@mecemirates.com";
 

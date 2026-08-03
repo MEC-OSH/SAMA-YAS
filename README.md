@@ -170,3 +170,18 @@ previous uploaded photo is removed after the database update succeeds.
 The sticky performance panel is slightly wider. Statistic values stay on one
 line, card arrows are removed, and the Man-Hours caption is hidden. Live
 Man-Hours uses the current manpower value shown in the performance statistics.
+
+
+## Risk Assessment Control Bullets
+
+Long control paragraphs are automatically split into individual sentence-level
+bullet points in the Risk Assessment Generator and generated Word document.
+Legal-reference lines remain separate, intact bullet points.
+
+
+## Multilingual AI Chatbot
+
+A floating MEC OSH AI Assistant is positioned above the emergency button.
+It supports English, Hindi and Arabic text chat, microphone input and spoken
+replies. Read `AI_CHATBOT_SETUP.md` and deploy the included Supabase Edge
+Function for full AI responses.
