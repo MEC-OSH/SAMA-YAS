@@ -148,3 +148,18 @@ removed. Cumulative values save directly to the public performance cards.
 ## Safety Report Name and Designation
 Run `SAFETY_REPORT_NAME_DESIGNATION_SETUP.sql` once. Name and Designation are
 optional on the public form and appear in Admin reports and Excel exports.
+
+
+## Dynamic Performance Statistics
+
+Run `PERFORMANCE_STATS_DYNAMIC_SETUP.sql` once. Admin → Performance can edit
+English and Arabic statistic titles, update weekly/cumulative values, change
+order and visibility, and add or delete statistics. The public dashboard is a
+sticky left-side panel after the hero section.
+
+
+## Replace Team Member Photo
+
+Admin → OSH Team now includes a Replace Photo input for every existing member.
+Select a new image and click Save Changes. The public profile is updated and the
+previous uploaded photo is removed after the database update succeeds.

@@ -101,6 +101,12 @@ body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-colum
   gap:16px;
   align-items:start;
 }
+.team-member-admin-photo-column{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:10px;
+}
 .team-member-admin-photo{
   width:140px;
   height:175px;
@@ -108,6 +114,20 @@ body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-colum
   object-position:center top;
   border-radius:8px;
   background:#222;
+}
+.team-photo-replace-label{
+  display:grid;
+  gap:7px;
+  max-width:180px;
+  font-weight:800;
+}
+.team-photo-replace-label input{
+  width:100%;
+  min-width:0;
+}
+.team-photo-replace-note{
+  max-width:180px;
+  margin:0;
 }
 .team-member-admin-fields{
   display:grid;
@@ -123,6 +143,9 @@ body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-colum
 @media(max-width:720px){
   .team-member-admin-card{
     grid-template-columns:1fr;
+  }
+  .team-member-admin-photo-column{
+    width:min(100%,220px);
   }
   .team-member-admin-photo{
     width:170px;
@@ -177,6 +200,42 @@ body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-colum
 .weekly-performance-save{
   margin-top:16px;
 }
+
+.performance-stat-form-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+.performance-stat-admin-card{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  align-items:end;
+}
+.performance-stat-admin-card .performance-stat-full{
+  grid-column:1/-1;
+}
+.performance-stat-admin-actions{
+  grid-column:1/-1;
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+}
+.performance-stat-toolbar{
+  margin-top:30px;
+}
+@media(max-width:1050px){
+  .performance-stat-form-grid,
+  .performance-stat-admin-card{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:620px){
+  .performance-stat-form-grid,
+  .performance-stat-admin-card{
+    grid-template-columns:1fr;
+  }
+}
 </style></head><body>
 <div id="loginView" class="login">
   <h1>Admin Login</h1>
@@ -198,38 +257,75 @@ body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-colum
 <main class="admin-main">
 <section id="dashboard" class="panel active"><div class="toolbar"><h1>Dashboard</h1><span class="spacer"></span><span id="adminIdentity" class="small"></span></div><div class="metrics"><div class="metric"><span>Manpower</span><strong id="dashManpower">—</strong></div><div class="metric"><span>Baseline Man-Hours</span><strong id="dashManhours">—</strong></div><div class="metric"><span>Open Reports</span><strong id="dashReports">—</strong></div></div></section>
 <section id="performance" class="panel">
-  <h1>Performance Details</h1>
+  <h1>Performance Statistics</h1>
 
   <p class="small">
-    Enter the figures displayed in the public performance popup.
-    The <strong>Cumulative</strong> column also controls the values shown
-    on the main website performance cards.
+    Edit each statistic title and values, change its display order, or add and
+    delete statistics. Active statistics appear in the sticky left-side
+    performance dashboard on the public website.
   </p>
 
-  <form id="performanceWeeklyForm">
-    <div class="weekly-performance-table-wrap">
-      <table class="weekly-performance-table">
-        <thead>
-          <tr>
-            <th>Performance Metric</th>
-            <th>As of Last Week</th>
-            <th>This Week</th>
-            <th>Cumulative</th>
-          </tr>
-        </thead>
-        <tbody id="weeklyPerformanceRows"></tbody>
-      </table>
+  <form id="performanceStatAddForm" class="admin-card">
+    <h3>Add New Statistic</h3>
+
+    <div class="performance-stat-form-grid">
+      <label>English title
+        <input id="newStatTitleEn" required maxlength="120">
+      </label>
+
+      <label>Arabic title
+        <input id="newStatTitleAr" dir="rtl" maxlength="120">
+      </label>
+
+      <label>As of last week
+        <input id="newStatLastWeek" type="number" step="0.01" value="0">
+      </label>
+
+      <label>This week
+        <input id="newStatThisWeek" type="number" step="0.01" value="0">
+      </label>
+
+      <label>Cumulative
+        <input id="newStatCumulative" type="number" step="0.01" value="0">
+      </label>
+
+      <label>Decimal places
+        <select id="newStatDecimals">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </label>
+
+      <label>Calculation
+        <select id="newStatCalculation">
+          <option value="manual">Manual value</option>
+          <option value="live_manhours">Live Man-Hours counter</option>
+          <option value="live_lti_days">Live LTI-Free Days counter</option>
+        </select>
+      </label>
+
+      <label>Sort order
+        <input id="newStatSortOrder" type="number" value="999">
+      </label>
     </div>
 
-    <div class="toolbar weekly-performance-save">
-      <button class="primary" type="submit">
-        Save Performance Details
-      </button>
-      <span id="performanceWeeklyStatus"
-            class="status"
-            aria-live="polite"></span>
-    </div>
+    <button class="primary" type="submit">Add Statistic</button>
+    <p id="performanceStatAddStatus" class="status"></p>
   </form>
+
+  <div class="toolbar performance-stat-toolbar">
+    <h2>Current Statistics</h2>
+    <span class="spacer"></span>
+    <button id="reloadPerformanceStats"
+            class="primary"
+            type="button">Reload</button>
+  </div>
+
+  <div id="performanceStatsAdminList" class="data-list"></div>
+  <p id="performanceStatsAdminStatus" class="status"></p>
 </section>
 <section id="reports" class="panel">
   <p class="small admin-delete-warning">
@@ -544,4 +640,4 @@ body{background:#070707;color:#fff}.admin-shell{display:grid;grid-template-colum
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script src="../supabase-config.js"></script>
-<script src="admin.js"></script></body></html>
+<script src="admin.js?v=20260803-1442"></script></body></html>

@@ -45,7 +45,9 @@ function applyLanguage(){
   if(typeof renderContactSettings==="function"){
     renderContactSettings();
   }
-  if(typeof refreshPerformancePopupLanguage==="function"){
+  if(typeof refreshPerformanceStatsLanguage==="function"){
+    refreshPerformanceStatsLanguage();
+  }else if(typeof refreshPerformancePopupLanguage==="function"){
     refreshPerformancePopupLanguage();
   }
 }
@@ -335,6 +337,94 @@ teamPhotoModal?.addEventListener("click",event=>{
   }
 });
 
+
+const galleryPhotoModal=document.getElementById("galleryPhotoModal");
+const galleryPhotoModalImage=document.getElementById(
+  "galleryPhotoModalImage"
+);
+const galleryPhotoModalTitle=document.getElementById(
+  "galleryPhotoModalTitle"
+);
+const galleryPhotoModalType=document.getElementById(
+  "galleryPhotoModalType"
+);
+const closeGalleryPhotoModalButton=document.getElementById(
+  "closeGalleryPhotoModal"
+);
+let activeGalleryPhotoTrigger=null;
+
+function openGalleryPhotoModal(trigger){
+  if(!galleryPhotoModal||!trigger)return;
+
+  activeGalleryPhotoTrigger=trigger;
+
+  const imageUrl=trigger.currentSrc||trigger.src||"";
+  const title=trigger.dataset.galleryTitle||trigger.alt||"Gallery Photo";
+  const type=trigger.dataset.galleryType||"Gallery";
+
+  if(galleryPhotoModalImage){
+    galleryPhotoModalImage.src=imageUrl;
+    galleryPhotoModalImage.alt=title;
+  }
+
+  if(galleryPhotoModalTitle){
+    galleryPhotoModalTitle.textContent=title;
+  }
+
+  if(galleryPhotoModalType){
+    galleryPhotoModalType.textContent=type;
+  }
+
+  galleryPhotoModal.hidden=false;
+  galleryPhotoModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("gallery-photo-popup-open");
+
+  setTimeout(()=>closeGalleryPhotoModalButton?.focus(),30);
+}
+
+function closeGalleryPhotoModal(){
+  if(!galleryPhotoModal)return;
+
+  galleryPhotoModal.hidden=true;
+  galleryPhotoModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("gallery-photo-popup-open");
+
+  if(galleryPhotoModalImage){
+    galleryPhotoModalImage.removeAttribute("src");
+  }
+
+  activeGalleryPhotoTrigger?.focus();
+  activeGalleryPhotoTrigger=null;
+}
+
+document.addEventListener("click",event=>{
+  const image=event.target.closest(".gallery-popup-image");
+  if(image){
+    openGalleryPhotoModal(image);
+  }
+});
+
+document.addEventListener("keydown",event=>{
+  if(event.key!=="Enter"&&event.key!==" ")return;
+
+  const image=event.target.closest(".gallery-popup-image");
+  if(!image)return;
+
+  event.preventDefault();
+  openGalleryPhotoModal(image);
+});
+
+closeGalleryPhotoModalButton?.addEventListener(
+  "click",
+  closeGalleryPhotoModal
+);
+
+galleryPhotoModal?.addEventListener("click",event=>{
+  if(event.target===galleryPhotoModal){
+    closeGalleryPhotoModal();
+  }
+});
+
 document.addEventListener("keydown",event=>{
   if(event.key!=="Escape")return;
 
@@ -357,6 +447,16 @@ document.addEventListener("keydown",event=>{
 
   if(teamPhotoModal&&!teamPhotoModal.hidden){
     closeTeamPhotoModal();
+    return;
+  }
+
+  if(galleryPhotoModal&&!galleryPhotoModal.hidden){
+    closeGalleryPhotoModal();
+    return;
+  }
+
+  if(trendChartModal&&!trendChartModal.hidden){
+    closeTrendChartModal();
   }
 });
 
@@ -468,34 +568,43 @@ function workingSecondsBetween(start, end) {
 }
 
 
-const performanceMetricConfig={
-  manpower:{elementId:"manpower",decimals:0},
-  manhours:{elementId:"manhours",decimals:0},
-  ltiDays:{elementId:"ltiDays",decimals:0},
-  trainingSessions:{elementId:"trainingSessions",decimals:0},
-  personnelTrained:{elementId:"personnelTrained",decimals:0},
-  trainingHours:{elementId:"trainingHours",decimals:2},
-  oshInductions:{elementId:"oshInductions",decimals:0},
-  oshMeetings:{elementId:"oshMeetings",decimals:0},
-  oshAudits:{elementId:"oshAudits",decimals:0},
-  oshInspections:{elementId:"oshInspections",decimals:0},
-  procedureReviews:{elementId:"procedureReviews",decimals:0},
-  emergencyDrills:{elementId:"emergencyDrills",decimals:0}
-};
-
-let performanceWeeklyData={
-  lastWeek:{},
-  thisWeek:{}
-};
+const performanceMetricConfig={};
+let performanceStatsRows=[];
+let performanceStatsByKey=new Map();
+let performanceWeeklyData={lastWeek:{},thisWeek:{}};
 let activePerformanceMetric=null;
 let activePerformanceCard=null;
 
 const performanceDetailModal=document.getElementById("performanceDetailModal");
 const closePerformanceDetailButton=document.getElementById("closePerformanceDetail");
 
+const performanceStatsFallback=[
+  {stat_key:"manpower",title_en:"Total Manpower",title_ar:"إجمالي القوى العاملة",last_week:1500,this_week:0,cumulative:1500,decimals:0,sort_order:10,calculation_mode:"manual",active:true},
+  {stat_key:"manhours",title_en:"Man-Hours",title_ar:"ساعات العمل",last_week:2568386,this_week:0,cumulative:2568386,decimals:0,sort_order:20,calculation_mode:"live_manhours",active:true},
+  {stat_key:"ltiDays",title_en:"LTI-Free Days",title_ar:"أيام دون إصابة مضيعة للوقت",last_week:0,this_week:0,cumulative:0,decimals:0,sort_order:30,calculation_mode:"live_lti_days",active:true},
+  {stat_key:"trainingSessions",title_en:"Training Sessions",title_ar:"جلسات التدريب",last_week:1773,this_week:0,cumulative:1773,decimals:0,sort_order:40,calculation_mode:"manual",active:true},
+  {stat_key:"personnelTrained",title_en:"Personnel Trained",title_ar:"الأفراد المدربون",last_week:39442,this_week:0,cumulative:39442,decimals:0,sort_order:50,calculation_mode:"manual",active:true},
+  {stat_key:"trainingHours",title_en:"Training Hours",title_ar:"ساعات التدريب",last_week:18433.55,this_week:0,cumulative:18433.55,decimals:2,sort_order:60,calculation_mode:"manual",active:true},
+  {stat_key:"oshInductions",title_en:"OSH Inductions",title_ar:"تعريفات السلامة والصحة المهنية",last_week:2238,this_week:0,cumulative:2238,decimals:0,sort_order:70,calculation_mode:"manual",active:true},
+  {stat_key:"oshMeetings",title_en:"OSH Meetings",title_ar:"اجتماعات السلامة والصحة المهنية",last_week:73,this_week:0,cumulative:73,decimals:0,sort_order:80,calculation_mode:"manual",active:true},
+  {stat_key:"oshAudits",title_en:"OSH Audits",title_ar:"تدقيقات السلامة والصحة المهنية",last_week:7,this_week:0,cumulative:7,decimals:0,sort_order:90,calculation_mode:"manual",active:true},
+  {stat_key:"oshInspections",title_en:"OSH Inspections",title_ar:"تفتيشات السلامة والصحة المهنية",last_week:167,this_week:0,cumulative:167,decimals:0,sort_order:100,calculation_mode:"manual",active:true},
+  {stat_key:"procedureReviews",title_en:"Procedure Reviews",title_ar:"مراجعات الإجراءات",last_week:64,this_week:0,cumulative:64,decimals:0,sort_order:110,calculation_mode:"manual",active:true},
+  {stat_key:"emergencyDrills",title_en:"Emergency Drills",title_ar:"تمارين الطوارئ",last_week:6,this_week:0,cumulative:6,decimals:0,sort_order:120,calculation_mode:"manual",active:true}
+];
+
 function normalizedWeeklyPerformanceData(value){
   if(!value||typeof value!=="object"||Array.isArray(value))return {};
   return value;
+}
+
+function performanceElementId(statKey){
+  return `performance-value-${String(statKey).replace(/[^a-zA-Z0-9_-]/g,"-")}`;
+}
+
+function performanceTitle(stat){
+  if(lang==="ar"&&stat.title_ar)return stat.title_ar;
+  return stat.title_en||"OSH Statistic";
 }
 
 function performanceDisplayNumber(metricKey,value){
@@ -505,9 +614,47 @@ function performanceDisplayNumber(metricKey,value){
   if(!Number.isFinite(number))return "—";
 
   return number.toLocaleString("en-US",{
-    minimumFractionDigits:config.decimals,
-    maximumFractionDigits:config.decimals
+    minimumFractionDigits:Number(config.decimals||0),
+    maximumFractionDigits:Number(config.decimals||0)
   });
+}
+
+function performanceLegacyCumulative(statKey,originalValue){
+  const legacy={
+    manpower:performance.manpower,
+    manhours:Number(performance.baseline_manhours||0)+Number(performance.manhour_adjustment||0),
+    trainingSessions:performance.training_sessions,
+    personnelTrained:performance.personnel_trained,
+    trainingHours:performance.training_hours,
+    oshInductions:performance.osh_inductions,
+    oshMeetings:performance.osh_meetings,
+    oshAudits:performance.osh_audits,
+    oshInspections:performance.osh_inspections,
+    procedureReviews:performance.procedure_reviews,
+    emergencyDrills:performance.emergency_drills
+  };
+
+  const value=legacy[statKey];
+  return value===undefined||value===null?originalValue:value;
+}
+
+function buildFallbackPerformanceStats(){
+  return performanceStatsFallback.map(stat=>({
+    ...stat,
+    last_week:Object.prototype.hasOwnProperty.call(
+      performanceWeeklyData.lastWeek,
+      stat.stat_key
+    )
+      ? performanceWeeklyData.lastWeek[stat.stat_key]
+      : performanceLegacyCumulative(stat.stat_key,stat.last_week),
+    this_week:Object.prototype.hasOwnProperty.call(
+      performanceWeeklyData.thisWeek,
+      stat.stat_key
+    )
+      ? performanceWeeklyData.thisWeek[stat.stat_key]
+      : stat.this_week,
+    cumulative:performanceLegacyCumulative(stat.stat_key,stat.cumulative)
+  }));
 }
 
 function currentPerformanceMetricValue(metricKey){
@@ -528,6 +675,78 @@ function performanceWeeklyValue(group,metricKey,fallback){
     if(Number.isFinite(number))return number;
   }
   return fallback;
+}
+
+function bindPerformanceCard(card){
+  card.addEventListener("click",()=>openPerformanceDetail(card));
+  card.addEventListener("keydown",event=>{
+    if(event.key==="Enter"||event.key===" "){
+      event.preventDefault();
+      openPerformanceDetail(card);
+    }
+  });
+}
+
+function renderPerformanceStats(rows){
+  const grid=document.getElementById("performanceStatsGrid");
+  if(!grid)return;
+
+  performanceStatsRows=(rows||[])
+    .filter(row=>row.active!==false)
+    .sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0));
+
+  performanceStatsByKey=new Map(
+    performanceStatsRows.map(row=>[row.stat_key,row])
+  );
+
+  performanceWeeklyData={lastWeek:{},thisWeek:{}};
+
+  Object.keys(performanceMetricConfig).forEach(key=>{
+    delete performanceMetricConfig[key];
+  });
+
+  if(!performanceStatsRows.length){
+    grid.innerHTML='<p class="performance-stats-empty">No active performance statistics.</p>';
+    return;
+  }
+
+  grid.innerHTML=performanceStatsRows.map(stat=>{
+    const key=stat.stat_key;
+    const elementId=performanceElementId(key);
+    const decimals=Math.max(0,Math.min(4,Number(stat.decimals||0)));
+
+    performanceMetricConfig[key]={elementId,decimals};
+    performanceWeeklyData.lastWeek[key]=Number(stat.last_week||0);
+    performanceWeeklyData.thisWeek[key]=Number(stat.this_week||0);
+
+    const liveLabel=stat.calculation_mode==="live_manhours"
+      ? '<small>Live UAE working-time counter</small>'
+      : stat.calculation_mode==="live_lti_days"
+        ? '<small>Live daily counter</small>'
+        :"";
+
+    return `<div class="stat performance-stat-card"
+                 data-performance-key="${escapeHtml(key)}"
+                 role="button"
+                 tabindex="0"
+                 aria-haspopup="dialog">
+      <label class="performance-stat-title">${escapeHtml(performanceTitle(stat))}</label>
+      <strong id="${escapeHtml(elementId)}">${performanceDisplayNumber(key,stat.cumulative)}</strong>
+      ${liveLabel}
+    </div>`;
+  }).join("");
+
+  grid.querySelectorAll(".performance-stat-card").forEach(bindPerformanceCard);
+  updateCounters();
+}
+
+function refreshPerformanceStatsLanguage(){
+  document.querySelectorAll(".performance-stat-card").forEach(card=>{
+    const stat=performanceStatsByKey.get(card.dataset.performanceKey);
+    const label=card.querySelector(".performance-stat-title");
+    if(stat&&label)label.textContent=performanceTitle(stat);
+  });
+  refreshPerformancePopupLanguage();
 }
 
 function refreshPerformancePopupLanguage(){
@@ -606,16 +825,6 @@ function closePerformanceDetail(){
   activePerformanceCard=null;
 }
 
-document.querySelectorAll(".performance-stat-card").forEach(card=>{
-  card.addEventListener("click",()=>openPerformanceDetail(card));
-  card.addEventListener("keydown",event=>{
-    if(event.key==="Enter"||event.key===" "){
-      event.preventDefault();
-      openPerformanceDetail(card);
-    }
-  });
-});
-
 closePerformanceDetailButton?.addEventListener(
   "click",
   closePerformanceDetail
@@ -631,13 +840,13 @@ function updateCounters() {
   const baselineDate=new Date(performance.baseline_at);
   const seconds=workingSecondsBetween(baselineDate,new Date());
   const value=Number(performance.baseline_manhours)+(seconds/3600)*Number(performance.manpower)+Number(performance.manhour_adjustment||0);
-  setText("manhours",Math.floor(value));
+  setText(performanceMetricConfig.manhours?.elementId,Math.floor(value));
   const start=new Date(`${performance.last_lti_date}T00:00:00+04:00`);
   const startNext=new Date(start.getTime()+86400000);
   const todayParts=uaeDateParts(new Date());
   const todayUaeMidnight=new Date(`${todayParts.year}-${todayParts.month}-${todayParts.day}T00:00:00+04:00`);
   const days=Math.max(0,Math.floor((todayUaeMidnight-startNext)/86400000)+1);
-  setText("ltiDays",days);
+  setText(performanceMetricConfig.ltiDays?.elementId,days);
   refreshOpenPerformanceDetail();
 }
 
@@ -738,32 +947,52 @@ async function loadContactSettings(){
 
 async function loadLiveSettings() {
   try {
-    const [{data:row,error},{data:holidayRows}] = await Promise.all([
+    const [settingsResult,holidayResult,statsResult]=await Promise.all([
       db.from("settings").select("*").eq("id",1).maybeSingle(),
-      db.from("holidays").select("holiday_date").eq("active",true)
+      db.from("holidays").select("holiday_date").eq("active",true),
+      db.from("performance_stats")
+        .select("*")
+        .eq("active",true)
+        .order("sort_order",{ascending:true})
+        .order("created_at",{ascending:true})
     ]);
-    if (error) throw error;
-    if (row){
-      performance={...performance,...row};
+
+    if(settingsResult.error)throw settingsResult.error;
+
+    if(settingsResult.data){
+      performance={...performance,...settingsResult.data};
       performanceWeeklyData={
-        lastWeek:normalizedWeeklyPerformanceData(row.performance_last_week),
-        thisWeek:normalizedWeeklyPerformanceData(row.performance_this_week)
+        lastWeek:normalizedWeeklyPerformanceData(
+          settingsResult.data.performance_last_week
+        ),
+        thisWeek:normalizedWeeklyPerformanceData(
+          settingsResult.data.performance_this_week
+        )
       };
     }
-    holidays=new Set((holidayRows||[]).map(x=>x.holiday_date));
-    setText("manpower",performance.manpower);
-    setText("trainingSessions",performance.training_sessions);
-    setText("personnelTrained",performance.personnel_trained);
-    setText("trainingHours",performance.training_hours,true);
-    setText("oshInductions",performance.osh_inductions);
-    setText("oshMeetings",performance.osh_meetings);
-    setText("oshAudits",performance.osh_audits);
-    setText("oshInspections",performance.osh_inspections);
-    setText("procedureReviews",performance.procedure_reviews);
-    setText("emergencyDrills",performance.emergency_drills);
+
+    holidays=new Set(
+      (holidayResult.data||[]).map(item=>item.holiday_date)
+    );
+
+    if(statsResult.error){
+      console.warn(
+        "Using built-in performance statistics:",
+        statsResult.error.message
+      );
+      renderPerformanceStats(buildFallbackPerformanceStats());
+    }else{
+      renderPerformanceStats(
+        statsResult.data?.length
+          ? statsResult.data
+          : buildFallbackPerformanceStats()
+      );
+    }
+
     updateCounters();
   } catch (error) {
-    console.warn("Using built-in performance values:", error.message);
+    console.warn("Using built-in performance values:",error.message);
+    renderPerformanceStats(buildFallbackPerformanceStats());
     updateCounters();
   }
 }
@@ -902,29 +1131,35 @@ function niceTrendMaximum(rows,fields){
   return Math.ceil(largest/interval)*interval;
 }
 
-function renderGroupedTrendChart(containerId,rows,series){
+function renderGroupedTrendChart(containerId,rows,series,options={}){
   const container=document.getElementById(containerId);
   if(!container)return;
 
-  const width=Math.max(1500,rows.length*76+130);
-  const height=535;
-  const margin={top:50,right:28,bottom:195,left:60};
+  const compact=Boolean(options.compact);
+  const width=Math.max(
+    compact?920:1500,
+    rows.length*(compact?48:76)+(compact?105:130)
+  );
+  const height=compact?360:535;
+  const margin=compact
+    ? {top:38,right:18,bottom:142,left:48}
+    : {top:50,right:28,bottom:195,left:60};
   const chartWidth=width-margin.left-margin.right;
   const chartHeight=height-margin.top-margin.bottom;
   const max=niceTrendMaximum(rows,series.map(item=>item.field));
-  const tickCount=6;
+  const tickCount=compact?5:6;
   const categoryWidth=chartWidth/rows.length;
-  const gap=3;
+  const gap=compact?2:3;
   const barWidth=Math.min(
-    14,
-    Math.max(7,(categoryWidth-18-(series.length-1)*gap)/series.length)
+    compact?10:14,
+    Math.max(compact?5:7,(categoryWidth-(compact?12:18)-(series.length-1)*gap)/series.length)
   );
 
   const grid=Array.from({length:tickCount+1},(_,index)=>{
     const value=Math.round(max*index/tickCount);
     const y=margin.top+chartHeight-(value/max)*chartHeight;
     return `<line x1="${margin.left}" y1="${y}" x2="${width-margin.right}" y2="${y}" class="trend-grid-line"/>
-      <text x="${margin.left-10}" y="${y+4}" text-anchor="end" class="trend-axis-number">${value}</text>`;
+      <text x="${margin.left-8}" y="${y+4}" text-anchor="end" class="trend-axis-number">${value}</text>`;
   }).join("");
 
   const bars=rows.map((row,index)=>{
@@ -937,7 +1172,7 @@ function renderGroupedTrendChart(containerId,rows,series){
       const barHeight=max?value/max*chartHeight:0;
       const x=start+seriesIndex*(barWidth+gap);
       const y=margin.top+chartHeight-barHeight;
-      const labelY=Math.max(margin.top+12,y-5);
+      const labelY=Math.max(margin.top+10,y-4);
 
       return `<rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="1" fill="${item.color}">
         <title>${escapeHtml(row.category)}: ${escapeHtml(item.label)} ${value}</title>
@@ -945,8 +1180,8 @@ function renderGroupedTrendChart(containerId,rows,series){
       <text x="${x+barWidth/2}" y="${labelY}" text-anchor="middle" class="trend-value-label">${value}</text>`;
     }).join("");
 
-    const labelX=center+4;
-    const labelY=margin.top+chartHeight+14;
+    const labelX=center+3;
+    const labelY=margin.top+chartHeight+12;
 
     return `${rowBars}
       <text x="${labelX}" y="${labelY}"
@@ -954,6 +1189,7 @@ function renderGroupedTrendChart(containerId,rows,series){
             class="trend-category-label">${escapeHtml(row.category)}</text>`;
   }).join("");
 
+  container.classList.toggle("compact-rendered-trend",compact);
   container.innerHTML=`<svg viewBox="0 0 ${width} ${height}" width="${width}" height="${height}"
       xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <rect width="${width}" height="${height}" fill="#fff"/>
@@ -979,10 +1215,13 @@ function updateTrendSummary(rows){
   setText("trendUcClosed",totals.ucClosed);
 }
 
-function renderSafetyTrend(rows){
-  updateTrendSummary(rows);
+let latestSafetyTrendRows=safetyTrendBaseline.map(row=>({...row}));
 
-  renderGroupedTrendChart("unsafeActTrendChart",rows,[
+function renderSafetyTrend(rows){
+  latestSafetyTrendRows=(rows||safetyTrendBaseline).map(row=>({...row}));
+  updateTrendSummary(latestSafetyTrendRows);
+
+  renderGroupedTrendChart("unsafeActTrendChart",latestSafetyTrendRows,[
     {
       field:"unsafe_act_open_count",
       label:"Unsafe Act Open",
@@ -993,9 +1232,9 @@ function renderSafetyTrend(rows){
       label:"Unsafe Act Closed",
       color:"#0aa34f"
     }
-  ]);
+  ],{compact:true});
 
-  renderGroupedTrendChart("unsafeConditionTrendChart",rows,[
+  renderGroupedTrendChart("unsafeConditionTrendChart",latestSafetyTrendRows,[
     {
       field:"unsafe_condition_open_count",
       label:"Unsafe Condition Open",
@@ -1006,8 +1245,98 @@ function renderSafetyTrend(rows){
       label:"Unsafe Condition Closed",
       color:"#2563eb"
     }
-  ]);
+  ],{compact:true});
 }
+
+
+const trendChartModal=document.getElementById("trendChartModal");
+const trendChartModalTitle=document.getElementById("trendChartModalTitle");
+const trendChartModalEyebrow=document.getElementById("trendChartModalEyebrow");
+const trendChartModalLegend=document.getElementById("trendChartModalLegend");
+const closeTrendChartModalButton=document.getElementById("closeTrendChartModal");
+let activeTrendChartTrigger=null;
+
+function trendChartDetails(type){
+  if(type==="unsafe-condition"){
+    return {
+      eyebrow:"Unsafe Condition Analysis",
+      title:"Unsafe Condition: Open vs Closed",
+      aria:"Enlarged Unsafe Condition Open and Closed observations by category",
+      legend:`<span><i class="legend-uc-open"></i> Open</span>
+        <span><i class="legend-uc-closed"></i> Closed</span>`,
+      series:[
+        {field:"unsafe_condition_open_count",label:"Unsafe Condition Open",color:"#ef1717"},
+        {field:"unsafe_condition_closed_count",label:"Unsafe Condition Closed",color:"#2563eb"}
+      ]
+    };
+  }
+
+  return {
+    eyebrow:"Unsafe Act Analysis",
+    title:"Unsafe Act: Open vs Closed",
+    aria:"Enlarged Unsafe Act Open and Closed observations by category",
+    legend:`<span><i class="legend-ua-open"></i> Open</span>
+      <span><i class="legend-ua-closed"></i> Closed</span>`,
+    series:[
+      {field:"unsafe_act_open_count",label:"Unsafe Act Open",color:"#f59e0b"},
+      {field:"unsafe_act_closed_count",label:"Unsafe Act Closed",color:"#0aa34f"}
+    ]
+  };
+}
+
+function openTrendChartModal(type,trigger){
+  if(!trendChartModal)return;
+
+  activeTrendChartTrigger=trigger||null;
+  const details=trendChartDetails(type);
+
+  if(trendChartModalEyebrow)trendChartModalEyebrow.textContent=details.eyebrow;
+  if(trendChartModalTitle)trendChartModalTitle.textContent=details.title;
+  if(trendChartModalLegend)trendChartModalLegend.innerHTML=details.legend;
+
+  const canvas=document.getElementById("trendChartPopupCanvas");
+  if(canvas)canvas.setAttribute("aria-label",details.aria);
+
+  renderGroupedTrendChart(
+    "trendChartPopupCanvas",
+    latestSafetyTrendRows,
+    details.series,
+    {compact:false}
+  );
+
+  trendChartModal.hidden=false;
+  trendChartModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("trend-chart-popup-open");
+  setTimeout(()=>closeTrendChartModalButton?.focus(),30);
+}
+
+function closeTrendChartModal(){
+  if(!trendChartModal)return;
+
+  trendChartModal.hidden=true;
+  trendChartModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("trend-chart-popup-open");
+  activeTrendChartTrigger?.focus();
+  activeTrendChartTrigger=null;
+}
+
+document.querySelectorAll("[data-trend-popup]").forEach(panel=>{
+  panel.addEventListener("click",()=>{
+    openTrendChartModal(panel.dataset.trendPopup,panel);
+  });
+
+  panel.addEventListener("keydown",event=>{
+    if(event.key!=="Enter"&&event.key!==" ")return;
+    event.preventDefault();
+    openTrendChartModal(panel.dataset.trendPopup,panel);
+  });
+});
+
+closeTrendChartModalButton?.addEventListener("click",closeTrendChartModal);
+
+trendChartModal?.addEventListener("click",event=>{
+  if(event.target===trendChartModal)closeTrendChartModal();
+});
 
 async function loadSafetyTrend(){
   const status=document.getElementById("trendUpdateStatus");
@@ -1459,7 +1788,14 @@ async function loadGallery(){
                  <source src="${escapeHtml(item.image_url)}">
                  Your browser does not support embedded video.
                </video>`
-            : `<img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(title)}" loading="lazy">`;
+            : `<img class="gallery-popup-image"
+                    src="${escapeHtml(item.image_url)}"
+                    alt="${escapeHtml(title)}"
+                    data-gallery-title="${escapeHtml(title)}"
+                    data-gallery-type="OSH Gallery"
+                    role="button"
+                    tabindex="0"
+                    loading="lazy">`;
 
           return `<article class="photo-slide-card ${isVideo?"video-card":""}">
             ${media}
@@ -1489,7 +1825,14 @@ async function loadGallery(){
         const cards=group.map(item=>{
           const title=lang==="ar"&&item.title_ar?item.title_ar:item.title_en;
           return `<article class="award-card">
-            <img class="award-image" src="${escapeHtml(item.image_url)}" alt="${escapeHtml(title)}" loading="lazy">
+            <img class="award-image gallery-popup-image"
+                 src="${escapeHtml(item.image_url)}"
+                 alt="${escapeHtml(title)}"
+                 data-gallery-title="${escapeHtml(title)}"
+                 data-gallery-type="Award Gallery"
+                 role="button"
+                 tabindex="0"
+                 loading="lazy">
             <h3>${escapeHtml(title)}</h3>
           </article>`;
         }).join("");

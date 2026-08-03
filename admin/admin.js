@@ -167,35 +167,17 @@ $("resetDocumentPassword").onclick=async()=>{
 };
 
 
-const WEEKLY_PERFORMANCE_METRICS=[
-  {key:"manpower",label:"Total Manpower",step:"1"},
-  {key:"manhours",label:"Man-Hours",step:"1"},
-  {key:"ltiDays",label:"LTI-Free Days",step:"1"},
-  {key:"trainingSessions",label:"Training Sessions",step:"1"},
-  {key:"personnelTrained",label:"Personnel Trained",step:"1"},
-  {key:"trainingHours",label:"Training Hours",step:"0.01"},
-  {key:"oshInductions",label:"OSH Inductions",step:"1"},
-  {key:"oshMeetings",label:"OSH Meetings",step:"1"},
-  {key:"oshAudits",label:"OSH Audits",step:"1"},
-  {key:"oshInspections",label:"OSH Inspections",step:"1"},
-  {key:"procedureReviews",label:"Procedure Reviews",step:"1"},
-  {key:"emergencyDrills",label:"Emergency Drills",step:"1"}
-];
+let adminPerformanceSettings={};
+let adminPerformanceRows=[];
 
-function weeklyPerformanceObject(value){
-  if(!value||typeof value!=="object"||Array.isArray(value))return {};
-  return value;
-}
-
-function adminLtiDaysFromDate(dateValue){
-  if(!dateValue)return 0;
-  const incident=new Date(`${dateValue}T00:00:00`);
-  const today=new Date();
-  today.setHours(0,0,0,0);
-  return Math.max(
-    0,
-    Math.round((today.getTime()-incident.getTime())/86400000)
-  );
+function adminEscapeHtml(value=""){
+  return String(value).replace(/[&<>"']/g,character=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[character]);
 }
 
 function adminDateFromLtiDays(daysValue){
@@ -210,136 +192,239 @@ function adminDateFromLtiDays(daysValue){
   return `${year}-${month}-${day}`;
 }
 
-function cumulativePerformanceValues(settings){
-  return {
-    manpower:Number(settings.manpower||0),
-    manhours:Math.floor(
-      Number(settings.baseline_manhours||0)
-      +Number(settings.manhour_adjustment||0)
-    ),
-    ltiDays:adminLtiDaysFromDate(settings.last_lti_date),
-    trainingSessions:Number(settings.training_sessions||0),
-    personnelTrained:Number(settings.personnel_trained||0),
-    trainingHours:Number(settings.training_hours||0),
-    oshInductions:Number(settings.osh_inductions||0),
-    oshMeetings:Number(settings.osh_meetings||0),
-    oshAudits:Number(settings.osh_audits||0),
-    oshInspections:Number(settings.osh_inspections||0),
-    procedureReviews:Number(settings.procedure_reviews||0),
-    emergencyDrills:Number(settings.emergency_drills||0)
-  };
+function adminCalculationOptions(selected){
+  const options=[
+    ["manual","Manual value"],
+    ["live_manhours","Live Man-Hours counter"],
+    ["live_lti_days","Live LTI-Free Days counter"]
+  ];
+
+  return options.map(([value,label])=>
+    `<option value="${value}" ${selected===value?"selected":""}>${label}</option>`
+  ).join("");
 }
 
-function renderWeeklyPerformanceAdmin(settings){
-  const rows=$("weeklyPerformanceRows");
-  if(!rows)return;
+async function syncPerformanceStatToSettings(stat){
+  const cumulative=Number(stat.cumulative||0);
+  const payload={};
 
-  const lastWeek=weeklyPerformanceObject(settings.performance_last_week);
-  const thisWeek=weeklyPerformanceObject(settings.performance_this_week);
-  const cumulative=cumulativePerformanceValues(settings);
-
-  rows.innerHTML=WEEKLY_PERFORMANCE_METRICS.map(metric=>{
-    const lastValue=Object.prototype.hasOwnProperty.call(lastWeek,metric.key)
-      ? lastWeek[metric.key]
-      :"";
-    const thisValue=Object.prototype.hasOwnProperty.call(thisWeek,metric.key)
-      ? thisWeek[metric.key]
-      :"";
-    const cumulativeValue=Object.prototype.hasOwnProperty.call(
-      cumulative,
-      metric.key
-    )
-      ? cumulative[metric.key]
-      :"";
-
-    return `<tr>
-      <td><strong>${metric.label}</strong></td>
-      <td>
-        <input id="weekly-${metric.key}-last"
-               type="number"
-               step="${metric.step}"
-               value="${lastValue}"
-               placeholder="0">
-      </td>
-      <td>
-        <input id="weekly-${metric.key}-this"
-               type="number"
-               step="${metric.step}"
-               value="${thisValue}"
-               placeholder="0">
-      </td>
-      <td>
-        <input id="weekly-${metric.key}-cumulative"
-               type="number"
-               step="${metric.step}"
-               value="${cumulativeValue}"
-               placeholder="0">
-      </td>
-    </tr>`;
-  }).join("");
-}
-
-$("performanceWeeklyForm").onsubmit=async event=>{
-  event.preventDefault();
-  setStatus("performanceWeeklyStatus","Saving…");
-
-  const lastWeek={};
-  const thisWeek={};
-  const cumulative={};
-
-  WEEKLY_PERFORMANCE_METRICS.forEach(metric=>{
-    lastWeek[metric.key]=Number(
-      $(`weekly-${metric.key}-last`)?.value||0
-    );
-    thisWeek[metric.key]=Number(
-      $(`weekly-${metric.key}-this`)?.value||0
-    );
-    cumulative[metric.key]=Number(
-      $(`weekly-${metric.key}-cumulative`)?.value||0
-    );
-  });
-
-  const payload={
-    performance_last_week:lastWeek,
-    performance_this_week:thisWeek,
-    manpower:cumulative.manpower,
-    baseline_manhours:cumulative.manhours,
-    baseline_at:new Date().toISOString(),
-    manhour_adjustment:0,
-    last_lti_date:adminDateFromLtiDays(cumulative.ltiDays),
-    training_sessions:cumulative.trainingSessions,
-    personnel_trained:cumulative.personnelTrained,
-    training_hours:cumulative.trainingHours,
-    osh_inductions:cumulative.oshInductions,
-    osh_meetings:cumulative.oshMeetings,
-    osh_audits:cumulative.oshAudits,
-    osh_inspections:cumulative.oshInspections,
-    procedure_reviews:cumulative.procedureReviews,
-    emergency_drills:cumulative.emergencyDrills
+  const fieldMap={
+    manpower:"manpower",
+    trainingSessions:"training_sessions",
+    personnelTrained:"personnel_trained",
+    trainingHours:"training_hours",
+    oshInductions:"osh_inductions",
+    oshMeetings:"osh_meetings",
+    oshAudits:"osh_audits",
+    oshInspections:"osh_inspections",
+    procedureReviews:"procedure_reviews",
+    emergencyDrills:"emergency_drills"
   };
+
+  if(fieldMap[stat.stat_key]){
+    payload[fieldMap[stat.stat_key]]=cumulative;
+  }
+
+  if(stat.calculation_mode==="live_manhours"||stat.stat_key==="manhours"){
+    payload.baseline_manhours=cumulative;
+    payload.baseline_at=new Date().toISOString();
+    payload.manhour_adjustment=0;
+  }
+
+  if(stat.calculation_mode==="live_lti_days"||stat.stat_key==="ltiDays"){
+    payload.last_lti_date=adminDateFromLtiDays(cumulative);
+  }
+
+  if(!Object.keys(payload).length)return;
 
   const {error}=await db
     .from("settings")
     .update(payload)
     .eq("id",1);
 
+  if(error)throw error;
+  adminPerformanceSettings={...adminPerformanceSettings,...payload};
+}
+
+function renderPerformanceStatsAdmin(){
+  const list=$("performanceStatsAdminList");
+  if(!list)return;
+
+  list.innerHTML=adminPerformanceRows.length
+    ?""
+    :"<p>No performance statistics have been added.</p>";
+
+  adminPerformanceRows.forEach(stat=>{
+    const card=document.createElement("div");
+    card.className="data-item performance-stat-admin-card";
+
+    card.innerHTML=`
+      <label>English title
+        <input class="stat-title-en"
+               value="${adminEscapeHtml(stat.title_en||"")}">
+      </label>
+
+      <label>Arabic title
+        <input class="stat-title-ar"
+               dir="rtl"
+               value="${adminEscapeHtml(stat.title_ar||"")}">
+      </label>
+
+      <label>As of last week
+        <input class="stat-last-week"
+               type="number"
+               step="0.01"
+               value="${Number(stat.last_week||0)}">
+      </label>
+
+      <label>This week
+        <input class="stat-this-week"
+               type="number"
+               step="0.01"
+               value="${Number(stat.this_week||0)}">
+      </label>
+
+      <label>Cumulative
+        <input class="stat-cumulative"
+               type="number"
+               step="0.01"
+               value="${Number(stat.cumulative||0)}">
+      </label>
+
+      <label>Decimal places
+        <select class="stat-decimals">
+          ${[0,1,2,3,4].map(value=>
+            `<option value="${value}" ${Number(stat.decimals||0)===value?"selected":""}>${value}</option>`
+          ).join("")}
+        </select>
+      </label>
+
+      <label>Calculation
+        <select class="stat-calculation">
+          ${adminCalculationOptions(stat.calculation_mode||"manual")}
+        </select>
+      </label>
+
+      <label>Sort order
+        <input class="stat-sort-order"
+               type="number"
+               value="${Number(stat.sort_order||0)}">
+      </label>
+
+      <label class="performance-stat-full">
+        <input class="stat-active"
+               type="checkbox"
+               ${stat.active?"checked":""}>
+        Show on public website
+      </label>
+
+      <div class="performance-stat-admin-actions">
+        <button class="primary save-performance-stat" type="button">
+          Save Changes
+        </button>
+        <button class="danger delete-performance-stat" type="button">
+          Delete Statistic
+        </button>
+      </div>`;
+
+    card.querySelector(".save-performance-stat").onclick=async()=>{
+      const button=card.querySelector(".save-performance-stat");
+      button.disabled=true;
+      button.textContent="Saving…";
+
+      const payload={
+        title_en:card.querySelector(".stat-title-en").value.trim(),
+        title_ar:card.querySelector(".stat-title-ar").value.trim()||null,
+        last_week:Number(card.querySelector(".stat-last-week").value||0),
+        this_week:Number(card.querySelector(".stat-this-week").value||0),
+        cumulative:Number(card.querySelector(".stat-cumulative").value||0),
+        decimals:Number(card.querySelector(".stat-decimals").value||0),
+        calculation_mode:card.querySelector(".stat-calculation").value,
+        sort_order:Number(card.querySelector(".stat-sort-order").value||0),
+        active:card.querySelector(".stat-active").checked,
+        updated_at:new Date().toISOString()
+      };
+
+      try{
+        if(!payload.title_en)throw new Error("English title is required.");
+
+        const {error}=await db
+          .from("performance_stats")
+          .update(payload)
+          .eq("id",stat.id);
+
+        if(error)throw error;
+
+        await syncPerformanceStatToSettings({
+          ...stat,
+          ...payload
+        });
+
+        setStatus(
+          "performanceStatsAdminStatus",
+          `${payload.title_en} was updated.`
+        );
+        await loadPerformanceStatsAdmin();
+        await loadSettingsDashboard();
+      }catch(error){
+        setStatus("performanceStatsAdminStatus",error.message);
+      }finally{
+        button.disabled=false;
+        button.textContent="Save Changes";
+      }
+    };
+
+    card.querySelector(".delete-performance-stat").onclick=async()=>{
+      const title=card.querySelector(".stat-title-en").value.trim()
+        ||"this statistic";
+
+      if(!confirm(`Delete ${title}?\n\nIt will be removed from the public website.`)){
+        return;
+      }
+
+      const {error}=await db
+        .from("performance_stats")
+        .delete()
+        .eq("id",stat.id);
+
+      if(error){
+        setStatus("performanceStatsAdminStatus",error.message);
+        return;
+      }
+
+      setStatus(
+        "performanceStatsAdminStatus",
+        `${title} was deleted.`
+      );
+      await loadPerformanceStatsAdmin();
+    };
+
+    list.appendChild(card);
+  });
+}
+
+async function loadPerformanceStatsAdmin(){
+  const {data,error}=await db
+    .from("performance_stats")
+    .select("*")
+    .order("sort_order",{ascending:true})
+    .order("created_at",{ascending:true});
+
   if(error){
-    const message=error.message.includes("performance_last_week")
-      ?"Run PERFORMANCE_WEEKLY_POPUP_SETUP.sql in Supabase SQL Editor first."
-      :error.message;
-    setStatus("performanceWeeklyStatus",message);
-    return;
+    setStatus(
+      "performanceStatsAdminStatus",
+      error.message.includes("performance_stats")
+        ?"Run PERFORMANCE_STATS_DYNAMIC_SETUP.sql in Supabase SQL Editor."
+        :error.message
+    );
+    throw error;
   }
 
-  setStatus(
-    "performanceWeeklyStatus",
-    "Performance details saved. Cumulative values will appear on the public website."
-  );
+  adminPerformanceRows=data||[];
+  renderPerformanceStatsAdmin();
+}
 
-  await loadSettings();
-};
-
-async function loadSettings(){
+async function loadSettingsDashboard(){
   const {data,error}=await db
     .from("settings")
     .select("*")
@@ -348,19 +433,90 @@ async function loadSettings(){
 
   if(error)throw error;
 
-  const settings=data||{};
-  const cumulative=cumulativePerformanceValues(settings);
+  adminPerformanceSettings=data||{};
 
   $("dashManpower").textContent=Number(
-    cumulative.manpower||0
+    adminPerformanceSettings.manpower||0
   ).toLocaleString();
 
   $("dashManhours").textContent=Number(
-    cumulative.manhours||0
+    adminPerformanceSettings.baseline_manhours||0
   ).toLocaleString();
-
-  renderWeeklyPerformanceAdmin(settings);
 }
+
+async function loadSettings(){
+  await loadSettingsDashboard();
+  await loadPerformanceStatsAdmin();
+}
+
+$("performanceStatAddForm").onsubmit=async event=>{
+  event.preventDefault();
+  setStatus("performanceStatAddStatus","Adding…");
+
+  const titleEn=$("newStatTitleEn").value.trim();
+  if(!titleEn){
+    setStatus("performanceStatAddStatus","English title is required.");
+    return;
+  }
+
+  const keyBase=titleEn
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-|-$/g,"")
+    .slice(0,42)
+    ||"stat";
+
+  const payload={
+    stat_key:`custom-${keyBase}-${crypto.randomUUID().slice(0,8)}`,
+    title_en:titleEn,
+    title_ar:$("newStatTitleAr").value.trim()||null,
+    last_week:Number($("newStatLastWeek").value||0),
+    this_week:Number($("newStatThisWeek").value||0),
+    cumulative:Number($("newStatCumulative").value||0),
+    decimals:Number($("newStatDecimals").value||0),
+    calculation_mode:$("newStatCalculation").value,
+    sort_order:Number($("newStatSortOrder").value||999),
+    active:true,
+    is_system:false
+  };
+
+  const {error}=await db
+    .from("performance_stats")
+    .insert(payload);
+
+  if(error){
+    setStatus(
+      "performanceStatAddStatus",
+      error.message.includes("performance_stats")
+        ?"Run PERFORMANCE_STATS_DYNAMIC_SETUP.sql in Supabase SQL Editor."
+        :error.message
+    );
+    return;
+  }
+
+  event.target.reset();
+  $("newStatLastWeek").value="0";
+  $("newStatThisWeek").value="0";
+  $("newStatCumulative").value="0";
+  $("newStatDecimals").value="0";
+  $("newStatCalculation").value="manual";
+  $("newStatSortOrder").value="999";
+
+  setStatus("performanceStatAddStatus","New statistic added.");
+  await loadPerformanceStatsAdmin();
+};
+
+$("reloadPerformanceStats").onclick=async()=>{
+  setStatus("performanceStatsAdminStatus","Reloading…");
+  try{
+    await loadPerformanceStatsAdmin();
+    setStatus("performanceStatsAdminStatus","Statistics reloaded.");
+  }catch(error){
+    console.warn(error);
+  }
+};
+
 
 let reportRows=[];async function loadReports(){const {data,error}=await db.from("safety_reports").select("*").order("created_at",{ascending:false});if(error)throw error;reportRows=data||[];$("dashReports").textContent=reportRows.filter(r=>r.status!=="Closed").length;const list=$("reportList");list.innerHTML=reportRows.length?"":"<p>No reports submitted yet.</p>";for(const r of reportRows){const d=document.createElement("div");d.className=`data-item ${r.urgency==="Critical"?"critical":""}`;const reporterName=r.reporter_name||"Not provided";
 const reporterDesignation=r.reporter_designation||"Not provided";
@@ -1095,9 +1251,23 @@ async function loadTeamMembers(){
     const card=document.createElement("div");
     card.className="data-item team-member-admin-card";
 
-    card.innerHTML=`<img class="team-member-admin-photo"
-                         src="${member.photo_url}"
-                         alt="${member.name_en}">
+    card.innerHTML=`<div class="team-member-admin-photo-column">
+        <img class="team-member-admin-photo"
+             src="${member.photo_url}"
+             alt="${member.name_en}">
+
+        <label class="team-photo-replace-label">
+          Replace Photo
+          <input class="member-photo-replacement"
+                 type="file"
+                 accept="image/*">
+        </label>
+
+        <p class="small team-photo-replace-note">
+          Select a new image, then click Save Changes.
+        </p>
+      </div>
+
       <div class="team-member-admin-fields">
         <label>English name
           <input class="member-name-en" value="${member.name_en||""}">
@@ -1129,29 +1299,129 @@ async function loadTeamMembers(){
         </div>
       </div>`;
 
+    const replacementInput=card.querySelector(".member-photo-replacement");
+    const previewImage=card.querySelector(".team-member-admin-photo");
+    let replacementPreviewUrl=null;
+
+    replacementInput.addEventListener("change",()=>{
+      const file=replacementInput.files[0];
+
+      if(replacementPreviewUrl){
+        URL.revokeObjectURL(replacementPreviewUrl);
+        replacementPreviewUrl=null;
+      }
+
+      if(!file){
+        previewImage.src=member.photo_url;
+        return;
+      }
+
+      if(!file.type.startsWith("image/")){
+        replacementInput.value="";
+        previewImage.src=member.photo_url;
+        alert("Select a valid image file.");
+        return;
+      }
+
+      replacementPreviewUrl=URL.createObjectURL(file);
+      previewImage.src=replacementPreviewUrl;
+    });
+
     card.querySelector(".save-team-member").onclick=async()=>{
       const saveButton=card.querySelector(".save-team-member");
+      const replacementFile=replacementInput.files[0];
+      let uploadedPhoto=null;
+
       saveButton.disabled=true;
-      saveButton.textContent="Saving…";
+      saveButton.textContent=replacementFile?"Uploading Photo…":"Saving…";
 
-      const {error}=await db.from("team_members").update({
-        name_en:card.querySelector(".member-name-en").value.trim(),
-        name_ar:card.querySelector(".member-name-ar").value.trim()||null,
-        designation_en:card.querySelector(".member-designation-en").value.trim(),
-        designation_ar:card.querySelector(".member-designation-ar").value.trim()||null,
-        stakeholder_group:card.querySelector(".member-stakeholder-group").value,
-        sort_order:Number(card.querySelector(".member-sort-order").value||0),
-        active:card.querySelector(".member-active").checked,
-        updated_at:new Date().toISOString()
-      }).eq("id",member.id);
+      try{
+        if(replacementFile&&!replacementFile.type.startsWith("image/")){
+          throw new Error("Select a valid image file.");
+        }
 
-      saveButton.disabled=false;
-      saveButton.textContent="Save Changes";
+        let photoUrl=member.photo_url;
 
-      if(error)alert(error.message);
-      else{
-        alert("Team member updated.");
-        loadTeamMembers();
+        if(replacementFile){
+          uploadedPhoto=await upload(
+            "gallery",
+            replacementFile,
+            "team-members"
+          );
+          photoUrl=uploadedPhoto.url;
+          saveButton.textContent="Saving…";
+        }
+
+        const payload={
+          name_en:card.querySelector(".member-name-en").value.trim(),
+          name_ar:card.querySelector(".member-name-ar").value.trim()||null,
+          designation_en:card.querySelector(".member-designation-en").value.trim(),
+          designation_ar:card.querySelector(".member-designation-ar").value.trim()||null,
+          stakeholder_group:card.querySelector(".member-stakeholder-group").value,
+          photo_url:photoUrl,
+          sort_order:Number(card.querySelector(".member-sort-order").value||0),
+          active:card.querySelector(".member-active").checked,
+          updated_at:new Date().toISOString()
+        };
+
+        if(!payload.name_en){
+          throw new Error("English name is required.");
+        }
+
+        if(!payload.designation_en){
+          throw new Error("English designation is required.");
+        }
+
+        const {error}=await db
+          .from("team_members")
+          .update(payload)
+          .eq("id",member.id);
+
+        if(error)throw error;
+
+        if(replacementFile){
+          const oldPhotoPath=storagePath(member.photo_url,"gallery");
+
+          if(
+            oldPhotoPath
+            &&oldPhotoPath!==uploadedPhoto?.path
+          ){
+            const {error:removeError}=await db.storage
+              .from("gallery")
+              .remove([oldPhotoPath]);
+
+            if(removeError){
+              console.warn(
+                "Old team photo could not be removed:",
+                removeError.message
+              );
+            }
+          }
+        }
+
+        if(replacementPreviewUrl){
+          URL.revokeObjectURL(replacementPreviewUrl);
+          replacementPreviewUrl=null;
+        }
+
+        alert(
+          replacementFile
+            ?"Team member details and photo updated."
+            :"Team member updated."
+        );
+
+        await loadTeamMembers();
+      }catch(error){
+        if(uploadedPhoto?.path){
+          await db.storage
+            .from("gallery")
+            .remove([uploadedPhoto.path]);
+        }
+
+        alert(`Unable to update team member: ${error.message}`);
+      }finally{
+        saveButton.disabled=false;
+        saveButton.textContent="Save Changes";
       }
     };
 

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="MEC OSH Department portal for Sama Yas Residential Development">
 <title>MEC OSH Department | Sama Yas</title>
-<link rel="stylesheet" href="styles.css?v=20260801-1128">
+<link rel="stylesheet" href="styles.css?v=20260803-1430">
 
 <style id="critical-top-navigation">
 .header .top-visible-links{
@@ -156,6 +156,31 @@
   </div>
 </section>
 
+<div class="post-hero-layout">
+  <aside class="performance-sidebar" aria-label="Sticky OSH performance statistics">
+<section id="performance"
+         class="section dark performance-sticky-panel"
+         aria-labelledby="performanceSectionTitle">
+  <div class="performance-sidebar-inner">
+    <div class="section-head light performance-sidebar-heading">
+      <span data-i18n="performance">Performance</span>
+      <h2 id="performanceSectionTitle"
+          data-i18n="livePerformance">Live cumulative OSH performance</h2>
+    </div>
+
+    <p class="performance-click-hint" data-i18n="performanceClickHint">
+      Select any performance card to view last week, this week and cumulative figures.
+    </p>
+
+    <div id="performanceStatsGrid"
+         class="stats performance-stats-grid"
+         aria-live="polite">
+      <div class="performance-stats-loading">Loading performance statistics…</div>
+    </div>
+  </div>
+</section>
+  </aside>
+  <div class="post-hero-main">
 <section id="stakeholders" class="section stakeholders-section">
   <div class="container">
     <div class="section-head stakeholders-heading">
@@ -231,93 +256,7 @@
 </div>
 </section>
 
-<section id="performance" class="section dark">
-<div class="container">
-  <div class="section-head light">
-    <span data-i18n="performance">Performance</span>
-    <h2 data-i18n="livePerformance">Live cumulative OSH performance</h2>
-  </div>
 
-  <p class="performance-click-hint" data-i18n="performanceClickHint">
-    Select any performance card to view last week, this week and cumulative figures.
-  </p>
-
-  <div class="stats">
-    <div class="stat performance-stat-card" data-performance-key="manpower"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="manpower">Total Manpower</label>
-      <strong id="manpower">1500</strong>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="manhours"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="manhours">Man-Hours</label>
-      <strong id="manhours">2,568,386</strong>
-      <small data-i18n="liveCounter">Live UAE working-time counter</small>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="ltiDays"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="ltiDays">LTI-Free Days</label>
-      <strong id="ltiDays">0</strong>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="trainingSessions"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="trainingSessions">Training Sessions</label>
-      <strong id="trainingSessions">1,773</strong>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="personnelTrained"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="personnelTrained">Personnel Trained</label>
-      <strong id="personnelTrained">39,442</strong>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="trainingHours"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="trainingHours">Training Hours</label>
-      <strong id="trainingHours">18,433.55</strong>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="oshInductions"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="inductions">OSH Inductions</label>
-      <strong id="oshInductions">2,238</strong>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="oshMeetings"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="meetings">OSH Meetings</label>
-      <strong id="oshMeetings">73</strong>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="oshAudits"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="audits">OSH Audits</label>
-      <strong id="oshAudits">6</strong>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="oshInspections"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="inspections">OSH Inspections</label>
-      <strong id="oshInspections">167</strong>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="procedureReviews"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="reviews">Procedure Reviews</label>
-      <strong id="procedureReviews">64</strong>
-    </div>
-
-    <div class="stat performance-stat-card" data-performance-key="emergencyDrills"
-         role="button" tabindex="0" aria-haspopup="dialog">
-      <label data-i18n="drills">Emergency Drills</label>
-      <strong id="emergencyDrills">6</strong>
-    </div>
-  </div>
-</div>
-</section>
 
 <div id="performanceDetailModal"
      class="performance-detail-modal"
@@ -557,7 +496,12 @@
     </div>
 
     <div class="separate-trend-charts">
-      <article class="trend-chart-panel unsafe-act-chart-panel">
+      <article class="trend-chart-panel compact-trend-panel unsafe-act-chart-panel"
+               data-trend-popup="unsafe-act"
+               role="button"
+               tabindex="0"
+               aria-haspopup="dialog"
+               aria-label="Open enlarged Unsafe Act chart">
         <div class="trend-chart-heading">
           <div>
             <span>Unsafe Act Analysis</span>
@@ -567,6 +511,7 @@
             <span><i class="legend-ua-open"></i> Open</span>
             <span><i class="legend-ua-closed"></i> Closed</span>
           </div>
+          <span class="trend-enlarge-hint" aria-hidden="true">⛶ Click to enlarge</span>
         </div>
         <div class="trend-chart-scroll">
           <div id="unsafeActTrendChart"
@@ -576,7 +521,12 @@
         </div>
       </article>
 
-      <article class="trend-chart-panel unsafe-condition-chart-panel">
+      <article class="trend-chart-panel compact-trend-panel unsafe-condition-chart-panel"
+               data-trend-popup="unsafe-condition"
+               role="button"
+               tabindex="0"
+               aria-haspopup="dialog"
+               aria-label="Open enlarged Unsafe Condition chart">
         <div class="trend-chart-heading">
           <div>
             <span>Unsafe Condition Analysis</span>
@@ -586,6 +536,7 @@
             <span><i class="legend-uc-open"></i> Open</span>
             <span><i class="legend-uc-closed"></i> Closed</span>
           </div>
+          <span class="trend-enlarge-hint" aria-hidden="true">⛶ Click to enlarge</span>
         </div>
         <div class="trend-chart-scroll">
           <div id="unsafeConditionTrendChart"
@@ -602,6 +553,35 @@
     </div>
   </div>
 </section>
+
+
+<div id="trendChartModal"
+     class="trend-chart-modal"
+     hidden
+     aria-hidden="true"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="trendChartModalTitle">
+  <div class="trend-chart-modal-card">
+    <button id="closeTrendChartModal"
+            class="trend-chart-modal-close"
+            type="button"
+            aria-label="Close enlarged trend chart">×</button>
+
+    <div class="trend-chart-modal-heading">
+      <span id="trendChartModalEyebrow">Trend Analysis</span>
+      <h2 id="trendChartModalTitle">OSH Trend Chart</h2>
+      <div id="trendChartModalLegend" class="trend-legend"></div>
+    </div>
+
+    <div class="trend-chart-modal-scroll">
+      <div id="trendChartPopupCanvas"
+           class="trend-chart"
+           role="img"
+           aria-label="Enlarged OSH trend chart"></div>
+    </div>
+  </div>
+</div>
 
 <section id="news" class="section">
 <div class="container">
@@ -819,15 +799,15 @@
   <div class="section-head"><span data-i18n="gallery">Gallery</span><h2 data-i18n="galleryTitle">OSH Gallery</h2></div>
   <div class="slideshow"><div class="photo-group active">
       <article class="photo-slide-card">
-        <img src="assets/gallery-1.jpg" alt="OSH good practice photo 1">
+        <img class="gallery-popup-image" src="assets/gallery-1.jpg" alt="OSH good practice photo 1" data-gallery-title="Good Practice" data-gallery-type="OSH Gallery" role="button" tabindex="0">
         <h3>Good Practice</h3>
       </article>
       <article class="photo-slide-card">
-        <img src="assets/gallery-2.jpg" alt="OSH good practice photo 2">
+        <img class="gallery-popup-image" src="assets/gallery-2.jpg" alt="OSH good practice photo 2" data-gallery-title="Good Practice" data-gallery-type="OSH Gallery" role="button" tabindex="0">
         <h3>Good Practice</h3>
       </article>
       <article class="photo-slide-card">
-        <img src="assets/gallery-3.jpg" alt="OSH good practice photo 3">
+        <img class="gallery-popup-image" src="assets/gallery-3.jpg" alt="OSH good practice photo 3" data-gallery-title="Good Practice" data-gallery-type="OSH Gallery" role="button" tabindex="0">
         <h3>Good Practice</h3>
       </article>
     </div>
@@ -856,6 +836,31 @@
   </div>
 </div>
 </section>
+
+<div id="galleryPhotoModal"
+     class="gallery-photo-modal"
+     hidden
+     aria-hidden="true"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="galleryPhotoModalTitle">
+  <div class="gallery-photo-modal-card">
+    <button id="closeGalleryPhotoModal"
+            class="gallery-photo-modal-close"
+            type="button"
+            aria-label="Close enlarged gallery photo">×</button>
+
+    <div class="gallery-photo-modal-image-wrap">
+      <img id="galleryPhotoModalImage" src="" alt="">
+    </div>
+
+    <div class="gallery-photo-modal-copy">
+      <span id="galleryPhotoModalType">OSH Gallery</span>
+      <h2 id="galleryPhotoModalTitle">Gallery Photo</h2>
+    </div>
+  </div>
+</div>
+
 
 <section id="emergency" class="section emergency-section">
 <div class="container">
@@ -952,6 +957,9 @@
     </div>
   </div>
 </section>
+  </div>
+</div>
+
 </main>
 
 <div id="reportModal" class="modal" aria-hidden="true">
@@ -1059,7 +1067,7 @@
 <script>window.CATEGORY_DATA=[{"name": "Housekeeping & General Workplace Amenities", "ua": 36, "uc": 188}, {"name": "Traffic Management & Logistics", "ua": 23, "uc": 51}, {"name": "Working at Height", "ua": 104, "uc": 89}, {"name": "Scaffolding/Ladder", "ua": 111, "uc": 195}, {"name": "Personal Protective Equipment", "ua": 87, "uc": 16}, {"name": "Electrical Safety", "ua": 29, "uc": 49}, {"name": "Hand Tools", "ua": 23, "uc": 25}, {"name": "Excavations", "ua": 4, "uc": 3}, {"name": "Lifting Equipment and Lifting Accessories", "ua": 31, "uc": 45}, {"name": "Portable Power Tools", "ua": 32, "uc": 49}, {"name": "Plant and Equipment", "ua": 20, "uc": 32}, {"name": "Confined Space", "ua": 1, "uc": 8}, {"name": "Hot Work Operations", "ua": 41, "uc": 41}, {"name": "Compressed Air and Gases", "ua": 0, "uc": 9}, {"name": "Manual Handling", "ua": 17, "uc": 9}, {"name": "Welfare Facilities", "ua": 28, "uc": 39}, {"name": "Hazardous Substances", "ua": 0, "uc": 20}, {"name": "Machine Guarding", "ua": 5, "uc": 8}, {"name": "Storage Arrangements", "ua": 22, "uc": 115}, {"name": "Barricading of Hazards", "ua": 62, "uc": 112}, {"name": "Access and Egress", "ua": 56, "uc": 78}, {"name": "Permit to Work", "ua": 20, "uc": 14}, {"name": "Safety Signage & Signals", "ua": 14, "uc": 14}, {"name": "Falsework/Formwork", "ua": 96, "uc": 112}, {"name": "Waste Management", "ua": 15, "uc": 66}, {"name": "First Aid Case", "ua": 4, "uc": 2}, {"name": "Near Miss Incident", "ua": 0, "uc": 0}, {"name": "Property Damage", "ua": 0, "uc": 0}, {"name": "Lost Time Injury", "ua": 0, "uc": 1}];</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20260801-1128"></script>
+<script src="app.js?v=20260803-1430"></script>
 
 <a
   class="floating-emergency-call"

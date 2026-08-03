@@ -164,3 +164,16 @@ SAFETY REPORT NAME AND DESIGNATION
 3. Confirm the final query returns reporter_name and reporter_designation.
 4. Wait about 10 seconds.
 5. Refresh the website and Admin Dashboard using Ctrl + F5.
+
+DYNAMIC PERFORMANCE STATISTICS
+------------------------------
+1. Open Supabase > SQL Editor > New query.
+2. Run PERFORMANCE_STATS_DYNAMIC_SETUP.sql.
+3. Confirm the final query returns the existing performance statistics.
+4. Wait about 10 seconds.
+5. Replace the website files and refresh using Ctrl + F5.
+6. Open Admin Dashboard > Performance.
+7. Edit English/Arabic titles and values, or add/delete statistics.
+
+The performance dashboard remains sticky on the left side after the hero
+section. On tablets and phones it returns to a normal full-width section.
