@@ -4189,3 +4189,194 @@ html[dir=rtl] .osh-chatbot-message.assistant{
     left:10px;
   }
 }
+
+
+/* Live Yas Island weather card in the hero's top-right marked area */
+.yas-weather-card{
+  position:absolute;
+  top:28px;
+  right:3.5vw;
+  z-index:5;
+  width:270px;
+  padding:16px 17px 13px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.38);
+  border-top:4px solid #ffd400;
+  border-radius:14px;
+  background:linear-gradient(
+    145deg,
+    rgba(8,8,8,.88),
+    rgba(20,20,20,.68)
+  );
+  color:#fff;
+  box-shadow:0 14px 38px rgba(0,0,0,.36);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.yas-weather-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(
+    circle at top right,
+    rgba(255,212,0,.16),
+    transparent 42%
+  );
+}
+.yas-weather-card > *{
+  position:relative;
+  z-index:1;
+}
+.yas-weather-topline{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.yas-weather-topline > div{
+  min-width:0;
+}
+.yas-weather-label{
+  display:block;
+  margin-bottom:2px;
+  color:#ffd400;
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.yas-weather-topline strong{
+  display:block;
+  color:#fff;
+  font-size:16px;
+  line-height:1.15;
+}
+.yas-weather-icon{
+  display:grid;
+  place-items:center;
+  width:42px;
+  height:42px;
+  flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:50%;
+  background:rgba(255,255,255,.09);
+  font-size:24px;
+}
+.yas-weather-main{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+  gap:12px;
+  margin:12px 0 11px;
+}
+.yas-weather-temperature{
+  color:#ffd400;
+  font-size:42px;
+  line-height:1;
+  letter-spacing:-2px;
+  white-space:nowrap;
+}
+.yas-weather-condition{
+  display:block;
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+  line-height:1.2;
+}
+.yas-weather-main small{
+  display:block;
+  margin-top:4px;
+  color:#c8c8c8;
+  font-size:10px;
+}
+.yas-weather-details{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+}
+.yas-weather-details > span{
+  min-width:0;
+  padding:8px 9px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:7px;
+  background:rgba(0,0,0,.22);
+}
+.yas-weather-details b{
+  display:block;
+  margin-bottom:3px;
+  color:#aaa;
+  font-size:9px;
+  font-weight:700;
+}
+.yas-weather-details strong{
+  display:block;
+  color:#fff;
+  font-size:12px;
+  white-space:nowrap;
+}
+.yas-weather-updated{
+  display:flex;
+  justify-content:flex-end;
+  gap:5px;
+  margin-top:9px;
+  color:#999;
+  font-size:9px;
+}
+.yas-weather-card.is-loading{
+  opacity:.88;
+}
+.yas-weather-card.is-error{
+  border-top-color:#ef4444;
+}
+html[dir=rtl] .yas-weather-card{
+  right:auto;
+  left:3.5vw;
+  text-align:right;
+}
+html[dir=rtl] .yas-weather-updated{
+  justify-content:flex-start;
+}
+@media(max-width:900px){
+  .yas-weather-card{
+    top:18px;
+    right:18px;
+    width:230px;
+    padding:13px 14px 11px;
+  }
+  .yas-weather-temperature{
+    font-size:34px;
+  }
+  html[dir=rtl] .yas-weather-card{
+    right:auto;
+    left:18px;
+  }
+}
+@media(max-width:650px){
+  .hero{
+    height:610px;
+  }
+  .hero-slide{
+    align-items:flex-start;
+  }
+  .hero-copy{
+    padding-top:168px;
+  }
+  .yas-weather-card{
+    top:14px;
+    right:12px;
+    left:12px;
+    width:auto;
+    max-width:none;
+  }
+  html[dir=rtl] .yas-weather-card{
+    right:12px;
+    left:12px;
+  }
+  .yas-weather-main{
+    margin:8px 0;
+  }
+  .yas-weather-details{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}

@@ -50,6 +50,9 @@ function applyLanguage(){
   }else if(typeof refreshPerformancePopupLanguage==="function"){
     refreshPerformancePopupLanguage();
   }
+  if(typeof renderYasWeather==="function"){
+    renderYasWeather();
+  }
 }
 
 const menuButton=document.querySelector(".menu-btn");
@@ -464,6 +467,239 @@ document.addEventListener("keydown",event=>{
 
 
 const db = window.mecSupabase;
+
+/* Live Yas Island weather */
+const YAS_WEATHER_ENDPOINT=
+  "https://api.open-meteo.com/v1/forecast"
+  +"?latitude=24.5061277"
+  +"&longitude=54.6277034"
+  +"&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m"
+  +"&temperature_unit=celsius"
+  +"&wind_speed_unit=kmh"
+  +"&timezone=Asia%2FDubai";
+
+const YAS_WEATHER_REFRESH_MS=10*60*1000;
+const YAS_WEATHER_CACHE_KEY="mecYasWeatherCacheV1";
+
+const YAS_WEATHER_TEXT={
+  en:{
+    label:"Live Weather",
+    location:"Yas Island",
+    humidity:"Humidity",
+    wind:"Wind",
+    feels:"Feels like",
+    updated:"Updated",
+    loading:"Loading weather…",
+    unavailable:"Weather unavailable"
+  },
+  ar:{
+    label:"الطقس المباشر",
+    location:"جزيرة ياس",
+    humidity:"الرطوبة",
+    wind:"الرياح",
+    feels:"المحسوسة",
+    updated:"آخر تحديث",
+    loading:"جارٍ تحميل الطقس…",
+    unavailable:"الطقس غير متاح"
+  }
+};
+
+const YAS_WEATHER_CODES={
+  0:["Clear sky","سماء صافية","☀️","🌙"],
+  1:["Mainly clear","صحو غالباً","🌤️","🌙"],
+  2:["Partly cloudy","غائم جزئياً","⛅","☁️"],
+  3:["Overcast","غائم","☁️","☁️"],
+  45:["Fog","ضباب","🌫️","🌫️"],
+  48:["Rime fog","ضباب متجمد","🌫️","🌫️"],
+  51:["Light drizzle","رذاذ خفيف","🌦️","🌧️"],
+  53:["Drizzle","رذاذ","🌦️","🌧️"],
+  55:["Heavy drizzle","رذاذ كثيف","🌧️","🌧️"],
+  56:["Freezing drizzle","رذاذ متجمد","🌧️","🌧️"],
+  57:["Heavy freezing drizzle","رذاذ متجمد كثيف","🌧️","🌧️"],
+  61:["Light rain","أمطار خفيفة","🌦️","🌧️"],
+  63:["Rain","أمطار","🌧️","🌧️"],
+  65:["Heavy rain","أمطار غزيرة","🌧️","🌧️"],
+  66:["Freezing rain","أمطار متجمدة","🌧️","🌧️"],
+  67:["Heavy freezing rain","أمطار متجمدة غزيرة","🌧️","🌧️"],
+  71:["Light snow","ثلوج خفيفة","🌨️","🌨️"],
+  73:["Snow","ثلوج","🌨️","🌨️"],
+  75:["Heavy snow","ثلوج كثيفة","❄️","❄️"],
+  77:["Snow grains","حبيبات ثلج","❄️","❄️"],
+  80:["Light showers","زخات خفيفة","🌦️","🌧️"],
+  81:["Showers","زخات مطر","🌧️","🌧️"],
+  82:["Heavy showers","زخات غزيرة","⛈️","⛈️"],
+  85:["Snow showers","زخات ثلج","🌨️","🌨️"],
+  86:["Heavy snow showers","زخات ثلج كثيفة","❄️","❄️"],
+  95:["Thunderstorm","عاصفة رعدية","⛈️","⛈️"],
+  96:["Thunderstorm with hail","عاصفة رعدية مع برد","⛈️","⛈️"],
+  99:["Severe thunderstorm with hail","عاصفة رعدية شديدة مع برد","⛈️","⛈️"]
+};
+
+let yasWeatherData=null;
+let yasWeatherLoading=false;
+
+function yasWeatherText(){
+  return YAS_WEATHER_TEXT[lang]||YAS_WEATHER_TEXT.en;
+}
+
+function yasWeatherCondition(code,isDay){
+  const entry=YAS_WEATHER_CODES[Number(code)]||[
+    "Current conditions",
+    "حالة الطقس الحالية",
+    "🌤️",
+    "🌙"
+  ];
+
+  return {
+    label:lang==="ar"?entry[1]:entry[0],
+    icon:Number(isDay)===1?entry[2]:entry[3]
+  };
+}
+
+function yasWeatherDisplayTime(value){
+  if(!value)return "--:--";
+
+  const isoValue=String(value).includes("+")
+    ?String(value)
+    :`${value}:00+04:00`;
+
+  const date=new Date(isoValue);
+  if(Number.isNaN(date.getTime()))return String(value).slice(11,16);
+
+  return new Intl.DateTimeFormat(
+    lang==="ar"?"ar-AE":"en-AE",
+    {
+      hour:"2-digit",
+      minute:"2-digit",
+      hour12:false,
+      timeZone:"Asia/Dubai"
+    }
+  ).format(date);
+}
+
+function setYasWeatherText(id,value){
+  const element=document.getElementById(id);
+  if(element)element.textContent=value;
+}
+
+function renderYasWeather(){
+  const card=document.getElementById("yasWeatherCard");
+  if(!card)return;
+
+  const text=yasWeatherText();
+
+  setYasWeatherText("yasWeatherLabel",text.label);
+  setYasWeatherText("yasWeatherLocation",text.location);
+  setYasWeatherText("yasWeatherHumidityLabel",text.humidity);
+  setYasWeatherText("yasWeatherWindLabel",text.wind);
+  setYasWeatherText("yasWeatherUpdatedLabel",text.updated);
+
+  if(!yasWeatherData){
+    setYasWeatherText(
+      "yasWeatherCondition",
+      yasWeatherLoading?text.loading:text.unavailable
+    );
+    setYasWeatherText("yasWeatherTemperature","--°");
+    setYasWeatherText("yasWeatherFeelsLike",`${text.feels} --°C`);
+    setYasWeatherText("yasWeatherHumidity","--%");
+    setYasWeatherText("yasWeatherWind","-- km/h");
+    setYasWeatherText("yasWeatherUpdated","--:--");
+    setYasWeatherText("yasWeatherIcon","🌤️");
+    return;
+  }
+
+  const current=yasWeatherData.current||{};
+  const condition=yasWeatherCondition(
+    current.weather_code,
+    current.is_day
+  );
+
+  setYasWeatherText(
+    "yasWeatherTemperature",
+    `${Math.round(Number(current.temperature_2m))}°`
+  );
+  setYasWeatherText("yasWeatherCondition",condition.label);
+  setYasWeatherText("yasWeatherIcon",condition.icon);
+  setYasWeatherText(
+    "yasWeatherFeelsLike",
+    `${text.feels} ${Math.round(Number(current.apparent_temperature))}°C`
+  );
+  setYasWeatherText(
+    "yasWeatherHumidity",
+    `${Math.round(Number(current.relative_humidity_2m))}%`
+  );
+  setYasWeatherText(
+    "yasWeatherWind",
+    `${Math.round(Number(current.wind_speed_10m))} km/h`
+  );
+  setYasWeatherText(
+    "yasWeatherUpdated",
+    yasWeatherDisplayTime(current.time)
+  );
+}
+
+function readCachedYasWeather(){
+  try{
+    const cached=JSON.parse(
+      localStorage.getItem(YAS_WEATHER_CACHE_KEY)||"null"
+    );
+    if(cached?.data?.current){
+      yasWeatherData=cached.data;
+      renderYasWeather();
+    }
+  }catch(error){
+    console.warn("Weather cache could not be read:",error.message);
+  }
+}
+
+async function loadYasWeather(){
+  if(yasWeatherLoading)return;
+
+  const card=document.getElementById("yasWeatherCard");
+  yasWeatherLoading=true;
+  card?.classList.add("is-loading");
+  card?.classList.remove("is-error");
+  renderYasWeather();
+
+  try{
+    const response=await fetch(YAS_WEATHER_ENDPOINT,{
+      cache:"no-store"
+    });
+
+    if(!response.ok){
+      throw new Error(`Weather request failed: ${response.status}`);
+    }
+
+    const data=await response.json();
+
+    if(!data?.current){
+      throw new Error("Current weather data was not returned.");
+    }
+
+    yasWeatherData=data;
+
+    try{
+      localStorage.setItem(
+        YAS_WEATHER_CACHE_KEY,
+        JSON.stringify({
+          savedAt:Date.now(),
+          data
+        })
+      );
+    }catch(error){
+      console.warn("Weather cache could not be saved:",error.message);
+    }
+  }catch(error){
+    console.warn("Yas Island weather:",error.message);
+    card?.classList.add("is-error");
+  }finally{
+    yasWeatherLoading=false;
+    card?.classList.remove("is-loading");
+    renderYasWeather();
+  }
+}
+
+readCachedYasWeather();
 
 const OSH_CHATBOT_UI={
   en:{
@@ -2361,6 +2597,8 @@ document.addEventListener("keydown",event=>{
 });
 
 applyLanguage();
+loadYasWeather();
+setInterval(loadYasWeather,YAS_WEATHER_REFRESH_MS);
 loadContactSettings();
 loadLiveSettings();
 loadDocuments();

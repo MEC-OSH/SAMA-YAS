@@ -185,3 +185,11 @@ A floating MEC OSH AI Assistant is positioned above the emergency button.
 It supports English, Hindi and Arabic text chat, microphone input and spoken
 replies. Read `AI_CHATBOT_SETUP.md` and deploy the included Supabase Edge
 Function for full AI responses.
+
+
+## Live Yas Island Weather
+
+A live weather card is positioned in the top-right area of the hero image. It
+shows Yas Island temperature, weather condition, feels-like temperature,
+humidity, wind speed and update time. Data refreshes automatically every
+10 minutes and the last successful result is cached in the browser.
