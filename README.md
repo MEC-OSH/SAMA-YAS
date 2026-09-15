@@ -193,3 +193,14 @@ A live weather card is positioned in the top-right area of the hero image. It
 shows Yas Island temperature, weather condition, feels-like temperature,
 humidity, wind speed and update time. Data refreshes automatically every
 10 minutes and the last successful result is cached in the browser.
+
+
+## Live 3D Site Walkthrough Link
+
+The website links directly to:
+
+https://sama-yas-site-walkthrough.shamil-hse.chatgpt.site/
+
+No 3D model files are stored in the MEC OSH website. Any future updates made
+at the same walkthrough URL are therefore available automatically without
+uploading a new website package.
