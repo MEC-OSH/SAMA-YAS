@@ -204,3 +204,21 @@ https://sama-yas-site-walkthrough.shamil-hse.chatgpt.site/
 No 3D model files are stored in the MEC OSH website. Any future updates made
 at the same walkthrough URL are therefore available automatically without
 uploading a new website package.
+
+
+## 3D Walkthrough Description Removed
+
+The explanatory paragraph under the 3D Site Walkthrough title was removed.
+The section now keeps only the heading and live walkthrough launch button.
+
+
+## Embedded 3D Site Walkthrough
+
+The Sama Yas 3D walkthrough is embedded directly inside the MEC OSH website
+using the live source below:
+
+https://sama-yas-site-walkthrough.shamil-hse.chatgpt.site/
+
+The MEC website contains only the iframe reference, not the 3D model files.
+Changes published at the same walkthrough URL are therefore loaded
+automatically inside the embedded viewer.

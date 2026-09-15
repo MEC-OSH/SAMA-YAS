@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="MEC OSH Department portal for Sama Yas Residential Development">
 <title>MEC OSH Department | Sama Yas</title>
-<link rel="stylesheet" href="styles.css?v=20260915-0918">
+<link rel="stylesheet" href="styles.css?v=20260915-0945">
 
 <style id="critical-top-navigation">
 .header .top-visible-links{
@@ -128,10 +128,7 @@
       <a href="#performance" data-i18n="performance">Performance</a>
       <a href="#documents" id="openDocumentLibrary" class="protected-document-link" data-i18n="documents">OSH Documents</a>
       <a class="risk-generator-nav" href="risk-assessment/">Risk Assessment Generator</a>
-      <a class="site-walkthrough-nav"
-         href="https://sama-yas-site-walkthrough.shamil-hse.chatgpt.site/"
-         target="_blank"
-         rel="noopener noreferrer">3D Site Walkthrough</a>
+      <a class="site-walkthrough-nav" href="#site-walkthrough">3D Site Walkthrough</a>
       <a href="#training-videos" data-i18n="trainingVideos">Training Awareness Videos</a>
       <a href="#reports" data-i18n="reports">Safety Reports</a>
       <a href="#trend-analysis">Trend Analysis</a>
@@ -226,30 +223,33 @@
 </section>
   </aside>
   <div class="post-hero-main">
-<section id="site-walkthrough" class="section site-walkthrough-section">
-  <div class="container">
-    <div class="site-walkthrough-card">
-      <div class="site-walkthrough-copy">
-        <span class="site-walkthrough-kicker" data-i18n="walkthroughKicker">Spatial Computing / 3D Telepresence</span>
-        <h2 data-i18n="walkthroughTitle">3D Site Walkthrough</h2>
-        <p data-i18n="walkthroughText">
-          Explore the live Sama Yas site walkthrough. The walkthrough opens from its
-          dedicated live link, so future model updates are reflected automatically
-          without uploading new 3D files to this website.
-        </p>
+<section id="site-walkthrough"
+         class="section site-walkthrough-section"
+         aria-labelledby="siteWalkthroughTitle">
+  <div class="container site-walkthrough-container">
+    <div class="site-walkthrough-heading">
+      <span class="site-walkthrough-kicker"
+            data-i18n="walkthroughKicker">Spatial Computing / 3D Telepresence</span>
+      <h2 id="siteWalkthroughTitle"
+          data-i18n="walkthroughTitle">3D Site Walkthrough</h2>
+    </div>
+
+    <div class="site-walkthrough-frame-wrap">
+      <div class="site-walkthrough-live-badge" aria-hidden="true">
+        <span></span>
+        LIVE
       </div>
 
-      <a class="site-walkthrough-button"
-         href="https://sama-yas-site-walkthrough.shamil-hse.chatgpt.site/"
-         target="_blank"
-         rel="noopener noreferrer"
-         aria-label="Open live Sama Yas 3D Site Walkthrough">
-        <span class="site-walkthrough-button-icon" aria-hidden="true">3D</span>
-        <span>
-          <small data-i18n="walkthroughLive">LIVE WALKTHROUGH</small>
-          <strong data-i18n="walkthroughOpen">Open 3D Site Walkthrough</strong>
-        </span>
-      </a>
+      <iframe
+        id="siteWalkthroughFrame"
+        class="site-walkthrough-frame"
+        src="https://sama-yas-site-walkthrough.shamil-hse.chatgpt.site/"
+        title="Sama Yas 3D Site Walkthrough"
+        loading="lazy"
+        allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; autoplay"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin">
+      </iframe>
     </div>
   </div>
 </section>
@@ -1140,7 +1140,7 @@
 <script>window.CATEGORY_DATA=[{"name": "Housekeeping & General Workplace Amenities", "ua": 36, "uc": 188}, {"name": "Traffic Management & Logistics", "ua": 23, "uc": 51}, {"name": "Working at Height", "ua": 104, "uc": 89}, {"name": "Scaffolding/Ladder", "ua": 111, "uc": 195}, {"name": "Personal Protective Equipment", "ua": 87, "uc": 16}, {"name": "Electrical Safety", "ua": 29, "uc": 49}, {"name": "Hand Tools", "ua": 23, "uc": 25}, {"name": "Excavations", "ua": 4, "uc": 3}, {"name": "Lifting Equipment and Lifting Accessories", "ua": 31, "uc": 45}, {"name": "Portable Power Tools", "ua": 32, "uc": 49}, {"name": "Plant and Equipment", "ua": 20, "uc": 32}, {"name": "Confined Space", "ua": 1, "uc": 8}, {"name": "Hot Work Operations", "ua": 41, "uc": 41}, {"name": "Compressed Air and Gases", "ua": 0, "uc": 9}, {"name": "Manual Handling", "ua": 17, "uc": 9}, {"name": "Welfare Facilities", "ua": 28, "uc": 39}, {"name": "Hazardous Substances", "ua": 0, "uc": 20}, {"name": "Machine Guarding", "ua": 5, "uc": 8}, {"name": "Storage Arrangements", "ua": 22, "uc": 115}, {"name": "Barricading of Hazards", "ua": 62, "uc": 112}, {"name": "Access and Egress", "ua": 56, "uc": 78}, {"name": "Permit to Work", "ua": 20, "uc": 14}, {"name": "Safety Signage & Signals", "ua": 14, "uc": 14}, {"name": "Falsework/Formwork", "ua": 96, "uc": 112}, {"name": "Waste Management", "ua": 15, "uc": 66}, {"name": "First Aid Case", "ua": 4, "uc": 2}, {"name": "Near Miss Incident", "ua": 0, "uc": 0}, {"name": "Property Damage", "ua": 0, "uc": 0}, {"name": "Lost Time Injury", "ua": 0, "uc": 1}];</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20260915-0918"></script>
+<script src="app.js?v=20260915-0945"></script>
 
 
 <button id="oshChatbotToggle"
