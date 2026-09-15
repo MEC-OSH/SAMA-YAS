@@ -195,16 +195,6 @@ humidity, wind speed and update time. Data refreshes automatically every
 10 minutes and the last successful result is cached in the browser.
 
 
-## Live 3D Site Walkthrough Link
-
-The website links directly to:
-
-https://sama-yas-site-walkthrough.shamil-hse.chatgpt.site/
-
-No 3D model files are stored in the MEC OSH website. Any future updates made
-at the same walkthrough URL are therefore available automatically without
-uploading a new website package.
-
 
 ## 3D Walkthrough Description Removed
 
@@ -212,13 +202,9 @@ The explanatory paragraph under the 3D Site Walkthrough title was removed.
 The section now keeps only the heading and live walkthrough launch button.
 
 
-## Embedded 3D Site Walkthrough
+## Local 3D Site Walkthrough
 
-The Sama Yas 3D walkthrough is embedded directly inside the MEC OSH website
-using the live source below:
-
-https://sama-yas-site-walkthrough.shamil-hse.chatgpt.site/
-
-The MEC website contains only the iframe reference, not the 3D model files.
-Changes published at the same walkthrough URL are therefore loaded
-automatically inside the embedded viewer.
+The 3D Site Walkthrough is stored inside this website under
+`site-walkthrough/`. The main website button and navigation open that local
+route in the same browser window. No ChatGPT-hosted walkthrough URL, iframe,
+or external 3D site link is used.
